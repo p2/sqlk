@@ -1,6 +1,6 @@
 //
 //  SQLiteStructure.m
-//  EviApp
+//  SQLiteKit
 //
 //  Created by Pascal Pfiffner on 11.09.10.
 //  Copyright 2010 Institute Of Immunology. All rights reserved.

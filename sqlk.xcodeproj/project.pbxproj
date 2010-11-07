@@ -105,12 +105,12 @@
 			children = (
 				EE2D916D12872C8700C69142 /* SQLiteObject.h */,
 				EE2D916E12872C8700C69142 /* SQLiteObject.m */,
-				EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */,
-				EE2D917012872C8700C69142 /* SQLKColumnStructure.m */,
 				EE2D917112872C8700C69142 /* SQLKStructure.h */,
 				EE2D917212872C8700C69142 /* SQLKStructure.m */,
 				EE2D917312872C8700C69142 /* SQLKTableStructure.h */,
 				EE2D917412872C8700C69142 /* SQLKTableStructure.m */,
+				EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */,
+				EE2D917012872C8700C69142 /* SQLKColumnStructure.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
