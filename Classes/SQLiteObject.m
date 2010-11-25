@@ -50,31 +50,36 @@
 - (void) setFromDict:(NSDictionary *)dict
 {
 	if (nil != dict) {
-		NSString *tk = [[self class] tableKey];
+		NSString *tableKey = [[self class] tableKey];
 		NSDictionary *linker = [[self class] sqlPropertyLinker];
 		
 		// loop all keys and assign appropriately
-		for (NSString *k in [dict allKeys]) {
-			id value = [dict objectForKey:k];
-			NSString *linkedKey = [linker objectForKey:k];
+		for (NSString *aKey in [dict allKeys]) {
+			id value = [dict objectForKey:aKey];
+			NSString *linkedKey = [linker objectForKey:aKey];
 			
-			if ([k isEqualToString:tk]) {
-				self.key = value;
+			if ([aKey isEqualToString:tableKey] || [linkedKey isEqualToString:@"key"]) {
+				// we don't allow to set the key here, it will be set automatically in hydrate
+				// changing this may break a lot of implementations, choose wisely!
 			}
 			else if (linkedKey) {
-				[self setValue:value forKey:linkedKey];
+				@try {
+					[self setValue:value forKey:linkedKey];
+				}
+				@catch (NSException *e) {
+					DLog(@"There is no instance variable for linked key \"%@\"", linkedKey);
+				}
 			}
 			else {
-				[self setValue:value forKey:k];
+				@try {
+					[self setValue:value forKey:aKey];
+				}
+				@catch (NSException *e) {
+					DLog(@"There is no instance variable for key \"%@\"", aKey);
+				}
 			}
 		}
 	}
-}
-
-- (void) setValue:(id)value forUndefinedKey:(NSString *)undefKey
-{
-	// NSObject's implementation raises an exception. We are more benevolent here.
-	DLog(@"There is no instance variable for key \"%@\"", undefKey);
 }
 #pragma mark -
 
@@ -105,15 +110,15 @@ static NSString *hydrateQuery = nil;
 	return hydrateQuery;
 }
 
-- (void) hydrate
+- (BOOL) hydrate
 {
 	if (!db) {
 		DLog(@"We can't hydrate without database");
-		return;
+		return NO;
 	}
 	if (!key) {
 		DLog(@"We can't hydrate without primary key");
-		return;
+		return NO;
 	}
 	
 	// fetch first result (hopefully the only one)
@@ -121,26 +126,110 @@ static NSString *hydrateQuery = nil;
 	[res next];
 	
 	// hydrate and close
-	[self setFromDict:[res resultDict]];
+	NSDictionary *result = [res resultDict];
+	self.key = [result objectForKey:[[self class] tableKey]];
+	[self setFromDict:result];
 	[res close];
 	hydrated = YES;
+	
+	return hydrated;
 }
 #pragma mark -
 
 
 
 #pragma mark Dehydrating
-- (void) dehydrate
+- (NSDictionary *) dehydrateDictionary
 {
-	// "UPDATE `t1` SET `x` = ? WHERE `key` = ?";
-	DLog(@"Implement me!");
-	hydrated = NO;
+	return nil;
+}
+
+- (BOOL) dehydrate:(NSError **)error
+{
+	if (!db) {
+		DLog(@"We can't dehydrate without a database");
+		return NO;
+	}
+	NSDictionary *dict = [self dehydrateDictionary];
+	if (!dict) {
+		DLog(@"We can't dehydrate without a dehydrate dictionary");
+		return NO;
+	}
+	
+	// prepare to rock
+	BOOL success = NO;
+	NSString *query = nil;
+	
+	// ** insert if needed
+	if (!self.key) {
+		NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[dict count]];
+		NSMutableArray *qmarks = [NSMutableArray arrayWithCapacity:[dict count]];
+		NSMutableArray *arguments = [NSMutableArray arrayWithCapacity:[dict count]];
+		for (NSString *dKey in [dict allKeys]) {
+			[properties addObject:dKey];
+			[qmarks addObject:@"?"];
+			[arguments addObject:[dict objectForKey:dKey]];
+		}
+		
+		query = [NSString stringWithFormat:
+				 @"INSERT INTO `%@` (%@) VALUES (%@)",
+				 [[self class] tableName],
+				 [properties componentsJoinedByString:@", "],
+				 [qmarks componentsJoinedByString:@", "]];
+		
+		// execute
+		success = [db executeUpdate:query withArgumentsInArray:arguments];
+		if (success) {
+			self.key = [NSNumber numberWithLongLong:[db lastInsertRowId]];
+		}
+	}
+	
+	// ** else update
+	else {
+		NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[dict count]];
+		NSMutableArray *arguments = [NSMutableArray arrayWithCapacity:[dict count]];
+		for (NSString *dKey in [dict allKeys]) {
+			[properties addObject:[NSString stringWithFormat:@"%@ = ?", dKey]];
+			[arguments addObject:[dict objectForKey:dKey]];
+		}
+		
+		query = [NSString stringWithFormat:
+				 @"UPDATE `%@` SET %@ WHERE `%@` = ?",
+				 [[self class] tableName],
+				 [properties componentsJoinedByString:@", "],
+				 [[self class] tableKey]];
+		[arguments addObject:self.key];
+		
+		// execute
+		success = [db executeUpdate:query withArgumentsInArray:arguments];
+	}
+	
+	// error?
+	if (!success && NULL != error) {
+		NSString *errorString = [db hadError] ? [db lastErrorMessage] : @"Unknown dehydrate error";
+		NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
+		*error = [NSError errorWithDomain:NSCocoaErrorDomain code:676 userInfo:userDict];
+	}
+	
+	return success;
 }
 #pragma mark -
 
 
 
 #pragma mark Utilities
+- (BOOL) isEqual:(id)object
+{
+	if ([object isKindOfClass:[self class]]) {
+		NSNumber *otherKey = [(SQLiteObject *)object key];
+		if (otherKey) {
+			return [key isEqualToNumber:otherKey];
+		}
+	}
+	return NO;
+}
+
+
 - (NSString *) description
 {
 	return [NSString stringWithFormat:@"%@ <0x%x> '%@'", NSStringFromClass([self class]), self, key];
