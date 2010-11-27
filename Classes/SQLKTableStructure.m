@@ -225,9 +225,9 @@
 				return YES;
 			}
 		}
-		else {
-			errorString = @"Table names don't match";
-		}
+		//else {
+		//	errorString = @"Table names don't match";
+		//}
 	}
 	else {
 		errorString = @"No other table given";

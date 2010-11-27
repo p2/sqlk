@@ -47,7 +47,7 @@
 
 
 #pragma mark Value Setter
-- (void) setFromDict:(NSDictionary *)dict
+- (void) setFromDictionary:(NSDictionary *)dict
 {
 	if (nil != dict) {
 		NSString *tableKey = [[self class] tableKey];
@@ -59,8 +59,7 @@
 			NSString *linkedKey = [linker objectForKey:aKey];
 			
 			if ([aKey isEqualToString:tableKey] || [linkedKey isEqualToString:@"key"]) {
-				// we don't allow to set the key here, it will be set automatically in hydrate
-				// changing this may break a lot of implementations, choose wisely!
+				self.key = value;
 			}
 			else if (linkedKey) {
 				@try {
@@ -128,7 +127,7 @@ static NSString *hydrateQuery = nil;
 	// hydrate and close
 	NSDictionary *result = [res resultDict];
 	self.key = [result objectForKey:[[self class] tableKey]];
-	[self setFromDict:result];
+	[self setFromDictionary:result];
 	[res close];
 	hydrated = YES;
 	
@@ -160,11 +159,33 @@ static NSString *hydrateQuery = nil;
 	BOOL success = NO;
 	NSString *query = nil;
 	
+	
+	// ** try to update
+	NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[dict count]];
+	NSMutableArray *arguments = [NSMutableArray arrayWithCapacity:[dict count]];
+	
+	for (NSString *dKey in [dict allKeys]) {
+		[properties addObject:[NSString stringWithFormat:@"%@ = ?", dKey]];
+		[arguments addObject:[dict objectForKey:dKey]];
+	}
+	[arguments addObject:self.key];
+	
+	query = [NSString stringWithFormat:
+			 @"UPDATE `%@` SET %@ WHERE `%@` = ?",
+			 [[self class] tableName],
+			 [properties componentsJoinedByString:@", "],
+			 [[self class] tableKey]];
+	
+	// execute
+	success = [db executeUpdate:query withArgumentsInArray:arguments];
+	
+	
 	// ** insert if needed
-	if (!self.key) {
-		NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[dict count]];
+	if ([db numChanges] < 1) {
+		[properties removeAllObjects];
+		[arguments removeAllObjects];
 		NSMutableArray *qmarks = [NSMutableArray arrayWithCapacity:[dict count]];
-		NSMutableArray *arguments = [NSMutableArray arrayWithCapacity:[dict count]];
+		
 		for (NSString *dKey in [dict allKeys]) {
 			[properties addObject:dKey];
 			[qmarks addObject:@"?"];
@@ -176,29 +197,6 @@ static NSString *hydrateQuery = nil;
 				 [[self class] tableName],
 				 [properties componentsJoinedByString:@", "],
 				 [qmarks componentsJoinedByString:@", "]];
-		
-		// execute
-		success = [db executeUpdate:query withArgumentsInArray:arguments];
-		if (success) {
-			self.key = [NSNumber numberWithLongLong:[db lastInsertRowId]];
-		}
-	}
-	
-	// ** else update
-	else {
-		NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[dict count]];
-		NSMutableArray *arguments = [NSMutableArray arrayWithCapacity:[dict count]];
-		for (NSString *dKey in [dict allKeys]) {
-			[properties addObject:[NSString stringWithFormat:@"%@ = ?", dKey]];
-			[arguments addObject:[dict objectForKey:dKey]];
-		}
-		
-		query = [NSString stringWithFormat:
-				 @"UPDATE `%@` SET %@ WHERE `%@` = ?",
-				 [[self class] tableName],
-				 [properties componentsJoinedByString:@", "],
-				 [[self class] tableKey]];
-		[arguments addObject:self.key];
 		
 		// execute
 		success = [db executeUpdate:query withArgumentsInArray:arguments];
@@ -221,9 +219,9 @@ static NSString *hydrateQuery = nil;
 - (BOOL) isEqual:(id)object
 {
 	if ([object isKindOfClass:[self class]]) {
-		NSNumber *otherKey = [(SQLiteObject *)object key];
+		id otherKey = [(SQLiteObject *)object key];
 		if (otherKey) {
-			return [key isEqualToNumber:otherKey];
+			return [key isEqual:otherKey];
 		}
 	}
 	return NO;
