@@ -32,7 +32,7 @@
 + (NSString *) tableName;							// the SQLite table being represented by these objects
 + (NSString *) tableKey;							// the column name of the primary id column, holding the unique row identifier
 + (NSString *) hydrateQuery;						// By default: SELECT * FROM `<tableName>` WHERE `<tableKey>` = object.key
-+ (NSDictionary *) sqlPropertyLinker;				// if a property has a different column name in the table, put it in here
++ (NSDictionary *) sqlPropertyLinker;				// if a property has a different column name in the table, put it in here. The dictionary key must be the name of the table column
 
 - (BOOL) dehydrate:(NSError **)error;
 - (NSDictionary *) dehydrateDictionary;

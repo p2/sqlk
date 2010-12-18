@@ -20,25 +20,23 @@
 @end
 
 
-
 @implementation SQLiteObject
 
-@synthesize key;
 @synthesize db;
+@synthesize key;
 @synthesize hydrated;
 
 
 - (void) dealloc
 {
 	[key release];
-	
 	[super dealloc];
 }
 
 
 + (id) objectOfDB:(FMDatabase *)aDatabase
 {
-	SQLiteObject *o = [[[self class] alloc] init];
+	SQLiteObject *o = [[self class] new];
 	o.db = aDatabase;
 	return [o autorelease];
 }
@@ -50,6 +48,8 @@
 - (void) setFromDictionary:(NSDictionary *)dict
 {
 	if (nil != dict) {
+		[dict retain];
+		
 		NSString *tableKey = [[self class] tableKey];
 		NSDictionary *linker = [[self class] sqlPropertyLinker];
 		
@@ -74,10 +74,12 @@
 					[self setValue:value forKey:aKey];
 				}
 				@catch (NSException *e) {
-					DLog(@"There is no instance variable for key \"%@\"", aKey);
+					//DLog(@"There is no instance variable for key \"%@\"", aKey);
 				}
 			}
 		}
+		
+		[dict release];
 	}
 }
 #pragma mark -
@@ -112,22 +114,19 @@ static NSString *hydrateQuery = nil;
 - (BOOL) hydrate
 {
 	if (!db) {
-		DLog(@"We can't hydrate without database");
+		DLog(@"We can't hydrate %@ without database", self);
 		return NO;
 	}
 	if (!key) {
-		DLog(@"We can't hydrate without primary key");
+		DLog(@"We can't hydrate %@ without primary key", self);
 		return NO;
 	}
 	
-	// fetch first result (hopefully the only one)
+	// fetch first result (hopefully the only one), hydrate and close
 	FMResultSet *res = [db executeQuery:[[self class] hydrateQuery], self.key];
-	[res next];
 	
-	// hydrate and close
-	NSDictionary *result = [res resultDict];
-	self.key = [result objectForKey:[[self class] tableKey]];
-	[self setFromDictionary:result];
+	[res next];
+	[self setFromDictionary:[res resultDict]];
 	[res close];
 	hydrated = YES;
 	
@@ -149,6 +148,7 @@ static NSString *hydrateQuery = nil;
 		DLog(@"We can't dehydrate without a database");
 		return NO;
 	}
+	
 	NSDictionary *dict = [self dehydrateDictionary];
 	if (!dict) {
 		DLog(@"We can't dehydrate without a dehydrate dictionary");
@@ -170,13 +170,13 @@ static NSString *hydrateQuery = nil;
 	}
 	[arguments addObject:self.key];
 	
+	// compose and execute query
 	query = [NSString stringWithFormat:
 			 @"UPDATE `%@` SET %@ WHERE `%@` = ?",
 			 [[self class] tableName],
 			 [properties componentsJoinedByString:@", "],
 			 [[self class] tableKey]];
 	
-	// execute
 	success = [db executeUpdate:query withArgumentsInArray:arguments];
 	
 	
@@ -192,13 +192,20 @@ static NSString *hydrateQuery = nil;
 			[arguments addObject:[dict objectForKey:dKey]];
 		}
 		
+		// explicitly set key if we have one already
+		if (key && ![dict objectForKey:[[self class] tableKey]]) {
+			[properties addObject:[[self class] tableKey]];
+			[qmarks addObject:@"?"];
+			[arguments addObject:key];
+		}
+		
+		// compose and execute query
 		query = [NSString stringWithFormat:
 				 @"INSERT INTO `%@` (%@) VALUES (%@)",
 				 [[self class] tableName],
 				 [properties componentsJoinedByString:@", "],
 				 [qmarks componentsJoinedByString:@", "]];
 		
-		// execute
 		success = [db executeUpdate:query withArgumentsInArray:arguments];
 	}
 	
