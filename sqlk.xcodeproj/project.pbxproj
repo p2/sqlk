@@ -37,7 +37,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = EE2D918612872CFB00C69142 /* fmdb.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = EEC720BE123CE5F8002CE942;
+			remoteGlobalIDString = EE4290EE12B42F870088BD94 /* FMDB */;
 			remoteInfo = FMDB;
 		};
 /* End PBXContainerItemProxy section */

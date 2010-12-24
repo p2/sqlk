@@ -47,34 +47,29 @@
 #pragma mark Value Setter
 - (void) setFromDictionary:(NSDictionary *)dict
 {
+	DLog(@"Subclasses must implement me");
+}
+
+- (void) autoFillFromDictionary:(NSDictionary *)dict
+{
 	if (nil != dict) {
 		[dict retain];
 		
 		NSString *tableKey = [[self class] tableKey];
-		NSDictionary *linker = [[self class] sqlPropertyLinker];
 		
 		// loop all keys and assign appropriately
 		for (NSString *aKey in [dict allKeys]) {
 			id value = [dict objectForKey:aKey];
-			NSString *linkedKey = [linker objectForKey:aKey];
 			
-			if ([aKey isEqualToString:tableKey] || [linkedKey isEqualToString:@"key"]) {
+			if ([aKey isEqualToString:tableKey]) {
 				self.key = value;
 			}
-			else if (linkedKey) {
-				@try {
-					[self setValue:value forKey:linkedKey];
-				}
-				@catch (NSException *e) {
-					DLog(@"There is no instance variable for linked key \"%@\"", linkedKey);
-				}
-			}
-			else {
+			else if ([value isKindOfClass:[[self valueForKey:aKey] class]]) {
 				@try {
 					[self setValue:value forKey:aKey];
 				}
 				@catch (NSException *e) {
-					//DLog(@"There is no instance variable for key \"%@\"", aKey);
+					//DLog(@"Failed to set value %@ for key \"%@\"", value, aKey);
 				}
 			}
 		}
@@ -95,11 +90,6 @@
 + (NSString *) tableKey
 {
 	return @"key";
-}
-
-+ (NSDictionary *) sqlPropertyLinker
-{
-	return nil;
 }
 
 static NSString *hydrateQuery = nil;

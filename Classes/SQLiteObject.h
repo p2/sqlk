@@ -17,7 +17,7 @@
 @interface SQLiteObject : NSObject {
 	FMDatabase *db;
 	
-	id key;					// the value of this object's value for "tableKey" in "tableName"
+	id key;					// the value of this object for "tableKey" in "tableName"
 	BOOL hydrated;
 }
 
@@ -27,12 +27,13 @@
 
 + (id) objectOfDB:(FMDatabase *)aDatabase;
 
-- (BOOL) hydrate;
-- (void) setFromDictionary:(NSDictionary *)dict;
-+ (NSString *) tableName;							// the SQLite table being represented by these objects
-+ (NSString *) tableKey;							// the column name of the primary id column, holding the unique row identifier
-+ (NSString *) hydrateQuery;						// By default: SELECT * FROM `<tableName>` WHERE `<tableKey>` = object.key
-+ (NSDictionary *) sqlPropertyLinker;				// if a property has a different column name in the table, put it in here. The dictionary key must be the name of the table column
+- (BOOL) hydrate;										// calls 'setFromDictionary:' with data fetched from SQLite
+- (void) setFromDictionary:(NSDictionary *)dict;		// OVERRIDE to suit your needs
+- (void) autoFillFromDictionary:(NSDictionary *)dict;	// tries to assign instance variables from dictionary
+
++ (NSString *) tableName;								// the SQLite table being represented by these objects
++ (NSString *) tableKey;								// the column name of the primary id column, holding the unique row identifier
++ (NSString *) hydrateQuery;							// By default: SELECT * FROM `<tableName>` WHERE `<tableKey>` = object.key
 
 - (BOOL) dehydrate:(NSError **)error;
 - (NSDictionary *) dehydrateDictionary;
