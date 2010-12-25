@@ -32,6 +32,7 @@
 - (BOOL) createInDatabase:(FMDatabase *)database error:(NSError **)error;
 - (NSString *) creationQuery;
 
+- (BOOL) hasColumnNamed:(NSString *)columnName;
 - (BOOL) hasColumnWithStructure:(SQLKColumnStructure *)columnStructure error:(NSError **)error;
 
 // The following is especially used by SQLKStructure to compare an instance created from XML to an instance created from the actual database

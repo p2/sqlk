@@ -73,11 +73,8 @@
 				//NSError *myError = nil;
 				
 				// select tables
-				FMResultSet *masterSet = [db executeQuery:@"SELECT * FROM `sqlite_master` WHERE `type` = 'table'"];
-				if ([db hadError]) {
-					errorString = [NSString stringWithFormat:@"SQLite error %d: %@", [db lastErrorCode], [db lastErrorMessage]];
-				}
-				else {
+				FMResultSet *masterSet = [db executeQuery:@"SELECT sql FROM `sqlite_master` WHERE `type` = 'table'"];
+				if (![db hadError]) {
 					NSMutableArray *newTables = [NSMutableArray array];
 					
 					// parse table SQL
@@ -93,6 +90,9 @@
 					if (![db close]) {
 						errorString = [NSString stringWithFormat:@"Could not close database at %@: (%d) %@", dbPath, [db lastErrorCode], [db lastErrorMessage]];
 					}
+				}
+				else {
+					errorString = [NSString stringWithFormat:@"SQLite error %d: %@", [db lastErrorCode], [db lastErrorMessage]];
 				}
 			}
 			else {
@@ -303,6 +303,79 @@
 		*error = [NSError errorWithDomain:NSCocoaErrorDomain code:675 userInfo:userDict];
 	}
 	return NO;
+}
+#pragma mark -
+
+
+
+#pragma mark Table Handling
+- (SQLKTableStructure *) tableWithName:(NSString *)tableName
+{
+	if ([tableName length] < 1) {
+		DLog(@"No tablename given");
+		return nil;
+	}
+	
+	// see whether we already have the table
+	for (SQLKTableStructure *table in tables) {
+		if ([table.name isEqualToString:tableName]) {
+			return table;
+		}
+	}
+	
+	// not yet instantiated, fetch from sqlite
+	if (path) {
+		NSString *errorString = nil;
+		DLog(@"2");
+		
+		// open the database
+		FMDatabase *db = [FMDatabase databaseWithPath:[path path]];
+		if ([db open]) {
+			
+			// fetch table sql
+			NSString *tableStructQuery = [NSString stringWithFormat:
+										  @"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '%@'", tableName];
+			FMResultSet *masterSet = [db executeQuery:tableStructQuery];
+			if (![db hadError]) {
+				[masterSet next];
+				
+				// create a table structure from sql
+				NSString *sql = [masterSet stringForColumn:@"sql"];
+				SQLKTableStructure *tblStructure = [SQLKTableStructure tableFromQuery:sql];
+				if (tblStructure) {
+					
+					// add to tables
+					if ([tables count] > 0) {
+						NSMutableArray *newTables = [NSMutableArray arrayWithArray:tables];
+						[newTables addObject:tblStructure];
+						self.tables = newTables;
+					}
+					else {
+						self.tables = [NSArray arrayWithObject:tblStructure];
+					}
+				}
+				else {
+					errorString = [NSString stringWithFormat:@"Failed to parse sql to table structure: %@", sql];
+				}
+				
+				if (![db close]) {
+					errorString = [NSString stringWithFormat:@"Could not close database at %@: (%d) %@", path, [db lastErrorCode], [db lastErrorMessage]];
+				}
+			}
+			else {
+				errorString = [NSString stringWithFormat:@"SQLite error %d: %@", [db lastErrorCode], [db lastErrorMessage]];
+			}
+		}
+		else {
+			errorString = [NSString stringWithFormat:@"Could not open database at %@: (%d) %@", path, [db lastErrorCode], [db lastErrorMessage]];
+		}
+		
+		// Error reporting
+		if (errorString) {
+			NSLog(@"Error in tableWithName: %@", errorString);
+		}
+	}
+	return nil;
 }
 #pragma mark -
 

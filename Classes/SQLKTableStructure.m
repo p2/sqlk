@@ -41,7 +41,7 @@
 	SQLKTableStructure *t = [self new];
 	if ([aQuery length] > 0) {
 		t.originalQuery = aQuery;
-		DLog(@"Parsing:  %@", aQuery);
+		//DLog(@"Parsing:  %@", aQuery);
 		
 		NSString *errorString = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:aQuery];
@@ -247,6 +247,18 @@
 
 - (BOOL) updateTableAccordingTo:(NSString *)tableDesc dropUnused:(BOOL)drop error:(NSError **)error
 {
+	return NO;
+}
+
+- (BOOL) hasColumnNamed:(NSString *)columnName
+{
+	if (columnName) {
+		for (SQLKColumnStructure *column in columns) {
+			if ([column.name isEqualToString:columnName]) {
+				return YES;
+			}
+		}
+	}
 	return NO;
 }
 

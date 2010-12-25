@@ -36,6 +36,8 @@
 + (SQLKStructure *) structureFromArchive:(NSURL *)archiveUrl;
 + (SQLKStructure *) structureFromDatabase:(NSURL *)dbPath;
 
+- (SQLKTableStructure *) tableWithName:(NSString *)tableName;
+
 - (void) parseStructureFromXML:(NSURL *)xmlUrl error:(NSError **)error;
 
 - (BOOL) createDatabaseAt:(NSURL *)dbPath error:(NSError **)error;

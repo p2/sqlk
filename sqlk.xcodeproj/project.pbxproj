@@ -13,7 +13,7 @@
 		EE2D917812872C8700C69142 /* SQLKColumnStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917012872C8700C69142 /* SQLKColumnStructure.m */; };
 		EE2D917912872C8700C69142 /* SQLKStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917112872C8700C69142 /* SQLKStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE2D917A12872C8700C69142 /* SQLKStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917212872C8700C69142 /* SQLKStructure.m */; };
-		EE2D917B12872C8700C69142 /* SQLKTableStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917312872C8700C69142 /* SQLKTableStructure.h */; };
+		EE2D917B12872C8700C69142 /* SQLKTableStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917312872C8700C69142 /* SQLKTableStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE2D917C12872C8700C69142 /* SQLKTableStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917412872C8700C69142 /* SQLKTableStructure.m */; };
 		EE2D91EB1287301C00C69142 /* libFMDB.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE2D918E12872CFB00C69142 /* libFMDB.a */; };
 /* End PBXBuildFile section */
@@ -37,7 +37,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = EE2D918612872CFB00C69142 /* fmdb.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = EE4290EE12B42F870088BD94 /* FMDB */;
+			remoteGlobalIDString = EE4290EE12B42F870088BD94;
 			remoteInfo = FMDB;
 		};
 /* End PBXContainerItemProxy section */
