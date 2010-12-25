@@ -10,7 +10,10 @@
 //
 
 #import "SQLiteObject.h"
+#import "SQLKStructure.h"
+#import "SQLKTableStructure.h"
 #import <sqlite3.h>
+#import <objc/objc-runtime.h>
 
 
 @interface SQLiteObject ()
@@ -47,30 +50,29 @@
 #pragma mark Value Setter
 - (void) setFromDictionary:(NSDictionary *)dict
 {
-	DLog(@"Subclasses must implement me");
+	[self autofillFrom:dict overwrite:NO];
 }
 
-- (void) autoFillFromDictionary:(NSDictionary *)dict
+- (void) autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite
 {
 	if (nil != dict) {
 		[dict retain];
-		
 		NSString *tableKey = [[self class] tableKey];
 		
 		// loop all keys and assign appropriately
 		for (NSString *aKey in [dict allKeys]) {
 			id value = [dict objectForKey:aKey];
 			
-			if ([aKey isEqualToString:tableKey]) {
-				self.key = value;
+			// handle the key
+			if ([aKey isEqualToString:@"key"] || [aKey isEqualToString:tableKey]) {
+				if (!key) {
+					self.key = value;
+				}
 			}
-			else if ([value isKindOfClass:[[self valueForKey:aKey] class]]) {
-				@try {
-					[self setValue:value forKey:aKey];
-				}
-				@catch (NSException *e) {
-					//DLog(@"Failed to set value %@ for key \"%@\"", value, aKey);
-				}
+			
+			// handle any other ivar
+			else if (overwrite || ![self valueForKey:aKey]) {
+				[self setValue:value forKey:aKey];
 			}
 		}
 		
@@ -116,20 +118,54 @@ static NSString *hydrateQuery = nil;
 	FMResultSet *res = [db executeQuery:[[self class] hydrateQuery], self.key];
 	
 	[res next];
-	[self setFromDictionary:[res resultDict]];
+	[self hydrateFromDictionary:[res resultDict]];
 	[res close];
 	hydrated = YES;
+	[self didHydrateSuccessfully:hydrated];
 	
 	return hydrated;
+}
+
+- (void) hydrateFromDictionary:(NSDictionary *)dict
+{
+	[self autofillFrom:dict overwrite:YES];
+}
+
+- (void) didHydrateSuccessfully:(BOOL)success
+{
 }
 #pragma mark -
 
 
 
 #pragma mark Dehydrating
-- (NSDictionary *) dehydrateDictionary
+- (NSMutableDictionary *) ivarDictionary
 {
-	return nil;
+	NSMutableDictionary *ivarDict = nil;
+	
+	// get instance variables
+	unsigned int numVars, i;
+	Ivar *ivars = class_copyIvarList([self class], &numVars);
+	
+	if (numVars > 0) {
+		ivarDict = [NSMutableDictionary dictionaryWithCapacity:numVars];
+		
+		for (i = 0; i < numVars; i++) {
+			Ivar var = ivars[i];
+			const char* name = ivar_getName(var);
+			NSString *theKey = [NSString stringWithUTF8String:name];
+			
+			// insert value into dictionary
+			id value = [self valueForKey:theKey];
+			if (!value) {
+				value = [NSNull null];
+			}
+			[ivarDict setObject:value forKey:theKey];
+		}
+	}
+	
+	free(ivars);
+	return ivarDict;
 }
 
 - (BOOL) dehydrate:(NSError **)error
@@ -138,27 +174,39 @@ static NSString *hydrateQuery = nil;
 		DLog(@"We can't dehydrate without a database");
 		return NO;
 	}
-	
-	NSDictionary *dict = [self dehydrateDictionary];
-	if (!dict) {
-		DLog(@"We can't dehydrate without a dehydrate dictionary");
+	if (!key) {
+		DLog(@"We can't dehydrate without a primary key");
 		return NO;
 	}
 	
-	// prepare to rock
-	BOOL success = NO;
-	NSString *query = nil;
+	NSDictionary *dict = [self ivarDictionary];
+	if (!dict) {
+		DLog(@"We can't dehydrate without an ivar dictionary");
+		return NO;
+	}
+	
+	// check the table fields at our disposal
+	SQLKStructure *ourDB = [SQLKStructure structureFromDatabase:[NSURL fileURLWithPath:[db databasePath]]];
+	SQLKTableStructure *ourTable = [ourDB tableWithName:[[self class] tableName]];
+	if (!ourTable) {
+		DLog(@"Unable to determine the table structure for table named %@ in %@. Trying to continue.", [[self class] tableName], db);
+	}
 	
 	
 	// ** try to update
+	BOOL success = NO;
+	NSString *query = nil;
+	
 	NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[dict count]];
 	NSMutableArray *arguments = [NSMutableArray arrayWithCapacity:[dict count]];
 	
-	for (NSString *dKey in [dict allKeys]) {
-		[properties addObject:[NSString stringWithFormat:@"%@ = ?", dKey]];
-		[arguments addObject:[dict objectForKey:dKey]];
+	for (NSString *columnKey in [dict allKeys]) {
+		if (!ourTable || [ourTable hasColumnNamed:columnKey]) {
+			[properties addObject:[NSString stringWithFormat:@"%@ = ?", columnKey]];
+			[arguments addObject:[dict objectForKey:columnKey]];
+		}
 	}
-	[arguments addObject:self.key];
+	[arguments addObject:key];
 	
 	// compose and execute query
 	query = [NSString stringWithFormat:
@@ -170,16 +218,18 @@ static NSString *hydrateQuery = nil;
 	success = [db executeUpdate:query withArgumentsInArray:arguments];
 	
 	
-	// ** insert if needed
-	if ([db numChanges] < 1) {
+	// ** insert if needed (success is YES if the query succeeded, no matter how many changes occurred)
+	if (success && [db numChanges] < 1) {
 		[properties removeAllObjects];
 		[arguments removeAllObjects];
 		NSMutableArray *qmarks = [NSMutableArray arrayWithCapacity:[dict count]];
 		
-		for (NSString *dKey in [dict allKeys]) {
-			[properties addObject:dKey];
-			[qmarks addObject:@"?"];
-			[arguments addObject:[dict objectForKey:dKey]];
+		for (NSString *columnKey in [dict allKeys]) {
+			if (!ourTable || [ourTable hasColumnNamed:columnKey]) {
+				[properties addObject:columnKey];
+				[qmarks addObject:@"?"];
+				[arguments addObject:[dict objectForKey:columnKey]];
+			}
 		}
 		
 		// explicitly set key if we have one already
@@ -200,19 +250,37 @@ static NSString *hydrateQuery = nil;
 	}
 	
 	// error?
-	if (!success && NULL != error) {
+	if (!success) {
 		NSString *errorString = [db hadError] ? [db lastErrorMessage] : @"Unknown dehydrate error";
-		NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
-		*error = [NSError errorWithDomain:NSCocoaErrorDomain code:676 userInfo:userDict];
+		DLog(@"dehydrate failed: %@", errorString);
+		if (NULL != error) {
+			NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
+			*error = [NSError errorWithDomain:NSCocoaErrorDomain code:676 userInfo:userDict];
+		}
 	}
 	
+	[self didDehydrateSuccessfully:success];
+	
 	return success;
+}
+
+- (void) didDehydrateSuccessfully:(BOOL)success
+{
 }
 #pragma mark -
 
 
 
 #pragma mark Utilities
+- (id) valueForUndefinedKey:(NSString *)aKey
+{
+	return nil;
+}
+
+- (void) setValue:(id)value forUndefinedKey:(NSString *)aKey
+{
+}
+
 - (BOOL) isEqual:(id)object
 {
 	if ([object isKindOfClass:[self class]]) {
