@@ -18,12 +18,12 @@
 @interface SQLiteObject : NSObject {
 	FMDatabase *db;
 	
-	id<NSObject, NSCopying> key;					// the value of this object for "tableKey" in "tableName"
+	id<NSObject, NSCopying> object_id;					// the value of this object for "tableKey" in "tableName" (the primary key)
 	BOOL hydrated;
 }
 
 @property (nonatomic, assign) FMDatabase *db;
-@property (nonatomic, retain) id key;
+@property (nonatomic, retain) id object_id;
 @property (nonatomic, readonly, assign, getter=isHydrated) BOOL hydrated;
 
 + (id) objectOfDB:(FMDatabase *)aDatabase;

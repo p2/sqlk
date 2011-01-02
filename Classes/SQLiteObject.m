@@ -15,6 +15,8 @@
 #import <sqlite3.h>
 #import <objc/objc-runtime.h>
 
+#define TIMING_DEBUG 0
+
 
 @interface SQLiteObject ()
 
@@ -26,13 +28,13 @@
 @implementation SQLiteObject
 
 @synthesize db;
-@synthesize key;
+@synthesize object_id;
 @synthesize hydrated;
 
 
 - (void) dealloc
 {
-	[key release];
+	[object_id release];
 	[super dealloc];
 }
 
@@ -64,9 +66,9 @@
 			id value = [dict objectForKey:aKey];
 			
 			// handle the key
-			if ([aKey isEqualToString:@"key"] || [aKey isEqualToString:tableKey]) {
-				if (!key) {
-					self.key = value;
+			if ([aKey isEqualToString:tableKey]) {
+				if (!object_id) {
+					self.object_id = value;
 				}
 			}
 			
@@ -109,13 +111,13 @@ static NSString *hydrateQuery = nil;
 		DLog(@"We can't hydrate %@ without database", self);
 		return NO;
 	}
-	if (!key) {
+	if (!object_id) {
 		DLog(@"We can't hydrate %@ without primary key", self);
 		return NO;
 	}
 	
 	// fetch first result (hopefully the only one), hydrate and close
-	FMResultSet *res = [db executeQuery:[[self class] hydrateQuery], self.key];
+	FMResultSet *res = [db executeQuery:[[self class] hydrateQuery], self.object_id];
 	
 	[res next];
 	[self hydrateFromDictionary:[res resultDict]];
@@ -170,11 +172,18 @@ static NSString *hydrateQuery = nil;
 
 - (BOOL) dehydrate:(NSError **)error
 {
+#if TIMING_DEBUG
+	mach_timebase_info_data_t timebase;
+	mach_timebase_info(&timebase);
+	double ticksToNanoseconds = (double)timebase.numer / timebase.denom;
+	uint64_t startTime = mach_absolute_time();
+#endif
+	
 	if (!db) {
 		DLog(@"We can't dehydrate without a database");
 		return NO;
 	}
-	if (!key) {
+	if (!object_id) {
 		DLog(@"We can't dehydrate without a primary key");
 		return NO;
 	}
@@ -206,9 +215,9 @@ static NSString *hydrateQuery = nil;
 			[arguments addObject:[dict objectForKey:columnKey]];
 		}
 	}
-	[arguments addObject:key];
 	
 	// compose and execute query
+	[arguments addObject:object_id];		// to satisfy the WHERE condition placeholder
 	query = [NSString stringWithFormat:
 			 @"UPDATE `%@` SET %@ WHERE `%@` = ?",
 			 [[self class] tableName],
@@ -232,11 +241,11 @@ static NSString *hydrateQuery = nil;
 			}
 		}
 		
-		// explicitly set key if we have one already
-		if (key && ![dict objectForKey:[[self class] tableKey]]) {
+		// explicitly set primary key if we have one already
+		if (object_id && ![dict objectForKey:[[self class] tableKey]]) {
 			[properties addObject:[[self class] tableKey]];
 			[qmarks addObject:@"?"];
-			[arguments addObject:key];
+			[arguments addObject:object_id];
 		}
 		
 		// compose and execute query
@@ -261,6 +270,11 @@ static NSString *hydrateQuery = nil;
 	
 	[self didDehydrateSuccessfully:success];
 	
+#if TIMING_DEBUG
+	uint64_t elapsedTime = mach_absolute_time() - startTime;
+	double elapsedTimeInNanoseconds = elapsedTime * ticksToNanoseconds;
+	NSLog(@"dehydrate %@: %f millisec", self, elapsedTimeInNanoseconds / 1000000);
+#endif
 	return success;
 }
 
@@ -274,19 +288,21 @@ static NSString *hydrateQuery = nil;
 #pragma mark Utilities
 - (id) valueForUndefinedKey:(NSString *)aKey
 {
+	// don't throw an error
 	return nil;
 }
 
 - (void) setValue:(id)value forUndefinedKey:(NSString *)aKey
 {
+	// don't throw an error
 }
 
 - (BOOL) isEqual:(id)object
 {
 	if ([object isKindOfClass:[self class]]) {
-		id otherKey = [(SQLiteObject *)object key];
+		id otherKey = [(SQLiteObject *)object object_id];
 		if (otherKey) {
-			return [key isEqual:otherKey];
+			return [object_id isEqual:otherKey];
 		}
 	}
 	return NO;
@@ -295,7 +311,7 @@ static NSString *hydrateQuery = nil;
 
 - (NSString *) description
 {
-	return [NSString stringWithFormat:@"%@ <0x%x> '%@'", NSStringFromClass([self class]), self, key];
+	return [NSString stringWithFormat:@"%@ <0x%x> '%@'", NSStringFromClass([self class]), self, object_id];
 }
 
 
