@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 @class SQLKTableStructure;
+@class FMDatabase;
 
 
 @interface SQLKStructure : NSObject <NSCoding, NSXMLParserDelegate> {
@@ -40,7 +41,8 @@
 
 - (void) parseStructureFromXML:(NSURL *)xmlUrl error:(NSError **)error;
 
-- (BOOL) createDatabaseAt:(NSURL *)dbPath error:(NSError **)error;
+- (FMDatabase *) createDatabaseAt:(NSURL *)dbPath error:(NSError **)error;
+- (FMDatabase *) createMemoryDatabaseWithError:(NSError **)error;
 - (BOOL) isEqualToDb:(SQLKStructure *)otherDB error:(NSError **)error;
 - (BOOL) updateDatabaseAt:(NSURL *)dbPath allowToDropColumns:(BOOL)dropCol tables:(BOOL)dropTables error:(NSError **)error;
 

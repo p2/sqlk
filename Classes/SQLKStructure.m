@@ -134,7 +134,7 @@
 
 
 #pragma mark Creating a database
-- (BOOL) createDatabaseAt:(NSURL *)dbPath error:(NSError **)error
+- (FMDatabase *) createDatabaseAt:(NSURL *)dbPath error:(NSError **)error
 {
 	NSString *errorString = nil;
 	
@@ -164,17 +164,17 @@
 								*error = [NSError errorWithDomain:NSCocoaErrorDomain code:667 userInfo:userDict];
 							}
 							[db close];
-							return NO;
+							return nil;
 						}
 					}
 					[db commit];
 					// ****
 					
 					if ([db close]) {
-						return YES;
+						return db;
 					}
 					
-					errorString = [NSString stringWithFormat:@"Could not close database at %@: (%d) %@", dbPath, [db lastErrorCode], [db lastErrorMessage]];
+					errorString = [NSString stringWithFormat:@"Could not close memory database at: (%d) %@", [db lastErrorCode], [db lastErrorMessage]];
 				}
 				else {
 					errorString = [NSString stringWithFormat:@"Could not open database at %@: (%d) %@", dbPath, [db lastErrorCode], [db lastErrorMessage]];
@@ -200,7 +200,59 @@
 		}
 	}
 	
-	return NO;
+	return nil;
+}
+
+- (FMDatabase *) createMemoryDatabaseWithError:(NSError **)error
+{
+	NSString *errorString = nil;
+	
+	// loop tables
+	if ([tables count] > 0) {
+		
+		// open the database in memory
+		FMDatabase *db = [FMDatabase databaseWithPath:nil];
+		if ([db open]) {
+			NSError *myError = nil;
+			
+			// **** go ahead, make my day errrh... tables!
+			[db beginTransaction];
+			for (SQLKTableStructure *table in tables) {
+				if (![table createInDatabase:db error:&myError]) {
+					[db commit];
+					[db close];
+					errorString = [NSString stringWithFormat:@"Failed to create table \"%@\" in memory database: %@", table.name, [myError userInfo]];
+					DLog(@"Error creating db: %@", errorString);
+					if (NULL != error) {
+						NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
+						*error = [NSError errorWithDomain:NSCocoaErrorDomain code:667 userInfo:userDict];
+					}
+					[db close];
+					return nil;
+				}
+			}
+			[db commit];
+			// ****
+			
+			return db;
+		}
+		else {
+			errorString = [NSString stringWithFormat:@"Could not open memory database at: (%d) %@", [db lastErrorCode], [db lastErrorMessage]];
+		}
+	}
+	else {
+		errorString = @"We first need tables in order to create a database";
+	}
+	
+	if (errorString) {
+		DLog(@"Error: %@", errorString);
+		if (NULL != error) {
+			NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
+			*error = [NSError errorWithDomain:NSCocoaErrorDomain code:666 userInfo:userDict];
+		}
+	}
+	
+	return nil;
 }
 #pragma mark -
 
