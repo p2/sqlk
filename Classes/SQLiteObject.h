@@ -26,6 +26,7 @@
 @property (nonatomic, retain) id object_id;
 @property (nonatomic, readonly, assign, getter=isHydrated) BOOL hydrated;
 
++ (id) object;
 + (id) objectOfDB:(FMDatabase *)aDatabase;
 
 - (BOOL) hydrate;										// calls 'hydrateFromDictionary:' with data fetched from SQLite

@@ -39,6 +39,11 @@
 }
 
 
++ (id) object
+{
+	return [[[self class] new] autorelease];
+}
+
 + (id) objectOfDB:(FMDatabase *)aDatabase
 {
 	SQLiteObject *o = [[self class] new];
@@ -57,7 +62,7 @@
 
 - (void) autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite
 {
-	if (nil != dict) {
+	if ([dict count] > 0) {
 		[dict retain];
 		NSString *tableKey = [[self class] tableKey];
 		
@@ -70,10 +75,16 @@
 				if (!object_id) {
 					self.object_id = value;
 				}
+				else if (overwrite) {
+					if (![object_id isEqual:value]) {
+						DLog(@"We're overwriting the object with a different key!");
+						self.object_id = value;
+					}
+				}
 			}
 			
 			// handle any other ivar
-			else if (overwrite || ![self valueForKey:aKey]) {
+			else {
 				[self setValue:value forKey:aKey];
 			}
 		}
@@ -285,7 +296,9 @@ static NSString *hydrateQuery = nil;
 
 
 
-#pragma mark Utilities
+#pragma mark Key-Value Overrides
+// TODO: Implement class-checking setValue:forKey:
+
 - (id) valueForUndefinedKey:(NSString *)aKey
 {
 	// don't throw an error
@@ -296,9 +309,17 @@ static NSString *hydrateQuery = nil;
 {
 	// don't throw an error
 }
+#pragma mark -
 
+
+
+#pragma mark Utilities
 - (BOOL) isEqual:(id)object
 {
+	if (self == object) {
+		return YES;
+	}
+	
 	if ([object isKindOfClass:[self class]]) {
 		id otherKey = [(SQLiteObject *)object object_id];
 		if (otherKey) {
