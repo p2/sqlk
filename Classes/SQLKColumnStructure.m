@@ -43,7 +43,7 @@
 #pragma mark Creating and Verifying
 - (NSString *) creationQuery
 {
-	NSMutableString *query = [NSMutableString stringWithFormat:@"%@ %@", name, type];
+	NSMutableString *query = [NSMutableString stringWithFormat:@"%@ %@", name, [self fullType]];
 	if (isPrimaryKey) {
 		[query appendString:@" PRIMARY KEY"];
 	}
@@ -89,6 +89,14 @@
 
 
 #pragma mark Utilities
+- (NSString *) fullType
+{
+	if ([@"int" isEqualToString:type] || [@"INT" isEqualToString:type]) {
+		self.type = @"INTEGER";
+	}
+	return type;
+}
+
 - (NSString *) description
 {
 	return [NSString stringWithFormat:@"%@ <0x%x> `%@` %@, primary: %i, unique: %i, default: %@", NSStringFromClass([self class]), self, name, type, isPrimaryKey, isUnique, (defaultNeedsQuotes ? [NSString stringWithFormat:@"\"%@\"", defaultString] : defaultString)];

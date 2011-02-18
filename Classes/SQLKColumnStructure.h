@@ -38,5 +38,7 @@
 - (NSString *) creationQuery;													// a query string representing this column, created from its properties
 - (BOOL) isEqualToColumn:(SQLKColumnStructure *)oc error:(NSError **)error;		// returns YES if creationQuery of both columns are the same
 
+- (NSString *) fullType;
+
 
 @end
