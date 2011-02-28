@@ -174,9 +174,9 @@
 		
 		// check name
 		if ([name isEqualToString:ot.name]) {
+			NSMutableArray *existingColumns = [columns mutableCopy];
 			
 			// compare columns
-			NSMutableArray *existingColumns = [columns mutableCopy];
 			if ([existingColumns count] > 0) {
 				NSMutableArray *errors = [NSMutableArray array];
 				
@@ -224,6 +224,8 @@
 				DLog(@"Note: These tables don't have any columns");
 				return YES;
 			}
+			
+			[existingColumns release];
 		}
 		//else {
 		//	errorString = @"Table names don't match";
