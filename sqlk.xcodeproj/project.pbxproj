@@ -3,42 +3,65 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		AA747D9F0F9514B9006C5449 /* sqlk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		EE075417133B49B40027F2F7 /* FMDBMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE075416133B49B40027F2F7 /* FMDBMac.framework */; };
 		EE2D917712872C8700C69142 /* SQLKColumnStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */; };
 		EE2D917812872C8700C69142 /* SQLKColumnStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917012872C8700C69142 /* SQLKColumnStructure.m */; };
 		EE2D917912872C8700C69142 /* SQLKStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917112872C8700C69142 /* SQLKStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE2D917A12872C8700C69142 /* SQLKStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917212872C8700C69142 /* SQLKStructure.m */; };
 		EE2D917B12872C8700C69142 /* SQLKTableStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917312872C8700C69142 /* SQLKTableStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE2D917C12872C8700C69142 /* SQLKTableStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917412872C8700C69142 /* SQLKTableStructure.m */; };
-		EE2D91EB1287301C00C69142 /* libFMDB.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE2D918E12872CFB00C69142 /* libFMDB.a */; };
+		EEE4986D133AB93800FEDD45 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE4986C133AB93800FEDD45 /* Cocoa.framework */; };
+		EEE49877133AB93800FEDD45 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EEE49875133AB93800FEDD45 /* InfoPlist.strings */; };
+		EEE498A7133ABA4600FEDD45 /* SQLKStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917112872C8700C69142 /* SQLKStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EEE498A8133ABA4B00FEDD45 /* SQLKStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917212872C8700C69142 /* SQLKStructure.m */; };
+		EEE498A9133ABA4E00FEDD45 /* SQLKTableStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917312872C8700C69142 /* SQLKTableStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EEE498AA133ABA5200FEDD45 /* SQLKTableStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917412872C8700C69142 /* SQLKTableStructure.m */; };
+		EEE498AB133ABA5500FEDD45 /* SQLKColumnStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */; };
+		EEE498AC133ABA5500FEDD45 /* SQLKColumnStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917012872C8700C69142 /* SQLKColumnStructure.m */; };
+		EEE498AD133ABA6000FEDD45 /* sqlk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		EE2D918B12872CFB00C69142 /* PBXContainerItemProxy */ = {
+		EE1F207C133A73B00080BE90 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = EE2D918612872CFB00C69142 /* fmdb.xcodeproj */;
+			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
 			remoteInfo = fmdb;
 		};
-		EE2D918D12872CFB00C69142 /* PBXContainerItemProxy */ = {
+		EE1F207E133A73B00080BE90 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = EE2D918612872CFB00C69142 /* fmdb.xcodeproj */;
+			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = EEC720BF123CE5F8002CE942;
+			remoteGlobalIDString = EE4290EF12B42F870088BD94;
 			remoteInfo = FMDB;
 		};
-		EE2D918F12872D0800C69142 /* PBXContainerItemProxy */ = {
+		EE495562133A778E006A3F7D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = EE2D918612872CFB00C69142 /* fmdb.xcodeproj */;
+			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = EE4290EE12B42F870088BD94;
 			remoteInfo = FMDB;
+		};
+		EEE49897133AB9A500FEDD45 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EEE49884133AB9A400FEDD45;
+			remoteInfo = FMDBMac;
+		};
+		EEE4989C133AB9B900FEDD45 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EEE49883133AB9A400FEDD45;
+			remoteInfo = FMDBMac;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -46,6 +69,8 @@
 		AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlk_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libsqlk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsqlk.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE075416133B49B40027F2F7 /* FMDBMac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FMDBMac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = fmdb.xcodeproj; path = ../fmdb/fmdb.xcodeproj; sourceTree = "<group>"; };
 		EE2D916D12872C8700C69142 /* SQLiteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteObject.h; sourceTree = "<group>"; };
 		EE2D916E12872C8700C69142 /* SQLiteObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteObject.m; sourceTree = "<group>"; };
 		EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKColumnStructure.h; sourceTree = "<group>"; };
@@ -54,7 +79,14 @@
 		EE2D917212872C8700C69142 /* SQLKStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLKStructure.m; sourceTree = "<group>"; };
 		EE2D917312872C8700C69142 /* SQLKTableStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKTableStructure.h; sourceTree = "<group>"; };
 		EE2D917412872C8700C69142 /* SQLKTableStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLKTableStructure.m; sourceTree = "<group>"; };
-		EE2D918612872CFB00C69142 /* fmdb.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = fmdb.xcodeproj; path = ../fmdb/fmdb.xcodeproj; sourceTree = SOURCE_ROOT; };
+		EEE4986B133AB93800FEDD45 /* SQLiteKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQLiteKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEE4986C133AB93800FEDD45 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		EEE4986F133AB93800FEDD45 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		EEE49870133AB93800FEDD45 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		EEE49871133AB93800FEDD45 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EEE49874133AB93800FEDD45 /* SQLiteKit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SQLiteKit-Info.plist"; sourceTree = "<group>"; };
+		EEE49876133AB93800FEDD45 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EEE49878133AB93800FEDD45 /* SQLiteKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SQLiteKit-Prefix.pch"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,7 +95,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
-				EE2D91EB1287301C00C69142 /* libFMDB.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EEE49867133AB93800FEDD45 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE075417133B49B40027F2F7 /* FMDBMac.framework in Frameworks */,
+				EEE4986D133AB93800FEDD45 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				D2AAC07E0554694100DB518D /* libsqlk.a */,
+				EEE4986B133AB93800FEDD45 /* SQLiteKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,9 +122,11 @@
 		0867D691FE84028FC02AAC07 /* sqlk */ = {
 			isa = PBXGroup;
 			children = (
-				EE2D918612872CFB00C69142 /* fmdb.xcodeproj */,
+				EE075416133B49B40027F2F7 /* FMDBMac.framework */,
+				EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
+				EEE49872133AB93800FEDD45 /* SQLiteKit */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
@@ -94,6 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
+				EEE4986C133AB93800FEDD45 /* Cocoa.framework */,
+				EEE4986E133AB93800FEDD45 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -121,13 +166,42 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
-		EE2D918712872CFB00C69142 /* Products */ = {
+		EE1F2075133A73B00080BE90 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EE2D918C12872CFB00C69142 /* fmdb */,
-				EE2D918E12872CFB00C69142 /* libFMDB.a */,
+				EE1F207D133A73B00080BE90 /* fmdb */,
+				EE1F207F133A73B00080BE90 /* libFMDB.a */,
+				EEE49898133AB9A500FEDD45 /* FMDBMac.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		EEE4986E133AB93800FEDD45 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EEE4986F133AB93800FEDD45 /* AppKit.framework */,
+				EEE49870133AB93800FEDD45 /* CoreData.framework */,
+				EEE49871133AB93800FEDD45 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		EEE49872133AB93800FEDD45 /* SQLiteKit */ = {
+			isa = PBXGroup;
+			children = (
+				EEE49873133AB93800FEDD45 /* Supporting Files */,
+			);
+			path = SQLiteKit;
+			sourceTree = "<group>";
+		};
+		EEE49873133AB93800FEDD45 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EEE49874133AB93800FEDD45 /* SQLiteKit-Info.plist */,
+				EEE49875133AB93800FEDD45 /* InfoPlist.strings */,
+				EEE49878133AB93800FEDD45 /* SQLiteKit-Prefix.pch */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +215,17 @@
 				EE2D917712872C8700C69142 /* SQLKColumnStructure.h in Headers */,
 				EE2D917912872C8700C69142 /* SQLKStructure.h in Headers */,
 				EE2D917B12872C8700C69142 /* SQLKTableStructure.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EEE49868133AB93800FEDD45 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EEE498A7133ABA4600FEDD45 /* SQLKStructure.h in Headers */,
+				EEE498A9133ABA4E00FEDD45 /* SQLKTableStructure.h in Headers */,
+				EEE498AB133ABA5500FEDD45 /* SQLKColumnStructure.h in Headers */,
+				EEE498AD133ABA6000FEDD45 /* sqlk_Prefix.pch in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,12 +243,31 @@
 			buildRules = (
 			);
 			dependencies = (
-				EE2D919012872D0800C69142 /* PBXTargetDependency */,
+				EE495563133A778E006A3F7D /* PBXTargetDependency */,
 			);
 			name = sqlk;
 			productName = sqlk;
 			productReference = D2AAC07E0554694100DB518D /* libsqlk.a */;
 			productType = "com.apple.product-type.library.static";
+		};
+		EEE4986A133AB93800FEDD45 /* SQLiteKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EEE49879133AB93800FEDD45 /* Build configuration list for PBXNativeTarget "SQLiteKit" */;
+			buildPhases = (
+				EEE49866133AB93800FEDD45 /* Sources */,
+				EEE49867133AB93800FEDD45 /* Frameworks */,
+				EEE49868133AB93800FEDD45 /* Headers */,
+				EEE49869133AB93800FEDD45 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EEE4989D133AB9B900FEDD45 /* PBXTargetDependency */,
+			);
+			name = SQLiteKit;
+			productName = SQLiteKit;
+			productReference = EEE4986B133AB93800FEDD45 /* SQLiteKit.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -171,7 +275,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "sqlk" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -179,39 +283,59 @@
 				Japanese,
 				French,
 				German,
+				en,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* sqlk */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = EE2D918712872CFB00C69142 /* Products */;
-					ProjectRef = EE2D918612872CFB00C69142 /* fmdb.xcodeproj */;
+					ProductGroup = EE1F2075133A73B00080BE90 /* Products */;
+					ProjectRef = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
 				},
 			);
 			projectRoot = "";
 			targets = (
 				D2AAC07D0554694100DB518D /* sqlk */,
+				EEE4986A133AB93800FEDD45 /* SQLiteKit */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		EE2D918C12872CFB00C69142 /* fmdb */ = {
+		EE1F207D133A73B00080BE90 /* fmdb */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
 			path = fmdb;
-			remoteRef = EE2D918B12872CFB00C69142 /* PBXContainerItemProxy */;
+			remoteRef = EE1F207C133A73B00080BE90 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		EE2D918E12872CFB00C69142 /* libFMDB.a */ = {
+		EE1F207F133A73B00080BE90 /* libFMDB.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libFMDB.a;
-			remoteRef = EE2D918D12872CFB00C69142 /* PBXContainerItemProxy */;
+			remoteRef = EE1F207E133A73B00080BE90 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		EEE49898133AB9A500FEDD45 /* FMDBMac.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FMDBMac.framework;
+			remoteRef = EEE49897133AB9A500FEDD45 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EEE49869133AB93800FEDD45 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EEE49877133AB93800FEDD45 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D2AAC07B0554694100DB518D /* Sources */ = {
@@ -224,21 +348,47 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EEE49866133AB93800FEDD45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EEE498A8133ABA4B00FEDD45 /* SQLKStructure.m in Sources */,
+				EEE498AA133ABA5200FEDD45 /* SQLKTableStructure.m in Sources */,
+				EEE498AC133ABA5500FEDD45 /* SQLKColumnStructure.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		EE2D919012872D0800C69142 /* PBXTargetDependency */ = {
+		EE495563133A778E006A3F7D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = FMDB;
-			targetProxy = EE2D918F12872D0800C69142 /* PBXContainerItemProxy */;
+			targetProxy = EE495562133A778E006A3F7D /* PBXContainerItemProxy */;
+		};
+		EEE4989D133AB9B900FEDD45 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FMDBMac;
+			targetProxy = EEE4989C133AB9B900FEDD45 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EEE49875133AB93800FEDD45 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EEE49876133AB93800FEDD45 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1DEB921F08733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/sqlk.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -248,29 +398,33 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = sqlk_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = sqlk;
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
 		1DEB922008733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				DSTROOT = /tmp/sqlk.dst;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = sqlk_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = sqlk;
+				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -278,22 +432,79 @@
 				OTHER_CFLAGS = "-DDEBUG";
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
-				USER_HEADER_SEARCH_PATHS = "../fmdb//**";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+				SYMROOT = "~/Library/Developer/Xcode/DerivedData";
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = Debug;
 		};
 		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
-				USER_HEADER_SEARCH_PATHS = "../fmdb//**";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+				SYMROOT = "~/Library/Developer/Xcode/DerivedData";
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
+			};
+			name = Release;
+		};
+		EEE4987A133AB93800FEDD45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SQLiteKit/SQLiteKit-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "SQLiteKit/SQLiteKit-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/FMDBMac.framework/Headers/**";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		EEE4987B133AB93800FEDD45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SQLiteKit/SQLiteKit-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "SQLiteKit/SQLiteKit-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/FMDBMac.framework/Headers/**";
+				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
 		};
@@ -314,6 +525,15 @@
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,
 				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EEE49879133AB93800FEDD45 /* Build configuration list for PBXNativeTarget "SQLiteKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EEE4987A133AB93800FEDD45 /* Debug */,
+				EEE4987B133AB93800FEDD45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

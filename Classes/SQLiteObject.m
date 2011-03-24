@@ -85,6 +85,9 @@
 			
 			// handle any other ivar
 			else {
+				if ([NSNull null] == value) {
+					value = nil;
+				}
 				[self setValue:value forKey:aKey];
 			}
 		}
@@ -239,7 +242,7 @@ static NSString *hydrateQuery = nil;
 	
 	
 	// ** insert if needed (success is YES if the query succeeded, no matter how many changes occurred)
-	if (success && [db numChanges] < 1) {
+	if (success && [db changes] < 1) {
 		[properties removeAllObjects];
 		[arguments removeAllObjects];
 		NSMutableArray *qmarks = [NSMutableArray arrayWithCapacity:[dict count]];
