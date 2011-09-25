@@ -9,13 +9,24 @@
 /* Begin PBXBuildFile section */
 		AA747D9F0F9514B9006C5449 /* sqlk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
-		EE075417133B49B40027F2F7 /* FMDBMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE075416133B49B40027F2F7 /* FMDBMac.framework */; };
 		EE2D917712872C8700C69142 /* SQLKColumnStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */; };
 		EE2D917812872C8700C69142 /* SQLKColumnStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917012872C8700C69142 /* SQLKColumnStructure.m */; };
 		EE2D917912872C8700C69142 /* SQLKStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917112872C8700C69142 /* SQLKStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE2D917A12872C8700C69142 /* SQLKStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917212872C8700C69142 /* SQLKStructure.m */; };
 		EE2D917B12872C8700C69142 /* SQLKTableStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917312872C8700C69142 /* SQLKTableStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE2D917C12872C8700C69142 /* SQLKTableStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917412872C8700C69142 /* SQLKTableStructure.m */; };
+		EEB659E7142F8122005B423C /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB659E1142F8122005B423C /* FMDatabaseAdditions.h */; };
+		EEB659E8142F8122005B423C /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB659E1142F8122005B423C /* FMDatabaseAdditions.h */; };
+		EEB659E9142F8122005B423C /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB659E2142F8122005B423C /* FMDatabaseAdditions.m */; };
+		EEB659EA142F8122005B423C /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB659E2142F8122005B423C /* FMDatabaseAdditions.m */; };
+		EEB659EB142F8122005B423C /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB659E3142F8122005B423C /* FMDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EEB659EC142F8122005B423C /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB659E3142F8122005B423C /* FMDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EEB659ED142F8122005B423C /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB659E4142F8122005B423C /* FMDatabase.m */; };
+		EEB659EE142F8122005B423C /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB659E4142F8122005B423C /* FMDatabase.m */; };
+		EEB659EF142F8122005B423C /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB659E5142F8122005B423C /* FMResultSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EEB659F0142F8122005B423C /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB659E5142F8122005B423C /* FMResultSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EEB659F1142F8122005B423C /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB659E6142F8122005B423C /* FMResultSet.m */; };
+		EEB659F2142F8122005B423C /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB659E6142F8122005B423C /* FMResultSet.m */; };
 		EEE4986D133AB93800FEDD45 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE4986C133AB93800FEDD45 /* Cocoa.framework */; };
 		EEE49877133AB93800FEDD45 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EEE49875133AB93800FEDD45 /* InfoPlist.strings */; };
 		EEE498A7133ABA4600FEDD45 /* SQLKStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917112872C8700C69142 /* SQLKStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -28,40 +39,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		EE1F207C133A73B00080BE90 /* PBXContainerItemProxy */ = {
+		EEB659D7142F7F55005B423C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
+			containerPortal = EEB659CE142F7F54005B423C /* fmdb.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
 			remoteInfo = fmdb;
 		};
-		EE1F207E133A73B00080BE90 /* PBXContainerItemProxy */ = {
+		EEB659D9142F7F55005B423C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
+			containerPortal = EEB659CE142F7F54005B423C /* fmdb.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = EE4290EF12B42F870088BD94;
 			remoteInfo = FMDB;
-		};
-		EE495562133A778E006A3F7D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = EE4290EE12B42F870088BD94;
-			remoteInfo = FMDB;
-		};
-		EEE49897133AB9A500FEDD45 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EEE49884133AB9A400FEDD45;
-			remoteInfo = FMDBMac;
-		};
-		EEE4989C133AB9B900FEDD45 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = EEE49883133AB9A400FEDD45;
-			remoteInfo = FMDBMac;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -69,8 +59,6 @@
 		AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlk_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libsqlk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsqlk.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		EE075416133B49B40027F2F7 /* FMDBMac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FMDBMac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = fmdb.xcodeproj; path = ../fmdb/fmdb.xcodeproj; sourceTree = "<group>"; };
 		EE2D916D12872C8700C69142 /* SQLiteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteObject.h; sourceTree = "<group>"; };
 		EE2D916E12872C8700C69142 /* SQLiteObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteObject.m; sourceTree = "<group>"; };
 		EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKColumnStructure.h; sourceTree = "<group>"; };
@@ -79,6 +67,13 @@
 		EE2D917212872C8700C69142 /* SQLKStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLKStructure.m; sourceTree = "<group>"; };
 		EE2D917312872C8700C69142 /* SQLKTableStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKTableStructure.h; sourceTree = "<group>"; };
 		EE2D917412872C8700C69142 /* SQLKTableStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLKTableStructure.m; sourceTree = "<group>"; };
+		EEB659CE142F7F54005B423C /* fmdb.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = fmdb.xcodeproj; path = fmdb/fmdb.xcodeproj; sourceTree = "<group>"; };
+		EEB659E1142F8122005B423C /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = fmdb/src/FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		EEB659E2142F8122005B423C /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = fmdb/src/FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		EEB659E3142F8122005B423C /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = fmdb/src/FMDatabase.h; sourceTree = "<group>"; };
+		EEB659E4142F8122005B423C /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabase.m; path = fmdb/src/FMDatabase.m; sourceTree = "<group>"; };
+		EEB659E5142F8122005B423C /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = fmdb/src/FMResultSet.h; sourceTree = "<group>"; };
+		EEB659E6142F8122005B423C /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = fmdb/src/FMResultSet.m; sourceTree = "<group>"; };
 		EEE4986B133AB93800FEDD45 /* SQLiteKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQLiteKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEE4986C133AB93800FEDD45 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		EEE4986F133AB93800FEDD45 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -102,7 +97,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE075417133B49B40027F2F7 /* FMDBMac.framework in Frameworks */,
 				EEE4986D133AB93800FEDD45 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -122,9 +116,9 @@
 		0867D691FE84028FC02AAC07 /* sqlk */ = {
 			isa = PBXGroup;
 			children = (
-				EE075416133B49B40027F2F7 /* FMDBMac.framework */,
-				EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
+				EEB659E0142F810F005B423C /* fmdb */,
+				EEB659CE142F7F54005B423C /* fmdb.xcodeproj */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				EEE49872133AB93800FEDD45 /* SQLiteKit */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
@@ -166,14 +160,26 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
-		EE1F2075133A73B00080BE90 /* Products */ = {
+		EEB659CF142F7F54005B423C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EE1F207D133A73B00080BE90 /* fmdb */,
-				EE1F207F133A73B00080BE90 /* libFMDB.a */,
-				EEE49898133AB9A500FEDD45 /* FMDBMac.framework */,
+				EEB659D8142F7F55005B423C /* fmdb */,
+				EEB659DA142F7F55005B423C /* libFMDB.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		EEB659E0142F810F005B423C /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				EEB659E1142F8122005B423C /* FMDatabaseAdditions.h */,
+				EEB659E2142F8122005B423C /* FMDatabaseAdditions.m */,
+				EEB659E3142F8122005B423C /* FMDatabase.h */,
+				EEB659E4142F8122005B423C /* FMDatabase.m */,
+				EEB659E5142F8122005B423C /* FMResultSet.h */,
+				EEB659E6142F8122005B423C /* FMResultSet.m */,
+			);
+			name = fmdb;
 			sourceTree = "<group>";
 		};
 		EEE4986E133AB93800FEDD45 /* Other Frameworks */ = {
@@ -215,6 +221,9 @@
 				EE2D917712872C8700C69142 /* SQLKColumnStructure.h in Headers */,
 				EE2D917912872C8700C69142 /* SQLKStructure.h in Headers */,
 				EE2D917B12872C8700C69142 /* SQLKTableStructure.h in Headers */,
+				EEB659E7142F8122005B423C /* FMDatabaseAdditions.h in Headers */,
+				EEB659EB142F8122005B423C /* FMDatabase.h in Headers */,
+				EEB659EF142F8122005B423C /* FMResultSet.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,6 +235,9 @@
 				EEE498A9133ABA4E00FEDD45 /* SQLKTableStructure.h in Headers */,
 				EEE498AB133ABA5500FEDD45 /* SQLKColumnStructure.h in Headers */,
 				EEE498AD133ABA6000FEDD45 /* sqlk_Prefix.pch in Headers */,
+				EEB659E8142F8122005B423C /* FMDatabaseAdditions.h in Headers */,
+				EEB659EC142F8122005B423C /* FMDatabase.h in Headers */,
+				EEB659F0142F8122005B423C /* FMResultSet.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,7 +255,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				EE495563133A778E006A3F7D /* PBXTargetDependency */,
 			);
 			name = sqlk;
 			productName = sqlk;
@@ -262,7 +273,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				EEE4989D133AB9B900FEDD45 /* PBXTargetDependency */,
 			);
 			name = SQLiteKit;
 			productName = SQLiteKit;
@@ -290,8 +300,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = EE1F2075133A73B00080BE90 /* Products */;
-					ProjectRef = EE1F2074133A73B00080BE90 /* fmdb.xcodeproj */;
+					ProductGroup = EEB659CF142F7F54005B423C /* Products */;
+					ProjectRef = EEB659CE142F7F54005B423C /* fmdb.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -303,25 +313,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		EE1F207D133A73B00080BE90 /* fmdb */ = {
+		EEB659D8142F7F55005B423C /* fmdb */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
 			path = fmdb;
-			remoteRef = EE1F207C133A73B00080BE90 /* PBXContainerItemProxy */;
+			remoteRef = EEB659D7142F7F55005B423C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		EE1F207F133A73B00080BE90 /* libFMDB.a */ = {
+		EEB659DA142F7F55005B423C /* libFMDB.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libFMDB.a;
-			remoteRef = EE1F207E133A73B00080BE90 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EEE49898133AB9A500FEDD45 /* FMDBMac.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FMDBMac.framework;
-			remoteRef = EEE49897133AB9A500FEDD45 /* PBXContainerItemProxy */;
+			remoteRef = EEB659D9142F7F55005B423C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -345,6 +348,9 @@
 				EE2D917812872C8700C69142 /* SQLKColumnStructure.m in Sources */,
 				EE2D917A12872C8700C69142 /* SQLKStructure.m in Sources */,
 				EE2D917C12872C8700C69142 /* SQLKTableStructure.m in Sources */,
+				EEB659E9142F8122005B423C /* FMDatabaseAdditions.m in Sources */,
+				EEB659ED142F8122005B423C /* FMDatabase.m in Sources */,
+				EEB659F1142F8122005B423C /* FMResultSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,23 +361,13 @@
 				EEE498A8133ABA4B00FEDD45 /* SQLKStructure.m in Sources */,
 				EEE498AA133ABA5200FEDD45 /* SQLKTableStructure.m in Sources */,
 				EEE498AC133ABA5500FEDD45 /* SQLKColumnStructure.m in Sources */,
+				EEB659EA142F8122005B423C /* FMDatabaseAdditions.m in Sources */,
+				EEB659EE142F8122005B423C /* FMDatabase.m in Sources */,
+				EEB659F2142F8122005B423C /* FMResultSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		EE495563133A778E006A3F7D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FMDB;
-			targetProxy = EE495562133A778E006A3F7D /* PBXContainerItemProxy */;
-		};
-		EEE4989D133AB9B900FEDD45 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FMDBMac;
-			targetProxy = EEE4989C133AB9B900FEDD45 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		EEE49875133AB93800FEDD45 /* InfoPlist.strings */ = {
@@ -434,7 +430,6 @@
 				PREBINDING = NO;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SYMROOT = "~/Library/Developer/Xcode/DerivedData";
-				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = Debug;
 		};
@@ -453,7 +448,6 @@
 				PREBINDING = NO;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SYMROOT = "~/Library/Developer/Xcode/DerivedData";
-				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = Release;
 		};

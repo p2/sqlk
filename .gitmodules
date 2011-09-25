@@ -1,0 +1,3 @@
+[submodule "fmdb"]
+	url = git@github.com:p2/fmdb.git
+	path = ./fmdb
