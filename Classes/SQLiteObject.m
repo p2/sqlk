@@ -13,7 +13,7 @@
 #import "SQLKStructure.h"
 #import "SQLKTableStructure.h"
 #import <sqlite3.h>
-#import <objc/objc-runtime.h>
+#import <objc/runtime.h>
 
 #define TIMING_DEBUG 0
 
@@ -32,23 +32,18 @@
 @synthesize hydrated;
 
 
-- (void) dealloc
-{
-	[object_id release];
-	[super dealloc];
-}
 
 
 + (id) object
 {
-	return [[[self class] new] autorelease];
+	return [[self class] new];
 }
 
 + (id) objectOfDB:(FMDatabase *)aDatabase
 {
 	SQLiteObject *o = [[self class] new];
 	o.db = aDatabase;
-	return [o autorelease];
+	return o;
 }
 #pragma mark -
 
@@ -63,7 +58,6 @@
 - (void) autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite
 {
 	if ([dict count] > 0) {
-		[dict retain];
 		NSString *tableKey = [[self class] tableKey];
 		
 		// loop all keys and assign appropriately
@@ -92,7 +86,6 @@
 			}
 		}
 		
-		[dict release];
 	}
 }
 #pragma mark -

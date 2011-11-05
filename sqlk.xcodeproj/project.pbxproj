@@ -38,23 +38,6 @@
 		EEE498AD133ABA6000FEDD45 /* sqlk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		EEB659D7142F7F55005B423C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEB659CE142F7F54005B423C /* fmdb.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
-			remoteInfo = fmdb;
-		};
-		EEB659D9142F7F55005B423C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEB659CE142F7F54005B423C /* fmdb.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE4290EF12B42F870088BD94;
-			remoteInfo = FMDB;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlk_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -67,7 +50,6 @@
 		EE2D917212872C8700C69142 /* SQLKStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLKStructure.m; sourceTree = "<group>"; };
 		EE2D917312872C8700C69142 /* SQLKTableStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKTableStructure.h; sourceTree = "<group>"; };
 		EE2D917412872C8700C69142 /* SQLKTableStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLKTableStructure.m; sourceTree = "<group>"; };
-		EEB659CE142F7F54005B423C /* fmdb.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = fmdb.xcodeproj; path = fmdb/fmdb.xcodeproj; sourceTree = "<group>"; };
 		EEB659E1142F8122005B423C /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = fmdb/src/FMDatabaseAdditions.h; sourceTree = "<group>"; };
 		EEB659E2142F8122005B423C /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = fmdb/src/FMDatabaseAdditions.m; sourceTree = "<group>"; };
 		EEB659E3142F8122005B423C /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = fmdb/src/FMDatabase.h; sourceTree = "<group>"; };
@@ -118,7 +100,6 @@
 			children = (
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				EEB659E0142F810F005B423C /* fmdb */,
-				EEB659CE142F7F54005B423C /* fmdb.xcodeproj */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				EEE49872133AB93800FEDD45 /* SQLiteKit */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
@@ -160,15 +141,6 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
-		EEB659CF142F7F54005B423C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				EEB659D8142F7F55005B423C /* fmdb */,
-				EEB659DA142F7F55005B423C /* libFMDB.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		EEB659E0142F810F005B423C /* fmdb */ = {
 			isa = PBXGroup;
 			children = (
@@ -195,19 +167,11 @@
 		EEE49872133AB93800FEDD45 /* SQLiteKit */ = {
 			isa = PBXGroup;
 			children = (
-				EEE49873133AB93800FEDD45 /* Supporting Files */,
-			);
-			path = SQLiteKit;
-			sourceTree = "<group>";
-		};
-		EEE49873133AB93800FEDD45 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
 				EEE49874133AB93800FEDD45 /* SQLiteKit-Info.plist */,
 				EEE49875133AB93800FEDD45 /* InfoPlist.strings */,
 				EEE49878133AB93800FEDD45 /* SQLiteKit-Prefix.pch */,
 			);
-			name = "Supporting Files";
+			path = SQLiteKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -298,12 +262,6 @@
 			mainGroup = 0867D691FE84028FC02AAC07 /* sqlk */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = EEB659CF142F7F54005B423C /* Products */;
-					ProjectRef = EEB659CE142F7F54005B423C /* fmdb.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				D2AAC07D0554694100DB518D /* sqlk */,
@@ -311,23 +269,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		EEB659D8142F7F55005B423C /* fmdb */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = fmdb;
-			remoteRef = EEB659D7142F7F55005B423C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EEB659DA142F7F55005B423C /* libFMDB.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libFMDB.a;
-			remoteRef = EEB659D9142F7F55005B423C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		EEE49869133AB93800FEDD45 /* Resources */ = {
@@ -386,14 +327,12 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/sqlk.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = sqlk_Prefix.pch;
-				INSTALL_PATH = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = sqlk;
 				SDKROOT = iphoneos;
@@ -403,12 +342,10 @@
 		1DEB922008733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
-				DSTROOT = /tmp/sqlk.dst;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = sqlk_Prefix.pch;
-				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = sqlk;
 				SDKROOT = iphoneos;
 			};
@@ -429,7 +366,6 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				SYMROOT = "~/Library/Developer/Xcode/DerivedData";
 			};
 			name = Debug;
 		};
@@ -447,9 +383,61 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				SYMROOT = "~/Library/Developer/Xcode/DerivedData";
 			};
 			name = Release;
+		};
+		EE54763E142FE348007AB43F /* AdHoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+			};
+			name = AdHoc;
+		};
+		EE54763F142FE348007AB43F /* AdHoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = sqlk_Prefix.pch;
+				PRODUCT_NAME = sqlk;
+				SDKROOT = iphoneos;
+			};
+			name = AdHoc;
+		};
+		EE547640142FE348007AB43F /* AdHoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SQLiteKit/SQLiteKit-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "SQLiteKit/SQLiteKit-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/FMDBMac.framework/Headers/**";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = AdHoc;
 		};
 		EEE4987A133AB93800FEDD45 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -510,6 +498,7 @@
 			buildConfigurations = (
 				1DEB921F08733DC00010E9CD /* Debug */,
 				1DEB922008733DC00010E9CD /* Release */,
+				EE54763F142FE348007AB43F /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -519,6 +508,7 @@
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,
 				1DEB922408733DC00010E9CD /* Release */,
+				EE54763E142FE348007AB43F /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -528,6 +518,7 @@
 			buildConfigurations = (
 				EEE4987A133AB93800FEDD45 /* Debug */,
 				EEE4987B133AB93800FEDD45 /* Release */,
+				EE547640142FE348007AB43F /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
