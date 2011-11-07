@@ -13,3 +13,11 @@
 #   define DLog(...)
 #endif
 #define ALog(fmt, ...) NSLog((@"%s (line %d) " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+
+// make error returning easy
+#define ERR(p, s, c)	if (p != NULL && s) {\
+		*p = [NSError errorWithDomain:NSCocoaErrorDomain code:(c ? c : 0) userInfo:[NSDictionary dictionaryWithObject:s forKey:NSLocalizedDescriptionKey]];\
+	}\
+	else {\
+		DLog(@"Ignored Error: %@", s);\
+	}

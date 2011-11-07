@@ -4,10 +4,6 @@
 //
 //  Created by Pascal Pfiffner on 22.09.09.
 //  Copyright 2009 Pascal Pfiffner. All rights reserved.
-//	
-//	Base object for your objects hydrated from SQLite
-//	Basically, one class represents one table, one instance of the class represents one table entry
-//	Note that this class doesn't throw exceptions on valueForUndefinedKey: and setValue:forUndefinedKey:
 //
 
 #import <Foundation/Foundation.h>
@@ -15,33 +11,37 @@
 #import "FMResultSet.h"
 
 
-@interface SQLiteObject : NSObject {
-	FMDatabase *__unsafe_unretained db;
-	
-	id<NSObject, NSCopying> object_id;					// the value of this object for "tableKey" in "tableName" (the primary key)
-	BOOL hydrated;
-}
+/**
+ *	Base object for your objects hydrated from SQLite
+ *	Basically, one class represents one table, one instance of the class represents one table entry. All instance variables beginning with an
+ *	underscore will be fetched from and written to the database!
+ *	@attention Note that this class doesn't throw exceptions on "valueForUndefinedKey:" and "setValue:forUndefinedKey:", but it does alert you
+ *	when the class is not key-value coding compliant for a given path to give you the opportunity to adjust the class to match the database
+ */
+@interface SQLiteObject : NSObject
 
 @property (nonatomic, unsafe_unretained) FMDatabase *db;
-@property (nonatomic, strong) id object_id;
+@property (nonatomic, strong) id object_id;										///< The object id can either be an NSNumber or NSString (e.g. for UUIDs)
 @property (nonatomic, readonly, assign, getter=isHydrated) BOOL hydrated;
 
-+ (id) object;
-+ (id) objectOfDB:(FMDatabase *)aDatabase;
++ (id)objectOfDB:(FMDatabase *)aDatabase;
 
-- (BOOL) hydrate;										// calls 'hydrateFromDictionary:' with data fetched from SQLite
-- (void) hydrateFromDictionary:(NSDictionary *)dict;	// by default calls 'autofillFromDictionary:overwrite:' with YES for overwrite
-- (void) setFromDictionary:(NSDictionary *)dict;		// by default calls 'autofillFromDictionary:overwrite:' with NO for overwrite
-- (void) autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite;	// tries to assign instance variables from dictionary. No need to override.
-- (void) didHydrateSuccessfully:(BOOL)success;			// by default does nothing. Override to hydrate relationships and perform other tasks
++ (NSArray *)dbVariables;
+- (NSMutableDictionary *)dbValues;
 
-+ (NSString *) tableName;								// the SQLite table being represented by these objects
-+ (NSString *) tableKey;								// the column name of the primary id column, holding the unique row identifier
-+ (NSString *) hydrateQuery;							// by default: SELECT * FROM `<tableName>` WHERE `<tableKey>` = object.key
+- (void)setFromDictionary:(NSDictionary *)dict;
+- (void)hydrateFromDictionary:(NSDictionary *)dict;
+- (void)autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite;
 
-- (BOOL) dehydrate:(NSError **)error;					// by default generates an UPDATE query from 'ivarDictionary' and does an INSERT if the update query didn't match any entry
-- (NSMutableDictionary *) ivarDictionary;				// dictionary containing all instance variables. Override to customize.
-- (void) didDehydrateSuccessfully:(BOOL)success;		// by default does nothing. Override to dehydrate relationships and perform other tasks
++ (NSString *)tableName;
++ (NSString *)tableKey;
++ (NSString *)hydrateQuery;
+
+- (BOOL)hydrate;
+- (void)didHydrateSuccessfully:(BOOL)success;
+
+- (BOOL)dehydrate:(NSError **)error;
+- (void)didDehydrateSuccessfully:(BOOL)success;
 
 
 @end

@@ -4,8 +4,6 @@
 //
 //  Created by Pascal Pfiffner on 11.09.10.
 //	
-//	Instances of this class represent columns belonging to a SQLKTableStructure
-//
 
 #import "SQLKColumnStructure.h"
 
@@ -13,14 +11,11 @@
 @implementation SQLKColumnStructure
 
 @synthesize table;
-@synthesize name;
-@synthesize type;
-@synthesize isPrimaryKey;
-@synthesize isUnique;
-@synthesize defaultNeedsQuotes;
-@synthesize defaultString;
+@synthesize name, type;
+@synthesize isPrimaryKey, isUnique;
+@synthesize defaultNeedsQuotes, defaultString;
 
-- (void) dealloc
+- (void)dealloc
 {
 	[name release];
 	[type release];
@@ -29,19 +24,24 @@
 	[super dealloc];
 }
 
-+ (SQLKColumnStructure *) columnForTable:(SQLKTableStructure *)aTable
+/**
+ *	Return a column belonging to the given table
+ */
++ (SQLKColumnStructure *)columnForTable:(SQLKTableStructure *)aTable
 {
 	SQLKColumnStructure *c = [self new];
 	c.table = aTable;
 	
 	return [c autorelease];
 }
-#pragma mark -
 
 
 
-#pragma mark Creating and Verifying
-- (NSString *) creationQuery
+#pragma mark - Creating and Verifying
+/**
+ *	Returns the SQLite query needed to create a column with the receiver's structure
+ */
+- (NSString *)creationQuery
 {
 	NSMutableString *query = [NSMutableString stringWithFormat:@"%@ %@", name, [self fullType]];
 	if (isPrimaryKey) {
@@ -64,32 +64,41 @@
 }
 
 
-- (BOOL) isEqual:(id)object
+/**
+ *	Two columns are considered equal if they have the same name and "isEqualToColumn:error:" returns YES
+ */
+- (BOOL)isEqual:(id)object
 {
-	if ([object isKindOfClass:[self class]]) {
+	if ([object isKindOfClass:[self class]] && [name isEqualToString:[object name]]) {
 		return [self isEqualToColumn:(SQLKColumnStructure *)object error:NULL];
 	}
 	return NO;
 }
 
-- (BOOL) isEqualToColumn:(SQLKColumnStructure *)oc error:(NSError **)error
+/**
+ *	Two columns are considered equal if their creation query strings are the same
+ *	@todo Improve
+ */
+- (BOOL)isEqualToColumn:(SQLKColumnStructure *)oc error:(NSError **)error
 {
 	BOOL equal = NO;
 	if (oc) {
 		equal = [[self creationQuery] isEqualToString:[oc creationQuery]];
-		if (!equal && NULL != error) {
-			NSDictionary *userDict = [NSDictionary dictionaryWithObject:@"Columns are not equal" forKey:NSLocalizedDescriptionKey];
-			*error = [NSError errorWithDomain:NSCocoaErrorDomain code:669 userInfo:userDict];
+		if (!equal) {
+			NSString *errorString = [NSString stringWithFormat:@"Columns are not equal (%@  --  %@)", [self creationQuery], [oc creationQuery]];
+			ERR(error, errorString, 669)
 		}
 	}
 	return equal;
 }
-#pragma mark -
 
 
 
-#pragma mark Utilities
-- (NSString *) fullType
+#pragma mark - Utilities
+/**
+ *	Returns the SQLite type for type variations one might use
+ */
+- (NSString *)fullType
 {
 	if ([@"int" isEqualToString:type] || [@"INT" isEqualToString:type]) {
 		self.type = @"INTEGER";
@@ -97,7 +106,7 @@
 	return type;
 }
 
-- (NSString *) description
+- (NSString *)description
 {
 	return [NSString stringWithFormat:@"%@ <0x%x> `%@` %@, primary: %i, unique: %i, default: %@", NSStringFromClass([self class]), self, name, type, isPrimaryKey, isUnique, (defaultNeedsQuotes ? [NSString stringWithFormat:@"\"%@\"", defaultString] : defaultString)];
 }
