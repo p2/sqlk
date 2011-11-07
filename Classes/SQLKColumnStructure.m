@@ -86,7 +86,7 @@
 		equal = [[self creationQuery] isEqualToString:[oc creationQuery]];
 		if (!equal) {
 			NSString *errorString = [NSString stringWithFormat:@"Columns are not equal (%@  --  %@)", [self creationQuery], [oc creationQuery]];
-			ERR(error, errorString, 669)
+			SQLK_ERR(error, errorString, 669)
 		}
 	}
 	return equal;

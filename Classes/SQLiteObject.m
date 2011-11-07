@@ -12,7 +12,7 @@
 #import <sqlite3.h>
 #import <objc/runtime.h>
 
-#define TIMING_DEBUG 0
+#define SQLK_TIMING_DEBUG 0
 
 
 @interface SQLiteObject ()
@@ -204,6 +204,123 @@ static NSString *hydrateQuery = nil;
 
 #pragma mark - Dehydrating
 /**
+ *	Generates an UPDATE query for all "dbValues" WITHOUT THE LEADING UNDERSCORE and does an INSERT if the update query didn't match any entry.
+ *	Consider using "didDehydrateSuccessfully:" before deciding to override this method.
+ *	@attention This method will try to insert/update for all instance variables beginning with an underscore and thus FMDB will fail if the
+ *	database table does not have a given column.
+ */
+- (BOOL)dehydrate:(NSError **)error
+{
+#if SQLK_TIMING_DEBUG
+	mach_timebase_info_data_t timebase;
+	mach_timebase_info(&timebase);
+	double ticksToNanoseconds = (double)timebase.numer / timebase.denom;
+	uint64_t startTime = mach_absolute_time();
+#endif
+	
+	if (!self.db) {
+		NSString *errorString = [NSString stringWithFormat:@"We can't dehydrate %@ without a database", self];
+		SQLK_ERR(error, errorString, 0);
+		return NO;
+	}
+	
+	NSDictionary *dict = [self dbValues];
+	if ([dict count] < 1) {
+		NSString *errorString = [NSString stringWithFormat:@"We can't dehydrate %@ without ivars for the database", self];
+		SQLK_ERR(error, errorString, 0)
+		return NO;
+	}
+	
+	BOOL success = NO;
+	NSString *query = nil;
+	
+	NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[dict count]];
+	NSMutableArray *arguments = [NSMutableArray arrayWithCapacity:[dict count]];
+	
+	
+	// ***** UPDATE
+	if (self.object_id) {
+		
+		// distribute column names and their values in two arrays (format needed for FMDB)
+		for (NSString *columnKey in [dict allKeys]) {
+			[properties addObject:[NSString stringWithFormat:@"%@ = ?", columnKey]];
+			[arguments addObject:[dict objectForKey:columnKey]];
+		}
+		
+		// compose and ...
+		[arguments addObject:object_id];									///< to satisfy the WHERE condition placeholder
+		query = [NSString stringWithFormat:
+				 @"UPDATE `%@` SET %@ WHERE `%@` = ?",
+				 [[self class] tableName],
+				 [properties componentsJoinedByString:@", "],
+				 [[self class] tableKey]];
+		
+		
+		// ... execute query
+		success = [self.db executeUpdate:query withArgumentsInArray:arguments];
+	}
+	
+	
+	// ***** INSERT
+	if (!self.object_id || (success && [self.db changes] < 1)) {
+		[properties removeAllObjects];
+		[arguments removeAllObjects];
+		NSMutableArray *qmarks = [NSMutableArray arrayWithCapacity:[dict count]];
+		
+		for (NSString *columnKey in [dict allKeys]) {
+			[properties addObject:columnKey];
+			[qmarks addObject:@"?"];
+			[arguments addObject:[dict objectForKey:columnKey]];
+		}
+		
+		// explicitly set primary key if we have one already
+		if (self.object_id && ![dict objectForKey:[[self class] tableKey]]) {
+			[properties addObject:[[self class] tableKey]];
+			[qmarks addObject:@"?"];
+			[arguments addObject:object_id];
+		}
+		
+		// compose and execute query
+		query = [NSString stringWithFormat:
+				 @"INSERT INTO `%@` (%@) VALUES (%@)",
+				 [[self class] tableName],
+				 [properties componentsJoinedByString:@", "],
+				 [qmarks componentsJoinedByString:@", "]];
+		
+		success = [self.db executeUpdate:query withArgumentsInArray:arguments];
+		if (success && !self.object_id) {
+			self.object_id = [NSNumber numberWithLongLong:[self.db lastInsertRowId]];
+		}
+	}
+	
+	// error?
+	if (!success) {
+		NSString *errorString = [self.db hadError] ? [self.db lastErrorMessage] : @"Unknown dehydrate error";
+		SQLK_ERR(error, errorString, 676)
+	}
+	
+	[self didDehydrateSuccessfully:success];
+	
+#if SQLK_TIMING_DEBUG
+	uint64_t elapsedTime = mach_absolute_time() - startTime;
+	double elapsedTimeInNanoseconds = elapsedTime * ticksToNanoseconds;
+	NSLog(@"dehydrate %@: %f millisec", self, elapsedTimeInNanoseconds / 1000000);
+#endif
+	return success;
+}
+
+/**
+ *	You can override this method to perform additional tasks after dehydration (e.g. dehydrate properties).
+ *	The default implementation does nothing.
+ */
+- (void) didDehydrateSuccessfully:(BOOL)success
+{
+}
+
+
+
+#pragma mark - Ivar Gathering
+/**
  *	Returns all instance variable names that begin with an underscore
  *	@return An NSArray full of NSStrings
  */
@@ -226,7 +343,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 			for (i = 0; i < numVars; i++) {
 				const char *name = ivar_getName(ivars[i]);
 				if (sizeof(name) > 0 && '_' == name[0]) {
-					name++;			/// @attention removes underscore
+					name++;									// removes the underscore
 					NSString *varName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
 					if (varName) {
 						[ivarArr addObject:varName];
@@ -272,133 +389,6 @@ static NSMutableDictionary *ivarsPerClass = nil;
 	}
 	
 	return dict;
-}
-
-/**
- *	Generates an UPDATE query for all "dbValues" WITHOUT THE LEADING UNDERSCORE and does an INSERT if the update query didn't match any entry.
- *	Consider using "didDehydrateSuccessfully:" before deciding to override this method.
- */
-- (BOOL)dehydrate:(NSError **)error
-{
-#if TIMING_DEBUG
-	mach_timebase_info_data_t timebase;
-	mach_timebase_info(&timebase);
-	double ticksToNanoseconds = (double)timebase.numer / timebase.denom;
-	uint64_t startTime = mach_absolute_time();
-#endif
-	
-	if (!self.db) {
-		DLog(@"We can't dehydrate %@ without a database", self);
-		return NO;
-	}
-	
-	NSDictionary *dict = [self dbValues];
-	if (!dict) {
-		DLog(@"We can't dehydrate %@ without ivars for the database", self);
-		return NO;
-	}
-	
-	// check the table fields at our disposal
-	/// @todo This is probably a lot faster if we cache the table structure per class or something along these lines
-	SQLKStructure *ourDB = [SQLKStructure structureFromDatabase:[NSURL fileURLWithPath:[self.db databasePath]]];
-	SQLKTableStructure *ourTable = [ourDB tableWithName:[[self class] tableName]];
-	if (!ourTable) {
-		DLog(@"Unable to determine the table structure for table named %@ in %@, cannot dehydrate", [[self class] tableName], self.db);
-		return NO;
-	}
-	
-	BOOL success = NO;
-	NSString *query = nil;
-	
-	NSMutableArray *properties = [NSMutableArray arrayWithCapacity:[dict count]];
-	NSMutableArray *arguments = [NSMutableArray arrayWithCapacity:[dict count]];
-	
-	
-	// ***** UPDATE
-	if (self.object_id) {
-		
-		// distribute column names and their values in two arrays (format needed for FMDB)
-		for (NSString *columnKey in [dict allKeys]) {
-			if (!ourTable || [ourTable hasColumnNamed:columnKey]) {
-				[properties addObject:[NSString stringWithFormat:@"%@ = ?", columnKey]];
-				[arguments addObject:[dict objectForKey:columnKey]];
-			}
-		}
-		
-		// compose and ...
-		[arguments addObject:object_id];									///< to satisfy the WHERE condition placeholder
-		query = [NSString stringWithFormat:
-				 @"UPDATE `%@` SET %@ WHERE `%@` = ?",
-				 [[self class] tableName],
-				 [properties componentsJoinedByString:@", "],
-				 [[self class] tableKey]];
-		
-		
-		// ... EXECUTE QUERY
-		success = [self.db executeUpdate:query withArgumentsInArray:arguments];
-	}
-	
-	
-	// ***** INSERT
-	if (!self.object_id || (success && [self.db changes] < 1)) {
-		[properties removeAllObjects];
-		[arguments removeAllObjects];
-		NSMutableArray *qmarks = [NSMutableArray arrayWithCapacity:[dict count]];
-		
-		for (NSString *columnKey in [dict allKeys]) {
-			if (!ourTable || [ourTable hasColumnNamed:columnKey]) {
-				[properties addObject:columnKey];
-				[qmarks addObject:@"?"];
-				[arguments addObject:[dict objectForKey:columnKey]];
-			}
-		}
-		
-		// explicitly set primary key if we have one already
-		if (self.object_id && ![dict objectForKey:[[self class] tableKey]]) {
-			[properties addObject:[[self class] tableKey]];
-			[qmarks addObject:@"?"];
-			[arguments addObject:object_id];
-		}
-		
-		// compose and execute query
-		query = [NSString stringWithFormat:
-				 @"INSERT INTO `%@` (%@) VALUES (%@)",
-				 [[self class] tableName],
-				 [properties componentsJoinedByString:@", "],
-				 [qmarks componentsJoinedByString:@", "]];
-		
-		success = [self.db executeUpdate:query withArgumentsInArray:arguments];
-		if (success && !self.object_id) {
-			self.object_id = [NSNumber numberWithLongLong:[self.db lastInsertRowId]];
-		}
-	}
-	
-	// error?
-	if (!success) {
-		NSString *errorString = [self.db hadError] ? [self.db lastErrorMessage] : @"Unknown dehydrate error";
-		DLog(@"dehydrate failed: %@", errorString);
-		if (NULL != error) {
-			NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
-			*error = [NSError errorWithDomain:NSCocoaErrorDomain code:676 userInfo:userDict];
-		}
-	}
-	
-	[self didDehydrateSuccessfully:success];
-	
-#if TIMING_DEBUG
-	uint64_t elapsedTime = mach_absolute_time() - startTime;
-	double elapsedTimeInNanoseconds = elapsedTime * ticksToNanoseconds;
-	NSLog(@"dehydrate %@: %f millisec", self, elapsedTimeInNanoseconds / 1000000);
-#endif
-	return success;
-}
-
-/**
- *	You can override this method to perform additional tasks after dehydration (e.g. dehydrate properties).
- *	The default implementation does nothing.
- */
-- (void) didDehydrateSuccessfully:(BOOL)success
-{
 }
 
 

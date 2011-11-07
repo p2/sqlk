@@ -167,25 +167,25 @@
 					}
 					
 					NSString *errorString = [NSString stringWithFormat:@"Could not close memory database at: (%d) %@", [db lastErrorCode], [db lastErrorMessage]];
-					ERR(error, errorString, 0)
+					SQLK_ERR(error, errorString, 0)
 				}
 				else {
 					NSString *errorString = [NSString stringWithFormat:@"Could not open database at %@: (%d) %@", dbPath, [db lastErrorCode], [db lastErrorMessage]];
-					ERR(error, errorString, 0)
+					SQLK_ERR(error, errorString, 0)
 				}
 			}
 			else {
 				NSString *errorString = [NSString stringWithFormat:@"A file already resides at %@, can't create a new database", dbPath];
-				ERR(error, errorString, 0)
+				SQLK_ERR(error, errorString, 0)
 			}
 		}
 		else {
 			NSString *errorString = [NSString stringWithFormat:@"Can't access database at %@", dbPath];
-			ERR(error, errorString, 0)
+			SQLK_ERR(error, errorString, 0)
 		}
 	}
 	else {
-		ERR(error, @"We first need tables in order to create a database", 0)
+		SQLK_ERR(error, @"We first need tables in order to create a database", 0)
 	}
 	
 	return nil;
@@ -206,11 +206,11 @@
 		}
 		else {
 			NSString *errorString = [NSString stringWithFormat:@"Could not open memory database at: (%d) %@", [db lastErrorCode], [db lastErrorMessage]];
-			ERR(error, errorString, 0)
+			SQLK_ERR(error, errorString, 0)
 		}
 	}
 	else {
-		ERR(error, @"We first need tables in order to create a database", 0)
+		SQLK_ERR(error, @"We first need tables in order to create a database", 0)
 	}
 	
 	return nil;
@@ -222,11 +222,11 @@
 - (BOOL)_createWithDatabase:(FMDatabase *)aDB error:(NSError **)error
 {
 	if (!aDB) {
-		ERR(error, @"No database given", 0)
+		SQLK_ERR(error, @"No database given", 0)
 		return NO;
 	}
 	if (![aDB open]) {
-		ERR(error, @"Failed to open the database", 0)
+		SQLK_ERR(error, @"Failed to open the database", 0)
 		return NO;
 	}
 	
@@ -239,7 +239,7 @@
 			[aDB close];
 			
 			NSString *errorString = [NSString stringWithFormat:@"Failed to create table \"%@\" in memory database: %@", table.name, [myError userInfo]];
-			ERR(error, errorString, 667)
+			SQLK_ERR(error, errorString, 667)
 			return NO;
 		}
 	}
@@ -605,7 +605,7 @@
 				self.parsingTableConstraints = [NSMutableArray array];
 			}
 			if (![@"CONSTRAINT" isEqualToString:[parsingString substringToIndex:MIN([parsingString length], 10)]]) {
-				self.parsingString = [@"CONSTRAINT " stringByAppendingString:parsingString];
+				self.parsingString = (NSMutableString *)[@"CONSTRAINT " stringByAppendingString:parsingString];			// We'll throw away the non-mutable string 3 lines later
 			}
 			[parsingTableConstraints addObject:parsingString];
 			self.parsingString = nil;

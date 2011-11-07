@@ -185,7 +185,7 @@
 			return YES;
 		}
 		NSString *errorString = [NSString stringWithFormat:@"Error executing query: (%d) %@\n%@", [database lastErrorCode], [database lastErrorMessage], query];
-		ERR(error, errorString, 0)
+		SQLK_ERR(error, errorString, 0)
 	}
 	return NO;
 }
@@ -276,7 +276,7 @@
 				// report specific errors
 				if ([errors count] > 0) {
 					NSString *errorString = [NSString stringWithFormat:@"%d errors occurred while comparing columns to table \"%@\". See \"SQLKErrors\" in this errors' userInfo.", [errors count], ot.name];
-					ERR(error, errorString, 673)
+					SQLK_ERR(error, errorString, 673)
 					
 					return NO;
 				}
@@ -304,7 +304,7 @@
 	
 	// report generic errors
 	if (errorString) {
-		ERR(error, errorString, 674)
+		SQLK_ERR(error, errorString, 674)
 	}
 	
 	return NO;
