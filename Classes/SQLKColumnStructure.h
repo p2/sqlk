@@ -6,6 +6,7 @@
 //	
 
 #import <Foundation/Foundation.h>
+
 @class SQLKTableStructure;
 
 

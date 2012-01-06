@@ -15,6 +15,8 @@
 		EE2D917A12872C8700C69142 /* SQLKStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917212872C8700C69142 /* SQLKStructure.m */; };
 		EE2D917B12872C8700C69142 /* SQLKTableStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917312872C8700C69142 /* SQLKTableStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE2D917C12872C8700C69142 /* SQLKTableStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917412872C8700C69142 /* SQLKTableStructure.m */; };
+		EE51873E146EFB97000BB0FC /* sqlk.h in Headers */ = {isa = PBXBuildFile; fileRef = EE51873D146EFB97000BB0FC /* sqlk.h */; };
+		EE51873F146EFB97000BB0FC /* sqlk.h in Headers */ = {isa = PBXBuildFile; fileRef = EE51873D146EFB97000BB0FC /* sqlk.h */; };
 		EEB659E7142F8122005B423C /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB659E1142F8122005B423C /* FMDatabaseAdditions.h */; };
 		EEB659E8142F8122005B423C /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB659E1142F8122005B423C /* FMDatabaseAdditions.h */; };
 		EEB659E9142F8122005B423C /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB659E2142F8122005B423C /* FMDatabaseAdditions.m */; };
@@ -42,14 +44,15 @@
 		AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = sqlk_Prefix.pch; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libsqlk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsqlk.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		EE2D916D12872C8700C69142 /* SQLiteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SQLiteObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		EE2D916E12872C8700C69142 /* SQLiteObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteObject.m; sourceTree = "<group>"; };
+		EE2D916D12872C8700C69142 /* SQLiteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = SQLiteObject.h; path = Classes/SQLiteObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		EE2D916E12872C8700C69142 /* SQLiteObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLiteObject.m; path = Classes/SQLiteObject.m; sourceTree = "<group>"; };
 		EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKColumnStructure.h; sourceTree = "<group>"; };
 		EE2D917012872C8700C69142 /* SQLKColumnStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SQLKColumnStructure.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		EE2D917112872C8700C69142 /* SQLKStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKStructure.h; sourceTree = "<group>"; };
 		EE2D917212872C8700C69142 /* SQLKStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SQLKStructure.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		EE2D917312872C8700C69142 /* SQLKTableStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKTableStructure.h; sourceTree = "<group>"; };
 		EE2D917412872C8700C69142 /* SQLKTableStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SQLKTableStructure.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		EE51873D146EFB97000BB0FC /* sqlk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlk.h; sourceTree = "<group>"; };
 		EEB659E1142F8122005B423C /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = fmdb/src/FMDatabaseAdditions.h; sourceTree = "<group>"; };
 		EEB659E2142F8122005B423C /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = fmdb/src/FMDatabaseAdditions.m; sourceTree = "<group>"; };
 		EEB659E3142F8122005B423C /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = fmdb/src/FMDatabase.h; sourceTree = "<group>"; };
@@ -98,8 +101,7 @@
 		0867D691FE84028FC02AAC07 /* sqlk */ = {
 			isa = PBXGroup;
 			children = (
-				08FB77AEFE84172EC02AAC07 /* Classes */,
-				EEB659E0142F810F005B423C /* fmdb */,
+				EE51873B146EFAA6000BB0FC /* SQLiteKit */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				EEE49872133AB93800FEDD45 /* SQLiteKit */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
@@ -121,8 +123,6 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				EE2D916D12872C8700C69142 /* SQLiteObject.h */,
-				EE2D916E12872C8700C69142 /* SQLiteObject.m */,
 				EE2D917112872C8700C69142 /* SQLKStructure.h */,
 				EE2D917212872C8700C69142 /* SQLKStructure.m */,
 				EE2D917312872C8700C69142 /* SQLKTableStructure.h */,
@@ -139,6 +139,18 @@
 				AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */,
 			);
 			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		EE51873B146EFAA6000BB0FC /* SQLiteKit */ = {
+			isa = PBXGroup;
+			children = (
+				EE51873D146EFB97000BB0FC /* sqlk.h */,
+				EE2D916D12872C8700C69142 /* SQLiteObject.h */,
+				EE2D916E12872C8700C69142 /* SQLiteObject.m */,
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				EEB659E0142F810F005B423C /* fmdb */,
+			);
+			name = SQLiteKit;
 			sourceTree = "<group>";
 		};
 		EEB659E0142F810F005B423C /* fmdb */ = {
@@ -188,6 +200,7 @@
 				EEB659E7142F8122005B423C /* FMDatabaseAdditions.h in Headers */,
 				EEB659EB142F8122005B423C /* FMDatabase.h in Headers */,
 				EEB659EF142F8122005B423C /* FMResultSet.h in Headers */,
+				EE51873E146EFB97000BB0FC /* sqlk.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +215,7 @@
 				EEB659E8142F8122005B423C /* FMDatabaseAdditions.h in Headers */,
 				EEB659EC142F8122005B423C /* FMDatabase.h in Headers */,
 				EEB659F0142F8122005B423C /* FMResultSet.h in Headers */,
+				EE51873F146EFB97000BB0FC /* sqlk.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

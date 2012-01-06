@@ -6,6 +6,7 @@
 //	
 
 #import "SQLKColumnStructure.h"
+#import "sqlk.h"
 
 
 @implementation SQLKColumnStructure

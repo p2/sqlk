@@ -6,6 +6,7 @@
 //	
 
 #import "SQLKTableStructure.h"
+#import "sqlk.h"
 #import "SQLKColumnStructure.h"
 #import "FMDatabase.h"
 

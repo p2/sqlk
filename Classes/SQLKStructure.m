@@ -7,6 +7,7 @@
 //	
 
 #import "SQLKStructure.h"
+#import "sqlk.h"
 #import "SQLKTableStructure.h"
 #import "SQLKColumnStructure.h"
 #import "FMDatabase.h"
@@ -165,9 +166,7 @@
 					if ([self _createWithDatabase:db error:error]) {
 						return db;
 					}
-					
-					NSString *errorString = [NSString stringWithFormat:@"Could not close memory database at: (%d) %@", [db lastErrorCode], [db lastErrorMessage]];
-					SQLK_ERR(error, errorString, 0)
+					[db close];
 				}
 				else {
 					NSString *errorString = [NSString stringWithFormat:@"Could not open database at %@: (%d) %@", dbPath, [db lastErrorCode], [db lastErrorMessage]];
@@ -603,9 +602,6 @@
 		if ([parsingString length] > 0) {
 			if (!parsingTableConstraints) {
 				self.parsingTableConstraints = [NSMutableArray array];
-			}
-			if (![@"CONSTRAINT" isEqualToString:[parsingString substringToIndex:MIN([parsingString length], 10)]]) {
-				self.parsingString = (NSMutableString *)[@"CONSTRAINT " stringByAppendingString:parsingString];			// We'll throw away the non-mutable string 3 lines later
 			}
 			[parsingTableConstraints addObject:parsingString];
 			self.parsingString = nil;
