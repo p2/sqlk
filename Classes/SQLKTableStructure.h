@@ -16,7 +16,7 @@
  *	Instances of this class represent tables belonging to a SQLKStructure
  */
 @interface SQLKTableStructure : NSObject {
-	SQLKStructure *structure;
+	SQLKStructure *__unsafe_unretained structure;
 	
 	NSString *name;
 	NSArray *columns;
@@ -24,7 +24,7 @@
 	NSString *originalQuery;
 }
 
-@property (nonatomic, assign) SQLKStructure *structure;
+@property (nonatomic, unsafe_unretained) SQLKStructure *structure;
 @property (nonatomic, copy) NSString *name;							///< Table names are assumed to be unique per database/SQLKStructure
 @property (nonatomic, copy) NSArray *columns;						///< An array full of SQLiteStructureTableColumn objects
 @property (nonatomic, copy) NSArray *constraints;					///< An array full of NSString objects

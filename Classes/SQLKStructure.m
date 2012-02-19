@@ -15,10 +15,10 @@
 
 @interface SQLKStructure ()
 
-@property (nonatomic, retain) NSMutableString *parsingString;
+@property (nonatomic, strong) NSMutableString *parsingString;
 
 - (BOOL)_createWithDatabase:(FMDatabase *)aDB error:(NSError **)error;
-- (void) parseXMLData:(NSData *)data;
+- (void)parseXMLData:(NSData *)data;
 
 @end
 
@@ -31,18 +31,6 @@
 @synthesize parsingTables, parsingTable, parsingTableColumns, parsingTableConstraints, parsingString;
 
 
-- (void)dealloc
-{
-	[tables release];
-	[path release];
-	self.parsingTables = nil;
-	self.parsingTable = nil;
-	[parsingTableColumns release];
-	[parsingTableConstraints release];
-	[parsingString release];
-	
-	[super dealloc];
-}
 
 
 /**
@@ -50,7 +38,7 @@
  */
 + (SQLKStructure *)structure
 {
-	return [[self new] autorelease];
+	return [self new];
 }
 
 /**
@@ -59,7 +47,7 @@
 + (SQLKStructure *)structureFromArchive:(NSURL *)archiveUrl
 {
 	DLog(@"Implement me to load from archive at %@", archiveUrl);
-	return [[[self alloc] init] autorelease];
+	return [[self alloc] init];
 }
 
 /**
@@ -68,7 +56,7 @@
  */
 + (SQLKStructure *)structureFromDatabase:(NSURL *)dbPath
 {
-	SQLKStructure *s = [[SQLKStructure new] autorelease];
+	SQLKStructure *s = [SQLKStructure new];
 	s.path = dbPath;
 	NSString *errorString = nil;
 	
@@ -282,7 +270,6 @@
 				[errors addObject:anError];
 			}
 		}
-		[existingTables release];
 		
 		// report specific errors
 		if ([errors count] > 0) {
@@ -443,10 +430,10 @@
 /**
  *	Parses an XML file at given path to create a database structure
  */
-- (void)parseStructureFromXML:(NSURL *)xmlUrl error:(NSError **)error
+- (void)parseStructureFromXML:(NSURL *)xmlUrl error:(NSError * __autoreleasing*)error
 {
 	// read data
-	NSError *parseError = nil;
+	__autoreleasing NSError *parseError = nil;
 	//NSData *xmlData = [NSData dataWithContentsOfURL:xmlUrl options:NSDataReadingUncached error:&parseError];	// NSDataReadingUncached is iOS 4.+ only
 	NSData *xmlData = [NSData dataWithContentsOfURL:xmlUrl options:2 error:&parseError];
 	
@@ -476,26 +463,25 @@
  */
 - (void)parseXMLData:(NSData *)data
 {	
-	NSAutoreleasePool *innerPool = [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
 	
 	// create a parser
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
-	[parser setDelegate:self];
-	
-	[parser setShouldProcessNamespaces:NO];
-	[parser setShouldReportNamespacePrefixes:NO];
-	[parser setShouldResolveExternalEntities:NO];
-	
-	// parse
-	[parser parse];
-	NSError *parseError = [parser parserError];
-	[parser release];
-	
-	// notify us
-	[self performSelectorOnMainThread:@selector(didParseData:) withObject:parseError waitUntilDone:YES];
+		NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
+		[parser setDelegate:self];
+		
+		[parser setShouldProcessNamespaces:NO];
+		[parser setShouldReportNamespacePrefixes:NO];
+		[parser setShouldResolveExternalEntities:NO];
+		
+		// parse
+		[parser parse];
+		NSError *parseError = [parser parserError];
+		
+		// notify us
+		[self performSelectorOnMainThread:@selector(didParseData:) withObject:parseError waitUntilDone:YES];
 	
 	// clean up
-	[innerPool release];
+	}
 }
 
 - (void)didParseData:(NSError *)error

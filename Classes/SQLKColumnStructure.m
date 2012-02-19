@@ -16,14 +16,6 @@
 @synthesize isPrimaryKey, isUnique;
 @synthesize defaultNeedsQuotes, defaultString;
 
-- (void)dealloc
-{
-	[name release];
-	[type release];
-	[defaultString release];
-	
-	[super dealloc];
-}
 
 /**
  *	Return a column belonging to the given table
@@ -33,7 +25,7 @@
 	SQLKColumnStructure *c = [self new];
 	c.table = aTable;
 	
-	return [c autorelease];
+	return c;
 }
 
 

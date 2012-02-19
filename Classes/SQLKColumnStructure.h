@@ -14,7 +14,7 @@
  *	Instances of this class represent columns belonging to a SQLKTableStructure
  */
 @interface SQLKColumnStructure : NSObject {
-	SQLKTableStructure *table;
+	SQLKTableStructure *__unsafe_unretained table;
 	
 	NSString *name;
 	NSString *type;
@@ -26,7 +26,7 @@
 	/// @todo add an array for column constraints
 }
 
-@property (nonatomic, assign) SQLKTableStructure *table;						///< The table to which the reicever belongs
+@property (nonatomic, unsafe_unretained) SQLKTableStructure *table;						///< The table to which the reicever belongs
 @property (nonatomic, copy) NSString *name;										///< The column name
 @property (nonatomic, copy) NSString *type;										///< The column type (e.g. "int(6)")
 @property (nonatomic, assign) BOOL isPrimaryKey;

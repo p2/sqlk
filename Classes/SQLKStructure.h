@@ -30,13 +30,13 @@
 }
 
 @property (nonatomic, copy) NSArray *tables;							///< An array full of SQLiteStructureTable objects
-@property (nonatomic, retain) NSURL *path;								///< The path to an sqlite database represented by the instance
+@property (nonatomic, strong) NSURL *path;								///< The path to an sqlite database represented by the instance
 
 @property (nonatomic, assign) BOOL asyncParsing;						///< Defaults to YES
-@property (nonatomic, retain) NSMutableArray *parsingTables;
-@property (nonatomic, retain) SQLKTableStructure *parsingTable;
-@property (nonatomic, retain) NSMutableArray *parsingTableColumns;
-@property (nonatomic, retain) NSMutableArray *parsingTableConstraints;
+@property (nonatomic, strong) NSMutableArray *parsingTables;
+@property (nonatomic, strong) SQLKTableStructure *parsingTable;
+@property (nonatomic, strong) NSMutableArray *parsingTableColumns;
+@property (nonatomic, strong) NSMutableArray *parsingTableConstraints;
 
 + (SQLKStructure *)structure;
 + (SQLKStructure *)structureFromArchive:(NSURL *)archiveUrl;

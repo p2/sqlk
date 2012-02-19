@@ -18,6 +18,7 @@
 @interface SQLiteObject ()
 
 @property (nonatomic, readwrite, assign) BOOL hydrated;
+@property (nonatomic, readwrite, assign) BOOL inDatabase;
 
 @end
 
@@ -26,7 +27,7 @@
 
 @synthesize db;
 @synthesize object_id;
-@synthesize hydrated;
+@synthesize hydrated, inDatabase;
 
 
 
@@ -56,7 +57,7 @@
  *	Calls "autofillFromDictionary:overwrite:" with YES for overwrite, thus setting the object_id
  *	@attention Dictionary entries with key "id" are assumed to be the object id!
  */
-- (void) hydrateFromDictionary:(NSDictionary *)dict
+- (void)hydrateFromDictionary:(NSDictionary *)dict
 {
 	[self autofillFrom:dict overwrite:YES];
 }
@@ -137,7 +138,7 @@
 /**
  *	The SQLite table being represented by these objects
  */
-+ (NSString *) tableName;
++ (NSString *)tableName;
 {
 	return @"t1";
 }
@@ -145,7 +146,7 @@
 /**
  *	The column name of the primary id column, holding the unique row identifier
  */
-+ (NSString *) tableKey
++ (NSString *)tableKey
 {
 	return @"key";
 }
@@ -155,7 +156,7 @@
  *	By default: SELECT * FROM `<tableName>` WHERE `<tableKey>` = object.key
  */
 static NSString *hydrateQuery = nil;
-+ (NSString *) hydrateQuery
++ (NSString *)hydrateQuery
 {
 	if (nil == hydrateQuery) {
 		hydrateQuery = [[NSString alloc] initWithFormat:@"SELECT * FROM `%@` WHERE `%@` = ?", [self tableName], [self tableKey]];
@@ -169,7 +170,7 @@ static NSString *hydrateQuery = nil;
  *	Calls "hydrateFromDictionary:" after performing "hydrateQuery"
  *	Consider using "didHydrateSuccessfully:" before deciding to override this method.
  */
-- (BOOL) hydrate
+- (BOOL)hydrate
 {
 	if (!self.db) {
 		DLog(@"We can't hydrate %@ without database", self);
@@ -187,6 +188,7 @@ static NSString *hydrateQuery = nil;
 	[self hydrateFromDictionary:[res resultDict]];
 	[res close];
 	hydrated = YES;
+	inDatabase = YES;
 	[self didHydrateSuccessfully:hydrated];
 	
 	return hydrated;
@@ -196,7 +198,7 @@ static NSString *hydrateQuery = nil;
  *	You may override this method to perform additional tasks after hydration has been completed, e.g. hydrate relationships.
  *	The default implementation does nothing.
  */
-- (void) didHydrateSuccessfully:(BOOL)success
+- (void)didHydrateSuccessfully:(BOOL)success
 {
 }
 
@@ -288,8 +290,11 @@ static NSString *hydrateQuery = nil;
 				 [qmarks componentsJoinedByString:@", "]];
 		
 		success = [self.db executeUpdate:query withArgumentsInArray:arguments];
-		if (success && !self.object_id) {
-			self.object_id = [NSNumber numberWithLongLong:[self.db lastInsertRowId]];
+		if (success) {
+			inDatabase = YES;
+			if (!self.object_id) {
+				self.object_id = [NSNumber numberWithLongLong:[self.db lastInsertRowId]];
+			}
 		}
 	}
 	

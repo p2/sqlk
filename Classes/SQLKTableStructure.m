@@ -17,15 +17,6 @@
 @synthesize name, columns, constraints;
 @synthesize originalQuery;
 
-- (void)dealloc
-{
-	[name release];
-	[columns release];
-	[constraints release];
-	[originalQuery release];
-
-	[super dealloc];
-}
 
 
 + (SQLKTableStructure *)tableForStructure:(SQLKStructure *)aStructure
@@ -33,7 +24,7 @@
 	SQLKTableStructure *t = [self new];
 	t.structure = aStructure;
 	
-	return [t autorelease];
+	return t;
 }
 
 /**
@@ -42,7 +33,7 @@
  */
 + (SQLKTableStructure *)tableFromQuery:(NSString *)aQuery
 {
-	SQLKTableStructure *t = [[self new] autorelease];
+	SQLKTableStructure *t = [self new];
 	if ([aQuery length] > 0) {
 		t.originalQuery = aQuery;
 		//DLog(@"Parsing:  %@", aQuery);
@@ -51,7 +42,7 @@
 		NSScanner *scanner = [NSScanner scannerWithString:aQuery];
 		[scanner setCaseSensitive:NO];
 		NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceCharacterSet];
-		NSMutableCharacterSet *wsOrComma = [[whiteSpace mutableCopy] autorelease];
+		NSMutableCharacterSet *wsOrComma = [whiteSpace mutableCopy];
 		[wsOrComma addCharactersInString:@","];
 		NSCharacterSet *closeBracketOrComma = [NSCharacterSet characterSetWithCharactersInString:@"),"];
 		
@@ -99,7 +90,7 @@
 							NSCharacterSet *skipSet = [scanner charactersToBeSkipped];
 							[scanner setCharactersToBeSkipped:nil];
 							
-							NSMutableString *constraint = [[scanString mutableCopy] autorelease];
+							NSMutableString *constraint = [scanString mutableCopy];
 							if ([scanner scanUpToString:@"(" intoString:&scanString]) {
 								[constraint appendString:scanString];
 								if ([scanner scanUpToString:@")" intoString:&scanString]) {
@@ -272,7 +263,6 @@
 						[errors addObject:anError];
 					}
 				}
-				[existingColumns release];
 				
 				// report specific errors
 				if ([errors count] > 0) {
@@ -293,7 +283,6 @@
 				return YES;
 			}
 			
-			[existingColumns release];
 		}
 		//else {
 		//	errorString = @"Table names don't match";
