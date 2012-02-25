@@ -25,7 +25,7 @@
 @property (nonatomic, readonly, assign, getter=isHydrated) BOOL hydrated;
 @property (nonatomic, readonly, assign, getter=isInDatabase) BOOL inDatabase;	///< Set to YES if the object has been hydrated from db or dehydrated at least once
 
-+ (id)objectOfDB:(FMDatabase *)aDatabase;
++ (id)newWithDatabase:(FMDatabase *)aDatabase;
 
 + (NSArray *)dbVariables;
 - (NSMutableDictionary *)dbValues;

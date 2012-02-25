@@ -34,7 +34,7 @@
 /**
  *	Returns a new object with a database link
  */
-+ (id)objectOfDB:(FMDatabase *)aDatabase
++ (id)newWithDatabase:(FMDatabase *)aDatabase
 {
 	SQLiteObject *o = [self new];
 	o.db = aDatabase;
