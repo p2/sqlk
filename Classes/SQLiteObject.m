@@ -20,6 +20,8 @@
 @property (nonatomic, readwrite, assign) BOOL hydrated;
 @property (nonatomic, readwrite, assign) BOOL inDatabase;
 
+- (BOOL)dehydrateProperties:(NSDictionary *)dict tryInsert:(BOOL)tryInsert error:(NSError *__autoreleasing *)error;
+
 @end
 
 
@@ -73,7 +75,7 @@
 {
 	if ([dict count] > 0) {
 		NSString *tableKey = [[self class] tableKey];
-		NSDictionary *dbvars = [self dbValues];
+		NSDictionary *dbvars = [self dbValuesForPropertyNames:[[self class] dbVariables]];
 		
 		// loop all db-ivars and assign appropriately
 		for (NSString *aKey in [dbvars allKeys]) {
@@ -184,7 +186,6 @@ static NSString *hydrateQuery = nil;
 	
 	// fetch first result (hopefully the only one), hydrate and close
 	FMResultSet *res = [self.db executeQuery:[[self class] hydrateQuery], self.object_id];
-	
 	[res next];
 	[self hydrateFromDictionary:[res resultDict]];
 	[res close];
@@ -206,12 +207,34 @@ static NSString *hydrateQuery = nil;
 
 #pragma mark - Dehydrating
 /**
- *	Generates an UPDATE query for all "dbValues" WITHOUT THE LEADING UNDERSCORE and does an INSERT if the update query didn't match any entry.
+ *	Generates an UPDATE query for all "dbVariables" WITHOUT THE LEADING UNDERSCORE and does an INSERT if the update query didn't match any entry.
  *	Consider using "didDehydrateSuccessfully:" before deciding to override this method.
- *	@attention This method will try to insert/update for all instance variables beginning with an underscore and thus FMDB will fail if the
- *	database table does not have a given column.
+ *	@attention This method will try to insert/update for all instance variables beginning with an underscore and thus FMDB will fail if the database
+ *	table does not have a given column. You should NOT call this method if you want to update existing objects and have not hydrated them first.
  */
 - (BOOL)dehydrate:(NSError **)error
+{
+	NSDictionary *dict = [self dbValuesForPropertyNames:[[self class] dbVariables]];
+	return [self dehydrateProperties:dict tryInsert:YES error:error];
+}
+
+
+/**
+ *	Fetches the current values for the given property names and runs an update query on only these values. Will not try to INSERT.
+ *	@param propNames An array with the property names, without underscore.
+ *	@param error An error pointer
+ */
+- (BOOL)dehydratePropertiesNamed:(NSArray *)propNames error:(NSError **)error
+{
+	NSDictionary *dict = [self dbValuesForPropertyNames:propNames];
+	return [self dehydrateProperties:dict tryInsert:NO error:error];
+}
+
+
+/**
+ *	The dehydration workhorse
+ */
+- (BOOL)dehydrateProperties:(NSDictionary *)dict tryInsert:(BOOL)tryInsert error:(NSError *__autoreleasing *)error
 {
 #if SQLK_TIMING_DEBUG
 	mach_timebase_info_data_t timebase;
@@ -220,16 +243,15 @@ static NSString *hydrateQuery = nil;
 	uint64_t startTime = mach_absolute_time();
 #endif
 	
-	if (!self.db) {
-		NSString *errorString = [NSString stringWithFormat:@"We can't dehydrate %@ without a database", self];
-		SQLK_ERR(error, errorString, 0);
-		return NO;
-	}
-	
-	NSDictionary *dict = [self dbValues];
 	if ([dict count] < 1) {
 		NSString *errorString = [NSString stringWithFormat:@"We can't dehydrate %@ without ivars for the database", self];
 		SQLK_ERR(error, errorString, 0)
+		return NO;
+	}
+	
+	if (!self.db) {
+		NSString *errorString = [NSString stringWithFormat:@"We can't dehydrate %@ without a database", self];
+		SQLK_ERR(error, errorString, 0);
 		return NO;
 	}
 	
@@ -264,7 +286,7 @@ static NSString *hydrateQuery = nil;
 	
 	
 	// ***** INSERT
-	if (!self.object_id || (success && [self.db changes] < 1)) {
+	if (tryInsert && (!self.object_id || (success && [self.db changes] < 1))) {
 		[properties removeAllObjects];
 		[arguments removeAllObjects];
 		NSMutableArray *qmarks = [NSMutableArray arrayWithCapacity:[dict count]];
@@ -313,6 +335,7 @@ static NSString *hydrateQuery = nil;
 #endif
 	return success;
 }
+
 
 /**
  *	You can override this method to perform additional tasks after dehydration (e.g. dehydrate properties).
@@ -371,15 +394,14 @@ static NSMutableDictionary *ivarsPerClass = nil;
 }
 
 /**
- *	Returns an NSDictionary with the receivers properties that are stored in the database (i.e. their ivar names start with an underscore)
+ *	Returns an NSDictionary with the receivers properties for the property names in the argument array
  */
-- (NSMutableDictionary *)dbValues
+- (NSMutableDictionary *)dbValuesForPropertyNames:(NSArray *)propNames
 {
-	NSArray *vars = [[self class] dbVariables];
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:[vars count]];
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:[propNames count]];
 	
 	// insert values into dictionary
-	for (NSString *varName in vars) {
+	for (NSString *varName in propNames) {
 		id value = nil;
 		@try {
 			value = [self valueForKey:varName];

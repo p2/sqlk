@@ -28,7 +28,7 @@
 + (id)newWithDatabase:(FMDatabase *)aDatabase;
 
 + (NSArray *)dbVariables;
-- (NSMutableDictionary *)dbValues;
+- (NSMutableDictionary *)dbValuesForPropertyNames:(NSArray *)propNames;
 
 - (void)setFromDictionary:(NSDictionary *)dict;
 - (void)hydrateFromDictionary:(NSDictionary *)dict;
@@ -42,6 +42,7 @@
 - (void)didHydrateSuccessfully:(BOOL)success;
 
 - (BOOL)dehydrate:(NSError **)error;
+- (BOOL)dehydratePropertiesNamed:(NSArray *)propNames error:(NSError **)error;
 - (void)didDehydrateSuccessfully:(BOOL)success;
 
 
