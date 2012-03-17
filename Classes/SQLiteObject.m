@@ -59,6 +59,7 @@
  */
 - (void)hydrateFromDictionary:(NSDictionary *)dict
 {
+	inDatabase = YES;
 	[self autofillFrom:dict overwrite:YES];
 }
 
@@ -188,7 +189,6 @@ static NSString *hydrateQuery = nil;
 	[self hydrateFromDictionary:[res resultDict]];
 	[res close];
 	hydrated = YES;
-	inDatabase = YES;
 	[self didHydrateSuccessfully:hydrated];
 	
 	return hydrated;

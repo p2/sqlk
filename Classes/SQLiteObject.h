@@ -21,9 +21,9 @@
 @interface SQLiteObject : NSObject
 
 @property (nonatomic, unsafe_unretained) FMDatabase *db;
-@property (nonatomic, strong) id object_id;										///< The object id can either be an NSNumber or NSString (e.g. for UUIDs)
+@property (nonatomic, strong) id object_id;											///< The object id can either be an NSNumber or NSString (e.g. for UUIDs)
 @property (nonatomic, readonly, assign, getter=isHydrated) BOOL hydrated;
-@property (nonatomic, readonly, assign, getter=isInDatabase) BOOL inDatabase;	///< Set to YES if the object has been hydrated from db or dehydrated at least once
+@property (nonatomic, readonly, assign, getter=isInDatabase) BOOL inDatabase;		///< Set to YES if one of the "[de]hydrate" methods has been called on the object
 
 + (id)newWithDatabase:(FMDatabase *)aDatabase;
 
