@@ -44,7 +44,7 @@
 
 - (SQLKTableStructure *)tableWithName:(NSString *)tableName;
 
-- (void)parseStructureFromXML:(NSURL *)xmlUrl error:(NSError **)error;
+- (BOOL)parseStructureFromXML:(NSURL *)xmlUrl error:(NSError **)error;
 
 - (FMDatabase *)createDatabaseAt:(NSURL *)dbPath error:(NSError **)error;
 - (FMDatabase *)createMemoryDatabaseWithError:(NSError **)error;

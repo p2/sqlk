@@ -428,9 +428,10 @@
 
 #pragma mark - Parsing Structure Descriptions
 /**
- *	Parses an XML file at given path to create a database structure
+ *	Parses an XML file at given path to create a database structure.
+ *	This method will NOT perform asynchronous parsing as it can't return YES or NO before parsing ends.
  */
-- (void)parseStructureFromXML:(NSURL *)xmlUrl error:(NSError * __autoreleasing*)error
+- (BOOL)parseStructureFromXML:(NSURL *)xmlUrl error:(NSError * __autoreleasing*)error
 {
 	// read data
 	__autoreleasing NSError *parseError = nil;
@@ -440,19 +441,16 @@
 	// parse
 	if (xmlData) {
 		self.parsingTables = [NSMutableArray array];
-		if (asyncParsing) {
-			[self performSelectorInBackground:@selector(parseXMLData:) withObject:xmlData];
-		}
-		else {
-			[self parseXMLData:xmlData];
-		}
+		[self parseXMLData:xmlData];
+		
+		return YES;			// on asyncParsing, we don't yet know whether we will succeed!
 	}
-	else {
-		DLog(@"Could not read XML: %@", [parseError userInfo]);
-		if (NULL != error) {
-			error = &parseError;
-		}
+	
+	DLog(@"Could not read XML: %@", [parseError userInfo]);
+	if (NULL != error) {
+		*error = parseError;
 	}
+	return NO;
 }
 
 
