@@ -45,6 +45,9 @@
 - (BOOL)dehydratePropertiesNamed:(NSArray *)propNames error:(NSError **)error;
 - (void)didDehydrateSuccessfully:(BOOL)success;
 
+- (BOOL)purge:(NSError **)error;
+- (void)didPurgeSuccessfully:(BOOL)success;
+
 
 @end
 

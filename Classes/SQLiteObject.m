@@ -341,7 +341,47 @@ static NSString *hydrateQuery = nil;
  *	You can override this method to perform additional tasks after dehydration (e.g. dehydrate properties).
  *	The default implementation does nothing.
  */
-- (void) didDehydrateSuccessfully:(BOOL)success
+- (void)didDehydrateSuccessfully:(BOOL)success
+{
+}
+
+
+
+#pragma mark - Purging/Deleting
+/**
+ *	Purge/delete an object from the database.
+ *	@param error An error pointer which is filled if the method returns NO
+ */
+- (BOOL)purge:(NSError *__autoreleasing *)error
+{
+	if (!self.db) {
+		NSString *errorMessage = [NSString stringWithFormat:@"We can't delete %@ without database", self];
+		SQLK_ERR(error, errorMessage, 0)
+		return NO;
+	}
+	if (!object_id) {
+		NSString *errorMessage = [NSString stringWithFormat:@"We can't delete %@ without primary key", self];
+		SQLK_ERR(error, errorMessage, 0)
+		return NO;
+	}
+	
+	// delete
+	NSString *purgeQuery = [NSString stringWithFormat:@"DELETE FROM `%@` WHERE `%@` = ?", [[self class] tableName], [[self class] tableKey]];
+	BOOL success = [self.db executeUpdate:purgeQuery, self.object_id];
+	if (success) {
+		hydrated = NO;
+		inDatabase = NO;
+	}
+	[self didPurgeSuccessfully:success];
+	
+	return success;
+}
+
+/**
+ *	Called after an object has been purged. You can override this to perform additional tasks (e.g. delete dependencies).
+ *	The default implementation does nothing.
+ */
+- (void)didPurgeSuccessfully:(BOOL)success
 {
 }
 
