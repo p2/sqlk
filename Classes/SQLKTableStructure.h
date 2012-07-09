@@ -36,11 +36,14 @@
 - (BOOL)createInDatabase:(FMDatabase *)database error:(NSError **)error;
 - (NSString *)creationQuery;
 
+- (SQLKColumnStructure *)columnNamed:(NSString *)columnName;
 - (BOOL)hasColumnNamed:(NSString *)columnName;
 - (BOOL)hasColumnWithStructure:(SQLKColumnStructure *)columnStructure error:(NSError **)error;
 
-- (BOOL)isEqualToTable:(SQLKTableStructure *)otherTable error:(NSError **)error;
-- (BOOL)updateTableAccordingTo:(NSString *)tableDesc dropUnused:(BOOL)drop error:(NSError **)error;	// returns YES on success
+- (BOOL)isEqualToTable:(SQLKTableStructure *)refTable error:(NSError **)error;
+- (BOOL)updateTableWith:(SQLKTableStructure *)refTable dropUnusedColumns:(BOOL)dropColumns error:(NSError **)error;
+
+- (BOOL)dropFromDatabase:(FMDatabase *)database error:(NSError **)error;
 
 - (void)log;
 

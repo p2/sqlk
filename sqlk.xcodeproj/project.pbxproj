@@ -9,6 +9,15 @@
 /* Begin PBXBuildFile section */
 		AA747D9F0F9514B9006C5449 /* sqlk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		EE08DE6215A9E07E00CF6086 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE6115A9E07E00CF6086 /* SenTestingKit.framework */; };
+		EE08DE6415A9E07E00CF6086 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE6315A9E07E00CF6086 /* UIKit.framework */; };
+		EE08DE6515A9E07E00CF6086 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		EE08DE6B15A9E07E00CF6086 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EE08DE6915A9E07E00CF6086 /* InfoPlist.strings */; };
+		EE08DE6E15A9E07E00CF6086 /* UnitTesting_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = EE08DE6D15A9E07E00CF6086 /* UnitTesting_iOS.m */; };
+		EE08DE8215A9E28500CF6086 /* libsqlk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC07E0554694100DB518D /* libsqlk.a */; };
+		EE08DE8415A9E28500CF6086 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE8315A9E28500CF6086 /* libsqlite3.dylib */; };
+		EE08DE8915A9E4A700CF6086 /* database1.xml in Resources */ = {isa = PBXBuildFile; fileRef = EE08DE8715A9E44D00CF6086 /* database1.xml */; };
+		EE08DE9215A9EE2100CF6086 /* database2.xml in Resources */ = {isa = PBXBuildFile; fileRef = EE08DE9115A9EE2100CF6086 /* database2.xml */; };
 		EE2D917712872C8700C69142 /* SQLKColumnStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */; };
 		EE2D917812872C8700C69142 /* SQLKColumnStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917012872C8700C69142 /* SQLKColumnStructure.m */; };
 		EE2D917912872C8700C69142 /* SQLKStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917112872C8700C69142 /* SQLKStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -40,16 +49,38 @@
 		EEE498AD133ABA6000FEDD45 /* sqlk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		EE08DE8515A9E29900CF6086 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = sqlk;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = sqlk_Prefix.pch; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libsqlk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsqlk.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE08DE6015A9E07E00CF6086 /* Unit Testing (iOS).octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Unit Testing (iOS).octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE08DE6115A9E07E00CF6086 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		EE08DE6315A9E07E00CF6086 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		EE08DE6815A9E07E00CF6086 /* Unit Testing (iOS)-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Unit Testing (iOS)-Info.plist"; sourceTree = "<group>"; };
+		EE08DE6A15A9E07E00CF6086 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EE08DE6C15A9E07E00CF6086 /* UnitTesting_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnitTesting_iOS.h; sourceTree = "<group>"; };
+		EE08DE6D15A9E07E00CF6086 /* UnitTesting_iOS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnitTesting_iOS.m; sourceTree = "<group>"; };
+		EE08DE6F15A9E07E00CF6086 /* Unit Testing (iOS)-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Unit Testing (iOS)-Prefix.pch"; sourceTree = "<group>"; };
+		EE08DE7A15A9E24E00CF6086 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		EE08DE8315A9E28500CF6086 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.0.sdk/usr/lib/libsqlite3.dylib; sourceTree = DEVELOPER_DIR; };
+		EE08DE8715A9E44D00CF6086 /* database1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = database1.xml; sourceTree = "<group>"; };
+		EE08DE9115A9EE2100CF6086 /* database2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = database2.xml; sourceTree = "<group>"; };
 		EE2D916D12872C8700C69142 /* SQLiteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = SQLiteObject.h; path = Classes/SQLiteObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		EE2D916E12872C8700C69142 /* SQLiteObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLiteObject.m; path = Classes/SQLiteObject.m; sourceTree = "<group>"; };
 		EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKColumnStructure.h; sourceTree = "<group>"; };
 		EE2D917012872C8700C69142 /* SQLKColumnStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SQLKColumnStructure.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		EE2D917112872C8700C69142 /* SQLKStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKStructure.h; sourceTree = "<group>"; };
-		EE2D917212872C8700C69142 /* SQLKStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SQLKStructure.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		EE2D917212872C8700C69142 /* SQLKStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SQLKStructure.m; sourceTree = "<group>"; };
 		EE2D917312872C8700C69142 /* SQLKTableStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKTableStructure.h; sourceTree = "<group>"; };
 		EE2D917412872C8700C69142 /* SQLKTableStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SQLKTableStructure.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		EE51873D146EFB97000BB0FC /* sqlk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlk.h; sourceTree = "<group>"; };
@@ -78,6 +109,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EE08DE5C15A9E07E00CF6086 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE08DE8415A9E28500CF6086 /* libsqlite3.dylib in Frameworks */,
+				EE08DE8215A9E28500CF6086 /* libsqlk.a in Frameworks */,
+				EE08DE6215A9E07E00CF6086 /* SenTestingKit.framework in Frameworks */,
+				EE08DE6415A9E07E00CF6086 /* UIKit.framework in Frameworks */,
+				EE08DE6515A9E07E00CF6086 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EEE49867133AB93800FEDD45 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -94,6 +137,7 @@
 			children = (
 				D2AAC07E0554694100DB518D /* libsqlk.a */,
 				EEE4986B133AB93800FEDD45 /* SQLiteKit.framework */,
+				EE08DE6015A9E07E00CF6086 /* Unit Testing (iOS).octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,9 +145,11 @@
 		0867D691FE84028FC02AAC07 /* sqlk */ = {
 			isa = PBXGroup;
 			children = (
-				EE51873B146EFAA6000BB0FC /* SQLiteKit */,
+				EE08DE7A15A9E24E00CF6086 /* README.md */,
+				EE51873B146EFAA6000BB0FC /* Code */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				EEE49872133AB93800FEDD45 /* SQLiteKit */,
+				EE08DE6615A9E07E00CF6086 /* Unit Testing (iOS) */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
@@ -113,8 +159,11 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EE08DE8315A9E28500CF6086 /* libsqlite3.dylib */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 				EEE4986C133AB93800FEDD45 /* Cocoa.framework */,
+				EE08DE6115A9E07E00CF6086 /* SenTestingKit.framework */,
+				EE08DE6315A9E07E00CF6086 /* UIKit.framework */,
 				EEE4986E133AB93800FEDD45 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -141,7 +190,29 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
-		EE51873B146EFAA6000BB0FC /* SQLiteKit */ = {
+		EE08DE6615A9E07E00CF6086 /* Unit Testing (iOS) */ = {
+			isa = PBXGroup;
+			children = (
+				EE08DE6C15A9E07E00CF6086 /* UnitTesting_iOS.h */,
+				EE08DE6D15A9E07E00CF6086 /* UnitTesting_iOS.m */,
+				EE08DE8715A9E44D00CF6086 /* database1.xml */,
+				EE08DE9115A9EE2100CF6086 /* database2.xml */,
+				EE08DE6715A9E07E00CF6086 /* Supporting Files */,
+			);
+			path = "Unit Testing (iOS)";
+			sourceTree = "<group>";
+		};
+		EE08DE6715A9E07E00CF6086 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EE08DE6815A9E07E00CF6086 /* Unit Testing (iOS)-Info.plist */,
+				EE08DE6915A9E07E00CF6086 /* InfoPlist.strings */,
+				EE08DE6F15A9E07E00CF6086 /* Unit Testing (iOS)-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EE51873B146EFAA6000BB0FC /* Code */ = {
 			isa = PBXGroup;
 			children = (
 				EE51873D146EFB97000BB0FC /* sqlk.h */,
@@ -150,7 +221,7 @@
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				EEB659E0142F810F005B423C /* fmdb */,
 			);
-			name = SQLiteKit;
+			name = Code;
 			sourceTree = "<group>";
 		};
 		EEB659E0142F810F005B423C /* fmdb */ = {
@@ -239,6 +310,25 @@
 			productReference = D2AAC07E0554694100DB518D /* libsqlk.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		EE08DE5F15A9E07E00CF6086 /* Unit Testing (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EE08DE7015A9E07E00CF6086 /* Build configuration list for PBXNativeTarget "Unit Testing (iOS)" */;
+			buildPhases = (
+				EE08DE5B15A9E07E00CF6086 /* Sources */,
+				EE08DE5C15A9E07E00CF6086 /* Frameworks */,
+				EE08DE5D15A9E07E00CF6086 /* Resources */,
+				EE08DE5E15A9E07E00CF6086 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EE08DE8615A9E29900CF6086 /* PBXTargetDependency */,
+			);
+			name = "Unit Testing (iOS)";
+			productName = "Unit Testing (iOS)";
+			productReference = EE08DE6015A9E07E00CF6086 /* Unit Testing (iOS).octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		EEE4986A133AB93800FEDD45 /* SQLiteKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EEE49879133AB93800FEDD45 /* Build configuration list for PBXNativeTarget "SQLiteKit" */;
@@ -262,6 +352,9 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "sqlk" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -280,11 +373,22 @@
 			targets = (
 				D2AAC07D0554694100DB518D /* sqlk */,
 				EEE4986A133AB93800FEDD45 /* SQLiteKit */,
+				EE08DE5F15A9E07E00CF6086 /* Unit Testing (iOS) */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		EE08DE5D15A9E07E00CF6086 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE08DE6B15A9E07E00CF6086 /* InfoPlist.strings in Resources */,
+				EE08DE8915A9E4A700CF6086 /* database1.xml in Resources */,
+				EE08DE9215A9EE2100CF6086 /* database2.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EEE49869133AB93800FEDD45 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -294,6 +398,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		EE08DE5E15A9E07E00CF6086 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D2AAC07B0554694100DB518D /* Sources */ = {
@@ -306,6 +426,14 @@
 				EEB659E9142F8122005B423C /* FMDatabaseAdditions.m in Sources */,
 				EEB659ED142F8122005B423C /* FMDatabase.m in Sources */,
 				EEB659F1142F8122005B423C /* FMResultSet.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE08DE5B15A9E07E00CF6086 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE08DE6E15A9E07E00CF6086 /* UnitTesting_iOS.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,7 +452,23 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		EE08DE8615A9E29900CF6086 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC07D0554694100DB518D /* sqlk */;
+			targetProxy = EE08DE8515A9E29900CF6086 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		EE08DE6915A9E07E00CF6086 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EE08DE6A15A9E07E00CF6086 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		EEE49875133AB93800FEDD45 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -342,7 +486,6 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -376,9 +519,9 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DDEBUG";
 				OTHER_LDFLAGS = "-ObjC";
-				PREBINDING = NO;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 			};
 			name = Debug;
@@ -393,12 +536,89 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-ObjC";
-				PREBINDING = NO;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 			};
 			name = Release;
+		};
+		EE08DE7115A9E07E00CF6086 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Unit Testing (iOS)/Unit Testing (iOS)-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "Unit Testing (iOS)/Unit Testing (iOS)-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		EE08DE7215A9E07E00CF6086 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Unit Testing (iOS)/Unit Testing (iOS)-Prefix.pch";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "Unit Testing (iOS)/Unit Testing (iOS)-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+		EE08DE7315A9E07E00CF6086 /* AdHoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Unit Testing (iOS)/Unit Testing (iOS)-Prefix.pch";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "Unit Testing (iOS)/Unit Testing (iOS)-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = AdHoc;
 		};
 		EE54763E142FE348007AB43F /* AdHoc */ = {
 			isa = XCBuildConfiguration;
@@ -410,9 +630,9 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-ObjC";
-				PREBINDING = NO;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 			};
 			name = AdHoc;
@@ -433,6 +653,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -457,6 +678,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -484,6 +706,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -523,6 +746,16 @@
 				1DEB922308733DC00010E9CD /* Debug */,
 				1DEB922408733DC00010E9CD /* Release */,
 				EE54763E142FE348007AB43F /* AdHoc */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EE08DE7015A9E07E00CF6086 /* Build configuration list for PBXNativeTarget "Unit Testing (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE08DE7115A9E07E00CF6086 /* Debug */,
+				EE08DE7215A9E07E00CF6086 /* Release */,
+				EE08DE7315A9E07E00CF6086 /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

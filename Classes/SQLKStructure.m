@@ -15,6 +15,7 @@
 
 @interface SQLKStructure ()
 
+@property (nonatomic, readwrite, strong) FMDatabase *database;
 @property (nonatomic, strong) NSMutableString *parsingString;
 
 - (BOOL)_createWithDatabase:(FMDatabase *)aDB error:(NSError **)error;
@@ -25,29 +26,40 @@
 
 @implementation SQLKStructure
 
-@synthesize tables;
-@synthesize path;
-@synthesize asyncParsing;
+@synthesize database = _database;
+@synthesize tables = _tables;
 @synthesize parsingTables, parsingTable, parsingTableColumns, parsingTableConstraints, parsingString;
 
 
 
 
 /**
- *	Returns a plain new instance
+ *	Reads an XML file representing a database and instantiates a structure
+ *	@return A new instance
  */
-+ (SQLKStructure *)structure
++ (SQLKStructure *)structureFromXML:(NSURL *)xmlPath
 {
-	return [self new];
+	SQLKStructure *s = [SQLKStructure new];
+	
+	// database accessible?
+	if ([s canAccessURL:xmlPath]) {
+		NSError *error = nil;
+		if ([s parseStructureFromXML:xmlPath error:&error]) {
+			return s;
+		}
+		DLog(@"%@", [error localizedDescription]);
+	}
+	
+	return nil;
 }
 
 /**
- *	Not yet implemented
+ *	@todo Not yet implemented
  */
 + (SQLKStructure *)structureFromArchive:(NSURL *)archiveUrl
 {
 	DLog(@"Implement me to load from archive at %@", archiveUrl);
-	return [[self alloc] init];
+	return [self new];
 }
 
 /**
@@ -57,7 +69,6 @@
 + (SQLKStructure *)structureFromDatabase:(NSURL *)dbPath
 {
 	SQLKStructure *s = [SQLKStructure new];
-	s.path = dbPath;
 	NSString *errorString = nil;
 	
 	// database accessible?
@@ -81,10 +92,12 @@
 					while ([masterSet next]) {
 						SQLKTableStructure *tblStructure = [SQLKTableStructure tableFromQuery:[masterSet stringForColumn:@"sql"]];
 						if (tblStructure) {
+							tblStructure.structure = s;
 							[newTables addObject:tblStructure];
 						}
 					}
 					
+					s.database = db;
 					s.tables = newTables;
 					
 					if (![db close]) {
@@ -130,7 +143,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-	[encoder encodeObject:tables forKey:@"tables"];
+	[encoder encodeObject:_tables forKey:@"tables"];
 }
 
 
@@ -141,7 +154,7 @@
  */
 - (FMDatabase *)createDatabaseAt:(NSURL *)dbPath error:(NSError **)error
 {
-	if ([tables count] > 0) {
+	if ([_tables count] > 0) {
 		
 		// can we access the database file?
 		if ([self canAccessURL:dbPath]) {
@@ -158,7 +171,7 @@
 				}
 				else {
 					NSString *errorString = [NSString stringWithFormat:@"Could not open database at %@: (%d) %@", dbPath, [db lastErrorCode], [db lastErrorMessage]];
-					SQLK_ERR(error, errorString, 0)
+					SQLK_ERR(error, errorString, 621)
 				}
 			}
 			else {
@@ -172,7 +185,7 @@
 		}
 	}
 	else {
-		SQLK_ERR(error, @"We first need tables in order to create a database", 0)
+		SQLK_ERR(error, @"We first need tables in order to create a database", 630)
 	}
 	
 	return nil;
@@ -184,7 +197,7 @@
 - (FMDatabase *)createMemoryDatabaseWithError:(NSError **)error
 {
 	// open the database in memory
-	if ([tables count] > 0) {
+	if ([_tables count] > 0) {
 		FMDatabase *db = [FMDatabase databaseWithPath:nil];
 		if ([db open]) {
 			if ([self _createWithDatabase:db error:error]) {
@@ -193,11 +206,11 @@
 		}
 		else {
 			NSString *errorString = [NSString stringWithFormat:@"Could not open memory database at: (%d) %@", [db lastErrorCode], [db lastErrorMessage]];
-			SQLK_ERR(error, errorString, 0)
+			SQLK_ERR(error, errorString, 623)
 		}
 	}
 	else {
-		SQLK_ERR(error, @"We first need tables in order to create a database", 0)
+		SQLK_ERR(error, @"We first need tables in order to create a database", 630)
 	}
 	
 	return nil;
@@ -206,46 +219,54 @@
 /**
  *	Recreates the receiver's structure in the given database
  */
-- (BOOL)_createWithDatabase:(FMDatabase *)aDB error:(NSError **)error
+- (BOOL)_createWithDatabase:(FMDatabase *)db error:(NSError **)error
 {
-	if (!aDB) {
+	if (!db) {
 		SQLK_ERR(error, @"No database given", 0)
 		return NO;
 	}
-	if (![aDB open]) {
+	if (![db open]) {
 		SQLK_ERR(error, @"Failed to open the database", 0)
+		return NO;
+	}
+	if ([_tables count] < 1) {
+		SQLK_ERR(error, @"There are no tables", 0)
 		return NO;
 	}
 	
 	// **** go ahead, make my day errrh... tables!
 	NSError *myError = nil;
-	[aDB beginTransaction];
-	for (SQLKTableStructure *table in tables) {
-		if (![table createInDatabase:aDB error:&myError]) {
-			[aDB rollback];
-			[aDB close];
+	[db beginTransaction];
+	for (SQLKTableStructure *table in _tables) {
+		if (![table createInDatabase:db error:&myError]) {
+			[db rollback];
+			[db close];
 			
 			NSString *errorString = [NSString stringWithFormat:@"Failed to create table \"%@\" in memory database: %@", table.name, [myError userInfo]];
-			SQLK_ERR(error, errorString, 667)
+			SQLK_ERR(error, errorString, 631)
 			return NO;
 		}
 	}
-	[aDB commit];
+	[db commit];
 	// ****
+	
+	self.database = db;
 	
 	return YES;
 }
 
 
 
-#pragma mark - Verifying
+#pragma mark - Verifying and Updating
 /**
- *	Compares a database structure to the receiver's structure. Compares all tables and the tables' structures and reports missing and superfluuous tables.
+ *	Compares a database structure to the receiver's structure.
+ *	Compares all tables and the tables' structures and reports missing and superfluuous tables.
  */
-- (BOOL)isEqualToDb:(SQLKStructure *)otherDB error:(NSError **)error
+- (BOOL)isEqualTo:(SQLKStructure *)otherDB error:(NSError **)error
 {
 	if (otherDB) {
-		NSMutableArray *existingTables = [tables mutableCopy];
+		NSMutableArray *existingTables = [_tables mutableCopy];
+		NSMutableArray *otherTables = [otherDB.tables mutableCopy];
 		NSMutableArray *errors = [NSMutableArray array];
 		
 		// compare table structures
@@ -257,6 +278,7 @@
 				}
 				else {
 					[existingTables removeObject:ts];
+					[otherTables removeObject:ts];
 				}
 			}
 		}
@@ -264,20 +286,30 @@
 		// superfluuous tables?
 		if ([existingTables count] > 0) {
 			for (SQLKTableStructure *sup in existingTables) {
+				NSError *myError = nil;
 				NSString *errorString = [NSString stringWithFormat:@"Superfluuous table: %@", sup.name];
-				NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
-				NSError *anError = [NSError errorWithDomain:NSCocoaErrorDomain code:670 userInfo:userDict];
-				[errors addObject:anError];
+				SQLK_ERR(&myError, errorString, 672)
+				[errors addObject:myError];
 			}
 		}
 		
-		// report specific errors
+		// missing tables?
+		if ([otherTables count] > 0) {
+			for (SQLKTableStructure *ts in self.tables) {
+				NSError *myError = nil;
+				if (![otherDB hasTableWithStructure:ts error:&myError]) {
+					[errors addObject:myError];
+				}
+			}
+		}
+		
+		// report mismatch errors
 		if ([errors count] > 0) {
-			NSString *errorString = [NSString stringWithFormat:@"%d errors occurred while comparing structure to \"%@\". See \"SQLKErrors\" in this errors' userInfo.", [errors count], self.path];
+			NSString *errorString = [NSString stringWithFormat:@"%d errors occurred while comparing structure. See \"SQLKErrors\" in this errors' userInfo.", [errors count]];
 			DLog(@"Error: %@", errorString);
 			if (NULL != error) {
 				NSDictionary *userDict = [NSDictionary dictionaryWithObjectsAndKeys:errorString, NSLocalizedDescriptionKey, errors, @"SQLKErrors", nil];
-				*error = [NSError errorWithDomain:NSCocoaErrorDomain code:671 userInfo:userDict];
+				*error = [NSError errorWithDomain:NSCocoaErrorDomain code:674 userInfo:userDict];
 			}
 			
 			return NO;
@@ -287,39 +319,102 @@
 		}
 	}
 	
-	// basic error
+	// missing other database
 	else {
-		NSString *errorString = [NSString stringWithFormat:@"There is no database at location: %@", self.path];
-		DLog(@"Error: %@", errorString);
-		if (NULL != error) {
-			NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
-			*error = [NSError errorWithDomain:NSCocoaErrorDomain code:672 userInfo:userDict];
-		}
+		SQLK_ERR(error, @"No comparison database structure given", 670);
 	}
 	
 	return NO;
 }
 
 /**
- *	Updates the database
- *	@todo implement
+ *	Updates the database to the receiver's structure
+ *	A structure is created from the existing database and then each table is compared to the receiver's structure. Missing columns are added to tables,
+ *	superfluuous tables are deleted if "dropCol" is YES, and the same applies to tables.
+ *	@param dbPath A NSURL to an sqlite database
+ *	@param dropColumns Whether it is allowed to drop no longer existing columns
+ *	@param dropTables Whether it is allowed to drop no longer existing tables
+ *	@param error A pointer to an error object
  */
-- (BOOL)updateDatabaseAt:(NSURL *)dbPath allowToDropColumns:(BOOL)dropCol tables:(BOOL)dropTables error:(NSError **)error
+- (BOOL)updateDatabaseAt:(NSURL *)dbPath allowToDropColumns:(BOOL)dropColumns tables:(BOOL)dropTables error:(NSError **)error
 {
-	SQLKStructure *otherDB = [SQLKStructure structureFromDatabase:dbPath];
-	if (![otherDB isEqualToDb:self error:error]) {
-		DLog(@"Should now update database at %@ because it does not meet our structure", dbPath);
-		return NO;
+	SQLKStructure *existingDb = [SQLKStructure structureFromDatabase:dbPath];
+	FMDatabase *db = existingDb.database;
+	
+	if ([db open]) {
+		[db beginTransaction];
+		NSMutableArray *existingTables = [existingDb.tables mutableCopy];
+		
+		// add new tables and update existing ones
+		if ([_tables count] > 0) {
+			for (SQLKTableStructure *myTable in _tables) {
+				SQLKTableStructure *existing = [existingDb tableWithName:myTable.name];
+				
+				// table exists, do update if needed
+				if (existing) {
+					if (![existing isEqualToTable:myTable error:nil]) {
+						if (![existing updateTableWith:myTable dropUnusedColumns:dropColumns error:error]) {
+							[db rollback];
+							return NO;
+						}
+					}
+					[existingTables removeObject:existing];
+				}
+				
+				// table is missing, create
+				else {
+					if (![myTable createInDatabase:db error:error]) {
+						[db rollback];
+						return NO;
+					}
+				}
+			}
+		}
+		
+		// superfluuous tables?
+		if ([existingTables count] > 0) {
+			if (dropTables) {
+				for (SQLKTableStructure *superfluuous in existingTables) {
+					if (![superfluuous dropFromDatabase:db error:error]) {
+						[db rollback];
+						return NO;
+					}
+				}
+			}
+			else {
+				DLog(@"There are %d superfluuous tables, but we're not allowed to drop them", [existingTables count]);
+			}
+		}
+		
+		if (![db commit]) {
+			NSString *errorString = [NSString stringWithFormat:@"Failed to commit transaction: (%d) %@", [db lastErrorCode], [db lastErrorMessage]];
+			SQLK_ERR(error, errorString, 625)
+			return NO;
+		}
+		return YES;
 	}
-	return YES;
+	
+	// missing other database
+	else if (db) {
+		NSString *errorString = [NSString stringWithFormat:@"Could not open database: (%d) %@", [db lastErrorCode], [db lastErrorMessage]];
+		SQLK_ERR(error, errorString, 621)
+	}
+	else if (existingDb) {
+		SQLK_ERR(error, @"Comparison structure does not have a database", 620);
+	}
+	else {
+		SQLK_ERR(error, @"No comparison database structure given", 670);
+	}
+	
+	return NO;
 }
 
 /**
- *	Returns YES if the database contains a table with this name
+ *	@return YES if the database contains a table with this name
  */
 - (BOOL)hasTable:(NSString *)tableName
 {
-	for (SQLKTableStructure *table in tables) {
+	for (SQLKTableStructure *table in _tables) {
 		if ([tableName isEqualToString:table.name]) {
 			return YES;
 		}
@@ -333,18 +428,17 @@
 - (BOOL)hasTableWithStructure:(SQLKTableStructure *)tableStructure error:(NSError **)error
 {
 	if (tableStructure) {
-		for (SQLKTableStructure *table in tables) {
+		for (SQLKTableStructure *table in _tables) {
 			if ([table.name isEqualToString:tableStructure.name]) {
 				return [table isEqualToTable:tableStructure error:error];
 			}
 		}
 	}
 	
-	if (error) {
-		NSString *errorString = [NSString stringWithFormat:@"No table named \"%@\"", tableStructure.name];
-		NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
-		*error = [NSError errorWithDomain:NSCocoaErrorDomain code:675 userInfo:userDict];
-	}
+	// no such table
+	NSString *errorString = [NSString stringWithFormat:@"No table with the structure of table named \"%@\"", tableStructure.name];
+	SQLK_ERR(error, errorString, 671)
+	
 	return NO;
 }
 
@@ -362,71 +456,69 @@
 		return nil;
 	}
 	
-	// see whether we already have the table
-	for (SQLKTableStructure *table in tables) {
-		if ([table.name isEqualToString:tableName]) {
-			return table;
+	// check our table array if we already have it
+	if (_tables) {
+		for (SQLKTableStructure *table in _tables) {
+			if ([table.name isEqualToString:tableName]) {
+				return table;
+			}
 		}
+		return nil;
 	}
 	
 	// not yet instantiated, fetch from sqlite
-	if (path) {
-		NSString *errorString = nil;
-		DLog(@"2");
+	if (![_database open]) {
+		if (_database) {
+			DLog(@"Could not open database: (%d) %@", [_database lastErrorCode], [_database lastErrorMessage]);
+		}
+		else {
+			DLog(@"I don't have a handle to a database, can't look for table named \"%@\"", tableName);
+		}
+		return nil;
+	}
+	NSString *errorString = nil;
+	
+	// fetch table sql
+	NSString *tableStructQuery = [NSString stringWithFormat:@"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '%@'", tableName];
+	FMResultSet *masterSet = [_database executeQuery:tableStructQuery];
+	if (![_database hadError]) {
+		[masterSet next];
 		
-		// open the database
-		FMDatabase *db = [FMDatabase databaseWithPath:[path path]];
-		if ([db open]) {
+		// create a table structure from sql
+		NSString *sql = [masterSet stringForColumn:@"sql"];
+		SQLKTableStructure *tblStructure = [SQLKTableStructure tableFromQuery:sql];
+		if (tblStructure) {
+			tblStructure.structure = self;
 			
-			// fetch table sql
-			NSString *tableStructQuery = [NSString stringWithFormat:
-										  @"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '%@'", tableName];
-			FMResultSet *masterSet = [db executeQuery:tableStructQuery];
-			if (![db hadError]) {
-				[masterSet next];
-				
-				// create a table structure from sql
-				NSString *sql = [masterSet stringForColumn:@"sql"];
-				SQLKTableStructure *tblStructure = [SQLKTableStructure tableFromQuery:sql];
-				if (tblStructure) {
-					
-					// add to tables
-					if ([tables count] > 0) {
-						NSMutableArray *newTables = [NSMutableArray arrayWithArray:tables];
-						[newTables addObject:tblStructure];
-						self.tables = newTables;
-					}
-					else {
-						self.tables = [NSArray arrayWithObject:tblStructure];
-					}
-				}
-				else {
-					errorString = [NSString stringWithFormat:@"Failed to parse sql to table structure: %@", sql];
-				}
-				
-				if (![db close]) {
-					errorString = [NSString stringWithFormat:@"Could not close database at %@: (%d) %@", path, [db lastErrorCode], [db lastErrorMessage]];
-				}
+			// add to tables
+			if ([_tables count] > 0) {
+				NSMutableArray *newTables = [NSMutableArray arrayWithArray:_tables];
+				[newTables addObject:tblStructure];
+				self.tables = newTables;
 			}
 			else {
-				errorString = [NSString stringWithFormat:@"SQLite error %d: %@", [db lastErrorCode], [db lastErrorMessage]];
+				self.tables = [NSArray arrayWithObject:tblStructure];
 			}
 		}
 		else {
-			errorString = [NSString stringWithFormat:@"Could not open database at %@: (%d) %@", path, [db lastErrorCode], [db lastErrorMessage]];
-		}
-		
-		// Error reporting
-		if (errorString) {
-			NSLog(@"Error in tableWithName: %@", errorString);
+			errorString = [NSString stringWithFormat:@"Failed to parse sql for table structure: %@", sql];
 		}
 	}
+	else {
+		errorString = [NSString stringWithFormat:@"SQLite error %d when fetching table description: %@", [_database lastErrorCode], [_database lastErrorMessage]];
+	}
+	
+	// log errors
+	if (errorString) {
+		DLog(@"Error in tableWithName: %@", errorString);
+	}
+	
 	return nil;
 }
 
 
 
-#pragma mark - Parsing Structure Descriptions
+#pragma mark - XML Parsing
 /**
  *	Parses an XML file at given path to create a database structure.
  *	This method will NOT perform asynchronous parsing as it can't return YES or NO before parsing ends.
@@ -454,16 +546,14 @@
 }
 
 
-
-#pragma mark - XML Parsing
 /**
  *	The parsing workhorse
  */
 - (void)parseXMLData:(NSData *)data
 {	
 	@autoreleasepool {
-	
-	// create a parser
+		
+		// create a parser
 		NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
 		[parser setDelegate:self];
 		
@@ -477,8 +567,6 @@
 		
 		// notify us
 		[self performSelectorOnMainThread:@selector(didParseData:) withObject:parseError waitUntilDone:YES];
-	
-	// clean up
 	}
 }
 
@@ -490,8 +578,6 @@
 	
 	self.tables = parsingTables;
 	self.parsingTables = nil;
-	
-	//[self log];
 }
 
 
@@ -511,15 +597,22 @@
 	
 	// table
 	if ([elementName isEqualToString:@"table"]) {
-		if ([self hasTable:[attributeDict valueForKey:@"name"]]) {
-			duplicateTable = YES;
-			DLog(@"There already is a table named \"%@\" in this structure, skipping", [attributeDict valueForKey:@"name"]);
+		self.parsingTable = nil;
+		NSString *tblName = [attributeDict valueForKey:@"name"];
+		if ([tblName length] > 0) {
+			if ([self hasTable:tblName]) {
+				duplicateTable = YES;
+				DLog(@"There already is a table named \"%@\" in this structure, skipping", [attributeDict valueForKey:@"name"]);
+			}
+			else {
+				duplicateTable = NO;
+				self.parsingTable = [SQLKTableStructure tableForStructure:self];
+				parsingTable.name = tblName;
+				self.parsingTableColumns = [NSMutableArray array];
+			}
 		}
 		else {
-			duplicateTable = NO;
-			self.parsingTable = [SQLKTableStructure tableForStructure:self];
-			parsingTable.name = [attributeDict valueForKey:@"name"];
-			self.parsingTableColumns = [NSMutableArray array];
+			DLog(@"Encountered a table element without name, skipping");
 		}
 	}
 	
@@ -537,7 +630,7 @@
 			[parsingTableColumns addObject:column];
 		}
 		else if (!duplicateTable) {
-			DLog(@"Encountered a column without a table in place. Generate an error!");
+			DLog(@"Encountered a column element without a table in place. Generate an error!");
 		}
 	}
 	
@@ -571,14 +664,11 @@
 			if ([parsingTableConstraints count] > 0) {
 				parsingTable.constraints = parsingTableConstraints;
 			}
-			self.parsingTableConstraints = nil;
 			
 			[parsingTables addObject:parsingTable];
 			self.parsingTable = nil;
 		}
-		else {
-			DLog(@"Ended a table without beginning one. Interesting. Generate an error!");
-		}
+		self.parsingTableConstraints = nil;
 	}
 	
 	// constraint
@@ -588,8 +678,8 @@
 				self.parsingTableConstraints = [NSMutableArray array];
 			}
 			[parsingTableConstraints addObject:parsingString];
-			self.parsingString = nil;
 		}
+		self.parsingString = nil;
 	}
 }
 
@@ -630,14 +720,14 @@
 - (void)log
 {
 	NSLog(@"%@", self);
-	for (SQLKTableStructure *table in tables) {
+	for (SQLKTableStructure *table in _tables) {
 		[table log];
 	}
 }
 
 - (NSString *) description
 {
-	return [NSString stringWithFormat:@"%@ <0x%x> %i tables", NSStringFromClass([self class]), self, [tables count]];
+	return [NSString stringWithFormat:@"%@ <%p> %i tables", NSStringFromClass([self class]), self, [_tables count]];
 }
 
 

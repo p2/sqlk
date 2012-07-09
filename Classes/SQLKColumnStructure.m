@@ -36,7 +36,7 @@
  */
 - (NSString *)creationQuery
 {
-	NSMutableString *query = [NSMutableString stringWithFormat:@"%@ %@", name, [self fullType]];
+	NSMutableString *query = [NSMutableString stringWithFormat:@"%@ %@", name, type];
 	if (isPrimaryKey) {
 		[query appendString:@" PRIMARY KEY"];
 	}
@@ -62,6 +62,9 @@
  */
 - (BOOL)isEqual:(id)object
 {
+	if (self == object) {
+		return YES;
+	}
 	if ([object isKindOfClass:[self class]] && [name isEqualToString:[object name]]) {
 		return [self isEqualToColumn:(SQLKColumnStructure *)object error:NULL];
 	}
@@ -79,7 +82,7 @@
 		equal = [[self creationQuery] isEqualToString:[oc creationQuery]];
 		if (!equal) {
 			NSString *errorString = [NSString stringWithFormat:@"Columns are not equal (%@  --  %@)", [self creationQuery], [oc creationQuery]];
-			SQLK_ERR(error, errorString, 669)
+			SQLK_ERR(error, errorString, 676)
 		}
 	}
 	return equal;
@@ -87,21 +90,29 @@
 
 
 
-#pragma mark - Utilities
+#pragma mark - KVC
 /**
  *	Returns the SQLite type for type variations one might use
  */
-- (NSString *)fullType
+- (void)setType:(NSString *)aType
 {
-	if ([@"int" isEqualToString:type] || [@"INT" isEqualToString:type]) {
-		self.type = @"INTEGER";
+	if (aType != type) {
+		NSString *intSuffix = ([aType length] > 3) ? [aType substringToIndex:3] : aType;
+		if ([@"int" isEqualToString:intSuffix] || [@"INT" isEqualToString:intSuffix]) {
+			type = @"INTEGER";
+		}
+		else {
+			type = [aType copy];
+		}
 	}
-	return type;
 }
 
+
+
+#pragma mark - Utilities
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"%@ <0x%x> `%@` %@, primary: %i, unique: %i, default: %@", NSStringFromClass([self class]), self, name, type, isPrimaryKey, isUnique, (defaultNeedsQuotes ? [NSString stringWithFormat:@"\"%@\"", defaultString] : defaultString)];
+	return [NSString stringWithFormat:@"%@ <%p> `%@` %@, primary: %i, unique: %i, default: %@", NSStringFromClass([self class]), self, name, type, isPrimaryKey, isUnique, (defaultNeedsQuotes ? [NSString stringWithFormat:@"\"%@\"", defaultString] : defaultString)];
 }
 
 

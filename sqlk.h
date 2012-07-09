@@ -8,7 +8,8 @@
 
 #ifndef SQLK_ERR
 #define SQLK_ERR(p, s, c)	if (p != NULL && s) {\
-		*p = [NSError errorWithDomain:NSCocoaErrorDomain code:(c ? c : 0) userInfo:[NSDictionary dictionaryWithObject:s forKey:NSLocalizedDescriptionKey]];\
+		NSString *str = s ? s : @"Unknown Error";\
+		*p = [NSError errorWithDomain:NSCocoaErrorDomain code:(c ? c : 0) userInfo:[NSDictionary dictionaryWithObject:str forKey:NSLocalizedDescriptionKey]];\
 	}\
 	else {\
 		DLog(@"Ignored Error: %@", s);\

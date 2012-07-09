@@ -323,7 +323,7 @@ static NSString *hydrateQuery = nil;
 	// error?
 	if (!success) {
 		NSString *errorString = [self.db hadError] ? [self.db lastErrorMessage] : @"Unknown dehydrate error";
-		SQLK_ERR(error, errorString, 676)
+		SQLK_ERR(error, errorString, 600)
 	}
 	
 	[self didDehydrateSuccessfully:success];

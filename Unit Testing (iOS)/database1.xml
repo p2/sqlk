@@ -1,0 +1,13 @@
+<database>
+	<table name="test_table">
+		<column name="row_id" type="int" primary="1" />
+		<column name="group_id" type="varchar(36)" />
+		<column name="type_id" type="varchar(36)" />
+		<column name="value" type="int(7)" />
+		<column name="lastedit" type="timestamp" default="CURRENT_TIMESTAMP" />
+		<column name="lastedit_by" type="int(6)" />
+		<column name="added" type="timestamp" default="CURRENT_TIMESTAMP" />
+		<column name="added_by" type="int(6)" />
+		<constraint>UNIQUE (group_id, type_id) ON CONFLICT REPLACE</constraint>
+	</table>
+</database>

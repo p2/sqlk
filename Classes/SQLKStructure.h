@@ -16,29 +16,22 @@
  *	Instances of this class represent one database. You mostly only interact with this class and only rarely need to use the table and column structure classes
  */
 @interface SQLKStructure : NSObject <NSCoding, NSXMLParserDelegate> {
-	NSArray *tables;
-	NSURL *path;
 	
-	// XML parsing
-	BOOL asyncParsing;
-	NSMutableArray *parsingTables;
-	SQLKTableStructure *parsingTable;
-	NSMutableArray *parsingTableColumns;
-	NSMutableArray *parsingTableConstraints;
+	@private
 	NSMutableString *parsingString;
 	BOOL duplicateTable;
 }
 
-@property (nonatomic, copy) NSArray *tables;							///< An array full of SQLiteStructureTable objects
-@property (nonatomic, strong) NSURL *path;								///< The path to an sqlite database represented by the instance
+@property (nonatomic, readonly, strong) FMDatabase *database;			///< A handle to the sqlite database that the receiver is representing
 
-@property (nonatomic, assign) BOOL asyncParsing;						///< Defaults to YES
+@property (nonatomic, copy) NSArray *tables;							///< An array full of SQLiteStructureTable objects
+
 @property (nonatomic, strong) NSMutableArray *parsingTables;
 @property (nonatomic, strong) SQLKTableStructure *parsingTable;
 @property (nonatomic, strong) NSMutableArray *parsingTableColumns;
 @property (nonatomic, strong) NSMutableArray *parsingTableConstraints;
 
-+ (SQLKStructure *)structure;
++ (SQLKStructure *)structureFromXML:(NSURL *)xmlPath;
 + (SQLKStructure *)structureFromArchive:(NSURL *)archiveUrl;
 + (SQLKStructure *)structureFromDatabase:(NSURL *)dbPath;
 
@@ -48,7 +41,7 @@
 
 - (FMDatabase *)createDatabaseAt:(NSURL *)dbPath error:(NSError **)error;
 - (FMDatabase *)createMemoryDatabaseWithError:(NSError **)error;
-- (BOOL)isEqualToDb:(SQLKStructure *)otherDB error:(NSError **)error;
+- (BOOL)isEqualTo:(SQLKStructure *)otherDB error:(NSError **)error;
 - (BOOL)updateDatabaseAt:(NSURL *)dbPath allowToDropColumns:(BOOL)dropCol tables:(BOOL)dropTables error:(NSError **)error;
 
 - (BOOL)hasTable:(NSString *)tableName;

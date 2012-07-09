@@ -39,7 +39,5 @@
 - (NSString *)creationQuery;
 - (BOOL)isEqualToColumn:(SQLKColumnStructure *)oc error:(NSError **)error;
 
-- (NSString *)fullType;
-
 
 @end
