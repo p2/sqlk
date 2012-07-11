@@ -76,7 +76,7 @@
 	STAssertEquals(777, [res intForColumn:@"value"], @"Wrong value");
 	[res close];
 	
-	// compare to database2 (new column, new default value, renamed column, one new table)
+	// compare to database2 (new column and a new table)
 	NSString *xmlBundlePath2 = [[NSBundle bundleForClass:[self class]] pathForResource:@"database2" ofType:@"xml"];
 	STAssertNotNil(xmlBundlePath2, @"Did not find database2.xml");
 	NSURL *xmlPath2 = [[NSURL alloc] initFileURLWithPath:xmlBundlePath2];
@@ -86,7 +86,12 @@
 	STAssertFalse([structure2 isEqualTo:structure error:nil], @"Structure thinks it's the same as the old one");
 	
 	// update structure
-	STAssertTrue([structure2 updateDatabaseAt:dbURL allowToDropColumns:YES tables:NO error:nil], @"Failed to update db structure");
+	STAssertTrue([structure2 updateDatabaseAt:dbURL dropTables:NO error:nil], @"Failed to update db structure");
+	STAssertTrue([db executeUpdate:@"UPDATE test_table SET description = \"Oh hell yes\" WHERE row_id = 2"], @"Failed to insert description");
+	res = [db executeQuery:@"SELECT description FROM test_table WHERE row_id = 2"];
+	[res next];
+	STAssertEqualObjects(@"Oh hell yes", [res stringForColumnIndex:0], @"Wrong description");
+	[res close];
 	
 	// clean up
 	[db close];

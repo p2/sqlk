@@ -42,7 +42,7 @@
 - (FMDatabase *)createDatabaseAt:(NSURL *)dbPath error:(NSError **)error;
 - (FMDatabase *)createMemoryDatabaseWithError:(NSError **)error;
 - (BOOL)isEqualTo:(SQLKStructure *)otherDB error:(NSError **)error;
-- (BOOL)updateDatabaseAt:(NSURL *)dbPath allowToDropColumns:(BOOL)dropCol tables:(BOOL)dropTables error:(NSError **)error;
+- (BOOL)updateDatabaseAt:(NSURL *)dbPath dropTables:(BOOL)dropTables error:(NSError **)error;
 
 - (BOOL)hasTable:(NSString *)tableName;
 - (BOOL)hasTableWithStructure:(SQLKTableStructure *)tableStructure error:(NSError **)error;

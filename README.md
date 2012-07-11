@@ -24,3 +24,12 @@ Using the kit
 
 - libsqlite3.dylib
 
+
+To do
+-----
+
+### Better column parsing ###
+
+- Correctly parse DEFAULT values (currently regards everything after DEFAULT until the next comma as default)
+- Parse ON CONFLICT statements for UNIQUE and PRIMARY KEY statements (are currently ignored)
+- Support COLLATE statements

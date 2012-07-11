@@ -11,6 +11,14 @@
 #import "SQLKColumnStructure.h"
 #import "FMDatabase.h"
 
+#define DEBUG_SCANNING 0
+#ifndef SLog
+# if DEBUG_SCANNING
+#  define SLog(fmt, ...) NSLog((@"%s (line %d) " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+# else
+#  define SLog(...)
+# endif
+#endif
 
 @implementation SQLKTableStructure
 
@@ -37,7 +45,7 @@
 	SQLKTableStructure *t = [self new];
 	if ([aQuery length] > 0) {
 		t.originalQuery = aQuery;
-		//DLog(@"Parsing:  %@", aQuery);
+		SLog(@"Parsing:  %@", aQuery);
 		
 		NSString *errorString = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:aQuery];
@@ -76,9 +84,9 @@
 					// separate constraints from columns
 					if (!noMoreColumns) {
 						[scanner scanUpToCharactersFromSet:whiteSpace intoString:&scanString];
-						//DLog(@" -->  %@", scanString);
+						SLog(@" -->  %@", scanString);
 						
-						// looks like we found a constraint
+						// ** looks like we found a constraint
 						if (atConstraints
 							|| ([@"CONSTRAINT" isEqualToString:scanString]
 								|| [@"UNIQUE" isEqualToString:scanString]
@@ -111,7 +119,7 @@
 							[newConstraints addObject:constraint];
 						}
 						
-						// most likely a column
+						// ** most likely we found a column
 						else {
 							SQLKColumnStructure *column = [SQLKColumnStructure columnForTable:t];
 							column.name = scanString;
@@ -121,14 +129,32 @@
 								column.type = scanString;
 							}
 							
-							/// @todo Scan column constraints more sophisticated (scan up to either "(" or "," and see what we've got, then decide whether next column is starting or we're in brackets)
+							/// @todo Scan column constraints more sophisticated (scan up to either "(" or "," and see what we've got, then decide whether next
+							// column is starting or we're in brackets)
 							
+							// scan column constraints and defaults
 							if ([scanner scanUpToString:@"," intoString:&scanString]) {
-								//DLog(@"==>  %@  \"%@\"", column.name, scanString);
-								column.isUnique = ([scanString rangeOfString:@"UNIQUE"].location != NSNotFound);
-								column.isPrimaryKey = ([scanString rangeOfString:@"PRIMARY KEY"].location != NSNotFound);
+								SLog(@"==>  %@  \"%@\"", column.name, scanString);
+								
+								// unique column
+								column.isUnique = (NSNotFound != [scanString rangeOfString:@"UNIQUE"].location);
+								
+								// column is primary key
+								column.isPrimaryKey = (NSNotFound != [scanString rangeOfString:@"PRIMARY KEY"].location);
+								
+								// column has a default defined - for now we assume everything behind DEFAULT is the default value
+								if (NSNotFound != [scanString rangeOfString:@"DEFAULT"].location) {
+									NSMutableArray *parts = [[scanString componentsSeparatedByCharactersInSet:whiteSpace] mutableCopy];
+									NSUInteger defaultIndex = [parts indexOfObject:@"DEFAULT"];
+									if ([parts count] > defaultIndex + 1) {
+										NSIndexSet *remove = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, defaultIndex + 1)];
+										[parts removeObjectsAtIndexes:remove];
+										column.defaultString = [parts componentsJoinedByString:@" "];
+									}
+								}
 							}
 							
+							// remember column and skip to next item
 							if ([column.name length] > 0) {
 								[newColumns addObject:column];
 							}
@@ -257,8 +283,10 @@
 				
 				// compare existing columns
 				for (SQLKColumnStructure *refColumn in refTable.columns) {
-					NSError *myError = nil;
-					if (![self hasColumnWithStructure:refColumn error:&myError]) {
+					if (![self hasColumnWithStructure:refColumn]) {
+						NSError *myError = nil;
+						NSString *errorMessage = [NSString stringWithFormat:@"Differring column: %@", refColumn.name];
+						SQLK_ERR(&myError, errorMessage, 0)
 						[errors addObject:myError];
 					}
 					else {
@@ -269,10 +297,10 @@
 				// leftover columns?
 				if ([existingColumns count] > 0) {
 					for (SQLKColumnStructure *sup in existingColumns) {
+						NSError *myError = nil;
 						NSString *errorString = [NSString stringWithFormat:@"Superfluuous column: %@", sup.name];
-						NSDictionary *userDict = [NSDictionary dictionaryWithObject:errorString forKey:NSLocalizedDescriptionKey];
-						NSError *anError = [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:userDict];
-						[errors addObject:anError];
+						SQLK_ERR(&myError, errorString, 0)
+						[errors addObject:myError];
 					}
 				}
 				
@@ -338,16 +366,15 @@
 /**
  *	Returns YES if the receiver has a column with the given structure
  */
-- (BOOL)hasColumnWithStructure:(SQLKColumnStructure *)columnStructure error:(NSError **)error
+- (BOOL)hasColumnWithStructure:(SQLKColumnStructure *)columnStructure
 {
 	if (columnStructure) {
 		for (SQLKColumnStructure *column in columns) {
 			if ([column.name isEqualToString:columnStructure.name]) {
-				return [column isEqualToColumn:columnStructure error:error];
+				return [column isEqual:columnStructure];
 			}
 		}
 	}
-	SQLK_ERR(error, @"No comparison column given", 0)
 	return NO;
 }
 
@@ -358,43 +385,36 @@
 
 /**
  *	Updates the table to match the structure given in the reference table.
- *	The receiver's parent structure must have an open handle to the actual database
+ *	The receiver's parent structure must have an open handle to the actual database. Remember SQLite can't drop columns, so if you remove them from your schema,
+ *	they will still persist in the database.
+ *	We don't use transactions within this method as a transaction is openend by updateDatabaseAt:dropTables:error:
  */
-- (BOOL)updateTableWith:(SQLKTableStructure *)refTable dropUnusedColumns:(BOOL)dropColumns error:(NSError **)error
+- (BOOL)updateTableWith:(SQLKTableStructure *)refTable error:(NSError **)error
 {
 	FMDatabase *db = structure.database;
 	if ([db open]) {
-		NSMutableArray *existingColumns = [columns mutableCopy];
 		
 		// compare existing columns
 		if ([refTable.columns count] > 0) {
 			for (SQLKColumnStructure *refColumn in refTable.columns) {
 				SQLKColumnStructure *existing = [self columnNamed:refColumn.name];
 				
-				// existing column, but is the structure still valid?
-				if (existing) {
-					if (![existing isEqual:refColumn]) {
-						DLog(@"MUST UPDATE COLUMN %@", refColumn.name);
+				// column is missing, add it
+				if (!existing) {
+					
+					/// @todo New columns may not: ( http://www.sqlite.org/lang_altertable.html )
+					//		- be PRIMARY
+					//		- be UNIQUE
+					//		- have CURRENT_[TIME|DATE|TIMESTAMP] as default
+					//		- if it is NOT NULL, must have a non-null default value
+					//		- if it has a REFERENCES clause, must have a null default value
+					NSString *query = [NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN %@", refTable.name, [refColumn creationQuery]];
+					if (![db executeUpdate:query]) {
+						NSString *errorString = [NSString stringWithFormat:@"Failed to: %@: (%d) %@", query, [db lastErrorCode], [db lastErrorMessage]];
+						SQLK_ERR(error, errorString, 601)
+						return NO;
 					}
-					[existingColumns removeObject:existing];
 				}
-				
-				// new column, create
-				else {
-					DLog(@"MUST CREATE COLUMN %@", refColumn.name);
-				}
-			}
-		}
-		
-		// leftover columns?
-		if ([existingColumns count] > 0) {
-			if (dropColumns) {
-				for (SQLKColumnStructure *superfluuous in existingColumns) {
-					DLog(@"MUST DROP COLUMN %@", superfluuous.name);
-				}
-			}
-			else {
-				DLog(@"There are %d superfluuous columns, but we're not allowed to drop them", [existingColumns count]);
 			}
 		}
 		

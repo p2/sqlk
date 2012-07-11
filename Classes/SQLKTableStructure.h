@@ -15,14 +15,7 @@
 /**
  *	Instances of this class represent tables belonging to a SQLKStructure
  */
-@interface SQLKTableStructure : NSObject {
-	SQLKStructure *__unsafe_unretained structure;
-	
-	NSString *name;
-	NSArray *columns;
-	NSArray *constraints;
-	NSString *originalQuery;
-}
+@interface SQLKTableStructure : NSObject
 
 @property (nonatomic, unsafe_unretained) SQLKStructure *structure;
 @property (nonatomic, copy) NSString *name;							///< Table names are assumed to be unique per database/SQLKStructure
@@ -38,10 +31,10 @@
 
 - (SQLKColumnStructure *)columnNamed:(NSString *)columnName;
 - (BOOL)hasColumnNamed:(NSString *)columnName;
-- (BOOL)hasColumnWithStructure:(SQLKColumnStructure *)columnStructure error:(NSError **)error;
+- (BOOL)hasColumnWithStructure:(SQLKColumnStructure *)columnStructure;
 
 - (BOOL)isEqualToTable:(SQLKTableStructure *)refTable error:(NSError **)error;
-- (BOOL)updateTableWith:(SQLKTableStructure *)refTable dropUnusedColumns:(BOOL)dropColumns error:(NSError **)error;
+- (BOOL)updateTableWith:(SQLKTableStructure *)refTable error:(NSError **)error;
 
 - (BOOL)dropFromDatabase:(FMDatabase *)database error:(NSError **)error;
 

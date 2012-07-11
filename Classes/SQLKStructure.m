@@ -329,14 +329,13 @@
 
 /**
  *	Updates the database to the receiver's structure
- *	A structure is created from the existing database and then each table is compared to the receiver's structure. Missing columns are added to tables,
- *	superfluuous tables are deleted if "dropCol" is YES, and the same applies to tables.
+ *	A structure is created from the existing database and then each table is compared to the receiver's structure. Missing tables/columns are added to tables
+ *	and superfluuous tables are deleted
  *	@param dbPath A NSURL to an sqlite database
- *	@param dropColumns Whether it is allowed to drop no longer existing columns
  *	@param dropTables Whether it is allowed to drop no longer existing tables
  *	@param error A pointer to an error object
  */
-- (BOOL)updateDatabaseAt:(NSURL *)dbPath allowToDropColumns:(BOOL)dropColumns tables:(BOOL)dropTables error:(NSError **)error
+- (BOOL)updateDatabaseAt:(NSURL *)dbPath dropTables:(BOOL)dropTables error:(NSError **)error
 {
 	SQLKStructure *existingDb = [SQLKStructure structureFromDatabase:dbPath];
 	FMDatabase *db = existingDb.database;
@@ -353,7 +352,7 @@
 				// table exists, do update if needed
 				if (existing) {
 					if (![existing isEqualToTable:myTable error:nil]) {
-						if (![existing updateTableWith:myTable dropUnusedColumns:dropColumns error:error]) {
+						if (![existing updateTableWith:myTable error:error]) {
 							[db rollback];
 							return NO;
 						}
@@ -620,12 +619,7 @@
 	else if ([elementName isEqualToString:@"column"]) {
 		if (parsingTable) {
 			SQLKColumnStructure *column = [SQLKColumnStructure columnForTable:parsingTable];
-			column.name = [attributeDict valueForKey:@"name"];
-			column.type = [attributeDict valueForKey:@"type"];
-			column.isPrimaryKey = [[attributeDict valueForKey:@"primary"] boolValue];
-			column.isUnique = [[attributeDict valueForKey:@"unique"] boolValue];
-			column.defaultString = [attributeDict valueForKey:@"default"];
-			column.defaultNeedsQuotes = [[attributeDict valueForKey:@"quote_default"] boolValue];
+			[column setFromAttributeDictionary:attributeDict];
 			
 			[parsingTableColumns addObject:column];
 		}

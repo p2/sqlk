@@ -29,8 +29,24 @@
 }
 
 
+/**
+ *	Sets the columns properties from its XML node attribute dictionary
+ */
+- (void)setFromAttributeDictionary:(NSDictionary *)dictionary
+{
+	if (dictionary) {
+		self.name = [dictionary valueForKey:@"name"];
+		self.type = [dictionary valueForKey:@"type"];
+		self.isPrimaryKey = [[dictionary valueForKey:@"primary"] boolValue];
+		self.isUnique = [[dictionary valueForKey:@"unique"] boolValue];
+		self.defaultString = [dictionary valueForKey:@"default"];
+		self.defaultNeedsQuotes = [[dictionary valueForKey:@"quote_default"] boolValue];
+	}
+}
 
-#pragma mark - Creating and Verifying
+
+
+#pragma mark - Creating
 /**
  *	Returns the SQLite query needed to create a column with the receiver's structure
  */
@@ -57,35 +73,30 @@
 }
 
 
+
+#pragma mark - Comparing
 /**
- *	Two columns are considered equal if they have the same name and "isEqualToColumn:error:" returns YES
+ *	Two columns are considered equal if their name, type, default values, uniqueness and primary key status are all the same
  */
 - (BOOL)isEqual:(id)object
 {
 	if (self == object) {
 		return YES;
 	}
-	if ([object isKindOfClass:[self class]] && [name isEqualToString:[object name]]) {
-		return [self isEqualToColumn:(SQLKColumnStructure *)object error:NULL];
-	}
-	return NO;
-}
-
-/**
- *	Two columns are considered equal if their creation query strings are the same
- *	@todo Improve
- */
-- (BOOL)isEqualToColumn:(SQLKColumnStructure *)oc error:(NSError **)error
-{
-	BOOL equal = NO;
-	if (oc) {
-		equal = [[self creationQuery] isEqualToString:[oc creationQuery]];
-		if (!equal) {
-			NSString *errorString = [NSString stringWithFormat:@"Columns are not equal (%@  --  %@)", [self creationQuery], [oc creationQuery]];
-			SQLK_ERR(error, errorString, 676)
+	if ([object isKindOfClass:[self class]]) {
+		if ([name isEqualToString:[object name]]) {
+			NSString *oType = [object type];
+			if ((!type && !oType) || [type isEqualToString:oType]) {
+				NSString *oDefault = [object defaultString];
+				if ((!defaultString && !oDefault) || [defaultString isEqualToString:oDefault]) {
+					if (isUnique == [object isUnique]) {
+						return (isPrimaryKey == [object isPrimaryKey]);
+					}
+				}
+			}
 		}
 	}
-	return equal;
+	return NO;
 }
 
 
@@ -97,8 +108,9 @@
 - (void)setType:(NSString *)aType
 {
 	if (aType != type) {
+		aType = [aType uppercaseString];
 		NSString *intSuffix = ([aType length] > 3) ? [aType substringToIndex:3] : aType;
-		if ([@"int" isEqualToString:intSuffix] || [@"INT" isEqualToString:intSuffix]) {
+		if ([@"INT" isEqualToString:intSuffix]) {
 			type = @"INTEGER";
 		}
 		else {
