@@ -30,11 +30,9 @@
 
 - (void)testAll
 {
-	NSString *xmlBundlePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"database1" ofType:@"xml"];
-	STAssertNotNil(xmlBundlePath, @"Did not find database1.xml");
-	NSURL *xmlURL = [[NSURL alloc] initFileURLWithPath:xmlBundlePath];
-	STAssertNotNil(xmlURL, @"Failed to create URL");
-	SQLKStructure *structure = [SQLKStructure structureFromXML:xmlURL];
+	NSString *xmlPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"database1" ofType:@"xml"];
+	STAssertNotNil(xmlPath, @"Did not find database1.xml");
+	SQLKStructure *structure = [SQLKStructure structureFromXML:xmlPath];
 	STAssertNotNil(structure, @"Structure from database1.xml failed");
 	
 	// is database1 correct?
@@ -47,12 +45,10 @@
 	STAssertTrue(([libraryPaths count] > 0), @"Library directory not found");
 	NSString *dbPath = [[libraryPaths objectAtIndex:0] stringByAppendingPathComponent:@"database.sqlite"];
 	STAssertNotNil(dbPath, @"No library to write to");
-	NSURL *dbURL = [[NSURL alloc] initFileURLWithPath:dbPath];
-	STAssertNotNil(dbURL, @"Failed to create URL");
 	
 	NSFileManager *fm = [NSFileManager new];
 	[fm removeItemAtPath:dbPath error:nil];				// will be removed at the end of this method, but this makes it easier to debug and no harm is done
-	FMDatabase *db = [structure createDatabaseAt:dbURL error:nil];
+	FMDatabase *db = [structure createDatabaseAt:dbPath error:nil];
 	STAssertNotNil(db, @"Failed to create sqlite database");
 	STAssertTrue([db open], @"Failed to open the database");
 	
@@ -77,16 +73,14 @@
 	[res close];
 	
 	// compare to database2 (new column and a new table)
-	NSString *xmlBundlePath2 = [[NSBundle bundleForClass:[self class]] pathForResource:@"database2" ofType:@"xml"];
-	STAssertNotNil(xmlBundlePath2, @"Did not find database2.xml");
-	NSURL *xmlPath2 = [[NSURL alloc] initFileURLWithPath:xmlBundlePath2];
-	STAssertNotNil(xmlPath2, @"Failed to create URL");
+	NSString *xmlPath2 = [[NSBundle bundleForClass:[self class]] pathForResource:@"database2" ofType:@"xml"];
+	STAssertNotNil(xmlPath2, @"Did not find database2.xml");
 	SQLKStructure *structure2 = [SQLKStructure structureFromXML:xmlPath2];
 	STAssertNotNil(structure2, @"Structure from database2.xml failed");
 	STAssertFalse([structure2 isEqualTo:structure error:nil], @"Structure thinks it's the same as the old one");
 	
 	// update structure
-	STAssertTrue([structure2 updateDatabaseAt:dbURL dropTables:NO error:nil], @"Failed to update db structure");
+	STAssertTrue([structure2 updateDatabaseAt:dbPath dropTables:NO error:nil], @"Failed to update db structure");
 	STAssertTrue([db executeUpdate:@"UPDATE test_table SET description = \"Oh hell yes\" WHERE row_id = 2"], @"Failed to insert description");
 	res = [db executeQuery:@"SELECT description FROM test_table WHERE row_id = 2"];
 	[res next];

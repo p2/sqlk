@@ -18,37 +18,29 @@
 @interface SQLKStructure : NSObject <NSCoding, NSXMLParserDelegate> {
 	
 	@private
-	NSMutableString *parsingString;
 	BOOL duplicateTable;
 }
 
 @property (nonatomic, readonly, strong) FMDatabase *database;			///< A handle to the sqlite database that the receiver is representing
-
 @property (nonatomic, copy) NSArray *tables;							///< An array full of SQLiteStructureTable objects
 
-@property (nonatomic, strong) NSMutableArray *parsingTables;
-@property (nonatomic, strong) SQLKTableStructure *parsingTable;
-@property (nonatomic, strong) NSMutableArray *parsingTableColumns;
-@property (nonatomic, strong) NSMutableArray *parsingTableConstraints;
-
-+ (SQLKStructure *)structureFromXML:(NSURL *)xmlPath;
-+ (SQLKStructure *)structureFromArchive:(NSURL *)archiveUrl;
-+ (SQLKStructure *)structureFromDatabase:(NSURL *)dbPath;
++ (SQLKStructure *)structureFromXML:(NSString *)xmlPath;
++ (SQLKStructure *)structureFromArchive:(NSString *)archiveUrl;
++ (SQLKStructure *)structureFromDatabase:(NSString *)dbPath;
 
 - (SQLKTableStructure *)tableWithName:(NSString *)tableName;
 
-- (BOOL)parseStructureFromXML:(NSURL *)xmlUrl error:(NSError **)error;
-
-- (FMDatabase *)createDatabaseAt:(NSURL *)dbPath error:(NSError **)error;
+- (FMDatabase *)createDatabaseAt:(NSString *)dbPath useBundleDbIfMissing:(NSString *)bundleFilename updateStructure:(BOOL)update error:(NSError * __autoreleasing *)error;
+- (FMDatabase *)createDatabaseAt:(NSString *)dbPath useBundleDbIfMissing:(NSString *)bundleFilename error:(NSError * __autoreleasing *)error;
+- (FMDatabase *)createDatabaseAt:(NSString *)dbPath error:(NSError * __autoreleasing *)error;
 - (FMDatabase *)createMemoryDatabaseWithError:(NSError **)error;
+
 - (BOOL)isEqualTo:(SQLKStructure *)otherDB error:(NSError **)error;
-- (BOOL)updateDatabaseAt:(NSURL *)dbPath dropTables:(BOOL)dropTables error:(NSError **)error;
+- (BOOL)updateDatabaseAt:(NSString *)dbPath dropTables:(BOOL)dropTables error:(NSError **)error;
 
 - (BOOL)hasTable:(NSString *)tableName;
 - (BOOL)hasTableWithStructure:(SQLKTableStructure *)tableStructure error:(NSError **)error;
 
-- (BOOL)canAccessURL:(NSURL *)dbPath;
-- (NSURL *)backupDatabaseAt:(NSURL *)dbPath;
 - (void)log;
 
 
