@@ -130,7 +130,8 @@
 							}
 							
 							/// @todo Scan column constraints more sophisticated (scan up to either "(" or "," and see what we've got, then decide whether next
-							// column is starting or we're in brackets)
+							// column is starting or we're in brackets). Not sure if it's worth the effort since this "feature" is only useful if parsing the
+							// structure from one sqlite database and wanting to create a blank copy of it, without access to an XML structure.
 							
 							// scan column constraints and defaults
 							if ([scanner scanUpToString:@"," intoString:&scanString]) {
@@ -175,7 +176,9 @@
 			errorString = @"Could not find CREATE TABLE hook";
 		}
 		
-		//[t log];
+#if DEBUG_SCANNING
+		[t log];
+#endif
 		
 		if (errorString) {
 			DLog(@"Error parsing: %@\nSQL: %@", errorString, aQuery);

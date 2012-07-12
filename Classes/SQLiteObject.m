@@ -187,7 +187,7 @@ static NSString *hydrateQuery = nil;
 	// fetch first result (hopefully the only one), hydrate and close
 	FMResultSet *res = [self.db executeQuery:[[self class] hydrateQuery], self.object_id];
 	[res next];
-	[self hydrateFromDictionary:[res resultDict]];
+	[self hydrateFromDictionary:[res resultDictionary]];
 	[res close];
 	hydrated = YES;
 	[self didHydrateSuccessfully:hydrated];
@@ -482,7 +482,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"%@ <0x%x> '%@'", NSStringFromClass([self class]), self, object_id];
+	return [NSString stringWithFormat:@"%@ <%p> '%@'", NSStringFromClass([self class]), self, object_id];
 }
 
 

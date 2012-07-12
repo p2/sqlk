@@ -48,8 +48,10 @@
 	
 	NSFileManager *fm = [NSFileManager new];
 	[fm removeItemAtPath:dbPath error:nil];				// will be removed at the end of this method, but this makes it easier to debug and no harm is done
-	FMDatabase *db = [structure createDatabaseAt:dbPath error:nil];
+	BOOL didCreate = NO;
+	FMDatabase *db = [structure createDatabaseAt:dbPath useBundleDbIfMissing:nil wasMissing:&didCreate updateStructure:NO error:nil];
 	STAssertNotNil(db, @"Failed to create sqlite database");
+	STAssertTrue(didCreate, @"Thinks it did not create a database");
 	STAssertTrue([db open], @"Failed to open the database");
 	
 	// first row

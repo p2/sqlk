@@ -76,7 +76,8 @@
 
 #pragma mark - Comparing
 /**
- *	Two columns are considered equal if their name, type, default values, uniqueness and primary key status are all the same
+ *	Two columns are considered equal if their name and type are the same
+ *	Since SQLite can't update types, default values, uniqueness, primary key status and whatever in existing columns, we don't test for those properties.
  */
 - (BOOL)isEqual:(id)object
 {
@@ -84,16 +85,9 @@
 		return YES;
 	}
 	if ([object isKindOfClass:[self class]]) {
-		if ([name isEqualToString:[object name]]) {
-			NSString *oType = [object type];
-			if ((!type && !oType) || [type isEqualToString:oType]) {
-				NSString *oDefault = [object defaultString];
-				if ((!defaultString && !oDefault) || [defaultString isEqualToString:oDefault]) {
-					if (isUnique == [object isUnique]) {
-						return (isPrimaryKey == [object isPrimaryKey]);
-					}
-				}
-			}
+		SQLKColumnStructure *col = (SQLKColumnStructure *)object;
+		if ([name isEqualToString:col.name]) {
+			return ((!type && !col.type) || [type isEqualToString:col.type]);
 		}
 	}
 	return NO;

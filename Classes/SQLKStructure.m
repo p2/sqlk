@@ -16,6 +16,7 @@
 @interface SQLKStructure ()
 
 @property (nonatomic, readwrite, strong) FMDatabase *database;
+@property (nonatomic, readwrite, copy) NSString *schemaPath;
 
 @property (nonatomic, strong) NSMutableString *parsingString;
 @property (nonatomic, strong) NSMutableArray *parsingTables;
@@ -32,6 +33,7 @@
 @implementation SQLKStructure
 
 @synthesize database = _database;
+@synthesize schemaPath = _schemaPath;
 @synthesize tables = _tables;
 @synthesize parsingTables, parsingTable, parsingTableColumns, parsingTableConstraints, parsingString;
 
@@ -45,15 +47,9 @@
 + (SQLKStructure *)structureFromXML:(NSString *)xmlPath
 {
 	SQLKStructure *s = [SQLKStructure new];
+	s.schemaPath = xmlPath;
 	
-	// parse XML
-	NSError *error = nil;
-	if ([s _parseStructureFromXML:xmlPath error:&error]) {
-		return s;
-	}
-	
-	DLog(@"%@", [error localizedDescription]);
-	return nil;
+	return s;
 }
 
 /**
@@ -135,12 +131,13 @@
  *	If a bundle file is given and the database is not there (i.e. first app launch), a bundle sqlite file will be copied to the target destination.
  *	@param dbPath The path where the sqlite database should be stored
  *	@param bundleFilename The name of an sqlite file in the app bundle (without the extension, which must be .sqlite)
+ *	@param wasMissing A pointer to a bool that will be YES if the database was freshly created (either by copying or creating from schema)
  *	@param update If YES updates the existing database's structure
  *	@return An closed (!) handle to the database
  */
-- (FMDatabase *)createDatabaseAt:(NSString *)dbPath useBundleDbIfMissing:(NSString *)bundleFilename updateStructure:(BOOL)update error:(NSError * __autoreleasing *)error
+- (FMDatabase *)createDatabaseAt:(NSString *)dbPath useBundleDbIfMissing:(NSString *)bundleFilename wasMissing:(BOOL *)wasMissing updateStructure:(BOOL)update error:(NSError * __autoreleasing *)error
 {
-	if ([_tables count] < 1) {
+	if ([self.tables count] < 1) {
 		SQLK_ERR(error, @"We need tables in order to create a database", 630)
 		return nil;
 	}
@@ -186,6 +183,11 @@
 					return nil;
 				}
 			}
+			
+			// report that it was missing
+			if (NULL != wasMissing) {
+				*wasMissing = YES;
+			}
 		}
 	}
 	
@@ -200,6 +202,15 @@
 	return handle;
 }
 
+/**
+ *	Recreates the receiver's structure in the database given at path.
+ *	If a bundle file is given and the database is not there (i.e. first app launch), a bundle sqlite file will be copied to the target destination.
+ */
+- (FMDatabase *)createDatabaseAt:(NSString *)dbPath useBundleDbIfMissing:(NSString *)bundleFilename updateStructure:(BOOL)update error:(NSError * __autoreleasing *)error
+{
+	return [self createDatabaseAt:dbPath useBundleDbIfMissing:bundleFilename wasMissing:NULL updateStructure:update error:error];
+}
+
 
 /**
  *	Recreates the receiver's structure in an SQLite database at the given path, if it does not exist but a bundle path to an sqlite file is given, that database
@@ -208,7 +219,7 @@
  */
 - (FMDatabase *)createDatabaseAt:(NSString *)dbPath useBundleDbIfMissing:(NSString *)bundleFilename error:(NSError * __autoreleasing *)error
 {
-	return [self createDatabaseAt:dbPath useBundleDbIfMissing:bundleFilename updateStructure:NO error:error];
+	return [self createDatabaseAt:dbPath useBundleDbIfMissing:bundleFilename wasMissing:NULL updateStructure:NO error:error];
 }
 
 /**
@@ -217,7 +228,7 @@
  */
 - (FMDatabase *)createDatabaseAt:(NSString *)dbPath error:(NSError * __autoreleasing *)error
 {
-	return [self createDatabaseAt:dbPath useBundleDbIfMissing:nil updateStructure:NO error:error];
+	return [self createDatabaseAt:dbPath useBundleDbIfMissing:nil wasMissing:NULL updateStructure:NO error:error];
 }
 
 /**
@@ -226,7 +237,7 @@
 - (FMDatabase *)createMemoryDatabaseWithError:(NSError **)error
 {
 	// open the database in memory
-	if ([_tables count] > 0) {
+	if ([self.tables count] > 0) {
 		FMDatabase *db = [FMDatabase databaseWithPath:nil];
 		if ([db open]) {
 			if ([self _createWithDatabase:db error:error]) {
@@ -259,7 +270,7 @@
 		SQLK_ERR(error, @"Failed to open the database", 0)
 		return NO;
 	}
-	if ([_tables count] < 1) {
+	if ([self.tables count] < 1) {
 		SQLK_ERR(error, @"There are no tables", 0)
 		return NO;
 	}
@@ -306,7 +317,7 @@
 		NSMutableArray *existingTables = [existingDb.tables mutableCopy];
 		
 		// add new tables and update existing ones
-		if ([_tables count] > 0) {
+		if ([self.tables count] > 0) {
 			for (SQLKTableStructure *myTable in _tables) {
 				SQLKTableStructure *existing = [existingDb tableWithName:myTable.name];
 				
@@ -379,6 +390,28 @@
 
 #pragma mark - Table Handling
 /**
+ *	The getter for our tables.
+ *	XML schemas are lazily parsed, when the getter is first called on an XML-based structure the XML gets actually parsed
+ */
+- (NSArray *)tables
+{
+	if (_tables) {
+		return _tables;
+	}
+	
+	// parse
+	if (!didParseSchema && [_schemaPath length] > 0) {
+		NSError *error = nil;
+		if ([self _parseStructureFromXML:_schemaPath error:&error]) {
+			return _tables;
+		}
+		
+		DLog(@"%@", [error localizedDescription]);
+	}
+	return nil;
+}
+
+/**
  *	@return YES if the database contains a table with this name
  */
 - (BOOL)hasTable:(NSString *)tableName
@@ -392,7 +425,7 @@
 - (BOOL)hasTableWithStructure:(SQLKTableStructure *)tableStructure error:(NSError **)error
 {
 	if (tableStructure) {
-		for (SQLKTableStructure *table in _tables) {
+		for (SQLKTableStructure *table in self.tables) {
 			if ([table.name isEqualToString:tableStructure.name]) {
 				return [table isEqualToTable:tableStructure error:error];
 			}
@@ -418,7 +451,7 @@
 	}
 	
 	// check our table array if we already have it
-	if (_tables) {
+	if (self.tables) {
 		for (SQLKTableStructure *table in _tables) {
 			if ([table.name isEqualToString:tableName]) {
 				return table;
@@ -488,7 +521,7 @@
 - (BOOL)isEqualTo:(SQLKStructure *)otherDB error:(NSError **)error
 {
 	if (otherDB) {
-		NSMutableArray *existingTables = [_tables mutableCopy];
+		NSMutableArray *existingTables = [self.tables mutableCopy];
 		NSMutableArray *otherTables = [otherDB.tables mutableCopy];
 		NSMutableArray *errors = [NSMutableArray array];
 		
@@ -570,7 +603,6 @@
 		return NO;
 	}
 	
-	// parse
 	// we parse on the main thread, table structures are usually not that big
 	@autoreleasepool {
 		self.parsingTables = [NSMutableArray array];
@@ -619,7 +651,16 @@
 		self.parsingTable = nil;
 		NSString *tblName = [attributeDict valueForKey:@"name"];
 		if ([tblName length] > 0) {
-			if ([self hasTable:tblName]) {
+			BOOL isDupe = NO;
+			
+			// check if we already have a table with this name
+			for (SQLKTableStructure *existing in parsingTables) {
+				if ([existing.name isEqualToString:tblName]) {
+					isDupe = YES;
+				}
+			}
+			
+			if (isDupe) {
 				duplicateTable = YES;
 				DLog(@"There already is a table named \"%@\" in this structure, skipping", [attributeDict valueForKey:@"name"]);
 			}
@@ -721,7 +762,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-	[encoder encodeObject:_tables forKey:@"tables"];
+	[encoder encodeObject:self.tables forKey:@"tables"];
 }
 
 
@@ -733,14 +774,14 @@
 - (void)log
 {
 	NSLog(@"%@", self);
-	for (SQLKTableStructure *table in _tables) {
+	for (SQLKTableStructure *table in self.tables) {
 		[table log];
 	}
 }
 
 - (NSString *) description
 {
-	return [NSString stringWithFormat:@"%@ <%p> %i tables", NSStringFromClass([self class]), self, [_tables count]];
+	return [NSString stringWithFormat:@"%@ <%p> %i tables", NSStringFromClass([self class]), self, [self.tables count]];
 }
 
 
