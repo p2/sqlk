@@ -28,9 +28,8 @@
 
 @implementation SQLiteObject
 
-@synthesize db;
-@synthesize object_id;
-@synthesize hydrated, inDatabase;
+@synthesize object_id = _object_id;
+@synthesize db, hydrated, inDatabase;
 
 
 
@@ -48,8 +47,9 @@
 
 #pragma mark - Value Setter
 /**
- *	Fills all instance variables beginning with an underscore with the corresponding values from the dictionary
+ *	Fills all database instance variables with the values from the dictionary
  *	@attention Dictionary entries with key "id" are assumed to be the object id!
+ *	@attention Dictionary entries that are not describing a database value are skipped
  */
 - (void)setFromDictionary:(NSDictionary *)dict
 {
@@ -57,7 +57,8 @@
 }
 
 /**
- *	Calls "autofillFromDictionary:overwrite:" with YES for overwrite, thus setting the object_id
+ *	Calls "autofillFromDictionary:overwrite:" with YES for overwrite, thus also setting the object_id if it is in the dictionary.
+ *	If you use this method, the receiver is assumed to be present in the database already.
  *	@attention Dictionary entries with key "id" are assumed to be the object id!
  */
 - (void)hydrateFromDictionary:(NSDictionary *)dict
@@ -67,33 +68,32 @@
 }
 
 /**
- *	Fills all instance variables beginning with an underscore with the corresponding values from the dictionary
+ *	Fills all instance variables ending with an underscore with the corresponding values from the dictionary
  *	@param dict The dictionary to use
- *	@param overwrite If YES, if the table key given in the dictionary differs from this instance's id, the key will be overwritten
+ *	@param overwrite If YES, if the primary key given in the dictionary differs from this instance's id, the primary key will be overwritten
  *	@attention Dictionary entries with key "id" are assumed to be the object id!
  */
 - (void)autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite
 {
 	if ([dict count] > 0) {
 		NSString *tableKey = [[self class] tableKey];
-		NSDictionary *dbvars = [self dbValuesForPropertyNames:[[self class] dbVariables]];
 		
 		// loop all db-ivars and assign appropriately
-		for (NSString *aKey in [dbvars allKeys]) {
+		for (NSString *aKey in [[self class] dbVariables]) {
 			id value = [dict objectForKey:aKey];
 			if (value) {
 				
-				// handle the key
+				// handle the primary key
 				if ([aKey isEqualToString:tableKey]) {
 					if ([value isKindOfClass:[NSString class]] && [[NSString stringWithFormat:@"%d", [value integerValue]] isEqualToString:value]) {
 						value = [NSNumber numberWithInteger:[value integerValue]];
 					}
 					
-					if (!object_id) {
+					if (!_object_id) {
 						self.object_id = value;
 					}
 					else if (overwrite) {
-						if (![object_id isEqual:value]) {
+						if (![_object_id isEqual:value]) {
 							SQLog(@"We're overwriting the object with a different key!");
 							self.object_id = value;
 						}
@@ -105,19 +105,19 @@
 					if ([NSNull null] == value) {
 						value = nil;
 					}
-					NSString *ivarKey = [@"_" stringByAppendingString:aKey];
+					NSString *ivarKey = [aKey stringByAppendingString:@"_"];
 					@try {
 						[self setValue:value forKey:ivarKey];
 					}
 					@catch (NSException *exception) {
-						SQLog(@"Catched exception when setting value for key \"%@\": %@", ivarKey, exception);
+						SQLog(@"Can not set value for key \"%@\": %@", ivarKey, exception);
 					}
 				}
 			}
 		}
 		
 		// if object_id is not yet set but the dictionary has an "id" or "<tableKey>" entry, use that
-		if (!object_id) {
+		if (!_object_id) {
 			id value = nil;
 			if ([dict objectForKey:tableKey]) {
 				value = [dict objectForKey:tableKey];
@@ -180,13 +180,13 @@ static NSString *hydrateQuery = nil;
 		SQLog(@"We can't hydrate %@ without database", self);
 		return NO;
 	}
-	if (!object_id) {
+	if (!_object_id) {
 		SQLog(@"We can't hydrate %@ without primary key", self);
 		return NO;
 	}
 	
 	// fetch first result (hopefully the only one), hydrate and close
-	FMResultSet *res = [self.db executeQuery:[[self class] hydrateQuery], self.object_id];
+	FMResultSet *res = [self.db executeQuery:[[self class] hydrateQuery], _object_id];
 	[res next];
 	[self hydrateFromDictionary:[res resultDictionary]];
 	[res close];
@@ -208,32 +208,41 @@ static NSString *hydrateQuery = nil;
 
 #pragma mark - Dehydrating
 /**
- *	Generates an UPDATE query for all "dbVariables" WITHOUT THE LEADING UNDERSCORE and does an INSERT if the update query didn't match any entry.
+ *	Generates an UPDATE query for all "dbVariables" WITHOUT THE TRAILING UNDERSCORE and does an INSERT if the update query didn't match any entry.
  *	Consider using "didDehydrateSuccessfully:" before deciding to override this method.
- *	@attention This method will try to insert/update for all instance variables beginning with an underscore and thus FMDB will fail if the database
- *	table does not have a given column. You should NOT call this method if you want to update existing objects and have not hydrated them first.
+ *	@attention This method will try to insert/update for all instance variables ending with an underscore and thus FMDB will fail if the database table does not
+ *	have a given column. You should NOT call this method if you want to update existing objects and have not hydrated them first.
  */
 - (BOOL)dehydrate:(NSError **)error
 {
-	NSDictionary *dict = [self dbValuesForPropertyNames:[[self class] dbVariables]];
+	NSDictionary *dict = [self valuesForPropertiesNamed:[[self class] dbVariables]];
 	return [self dehydrateProperties:dict tryInsert:YES error:error];
 }
 
 
 /**
- *	Fetches the current values for the given property names and runs an update query on only these values. Will not try to INSERT.
- *	@param propNames An array with the property names, without underscore.
+ *	Fetches the current values for the given property names and runs an update query on only these values.
+ *	This method filters the supplied property names array to only contain our database values, i.e. those ivars that end with an underscore.
+ *	@attention Will not try to INSERT.
+ *	@param propNames A set with the property names, without the trailing underscore.
  *	@param error An error pointer
  */
-- (BOOL)dehydratePropertiesNamed:(NSArray *)propNames error:(NSError **)error
+- (BOOL)dehydratePropertiesNamed:(NSSet *)propNames error:(NSError *__autoreleasing *)error
 {
-	NSDictionary *dict = [self dbValuesForPropertyNames:propNames];
+	NSMutableSet *cleanNames = [propNames mutableCopy];
+	[cleanNames intersectSet:[[self class] dbVariables]];
+	
+	NSDictionary *dict = [self valuesForPropertiesNamed:cleanNames];
 	return [self dehydrateProperties:dict tryInsert:NO error:error];
 }
 
 
 /**
- *	The dehydration workhorse
+ *	Dehydrates all values in the dictionary to their key
+ *	If you use this method directly, you need to ensure that the dictionary keys are actual database columns.
+ *	@param dict A dictionary where the key is the column name and the value the value to be written to the database
+ *	@param tryInsert Set to YES to try an INSERT query if the UPDATE query didn't affect a row
+ *	@param error An error pointer filled with an NSError object if the method returns NO
  */
 - (BOOL)dehydrateProperties:(NSDictionary *)dict tryInsert:(BOOL)tryInsert error:(NSError *__autoreleasing *)error
 {
@@ -245,11 +254,10 @@ static NSString *hydrateQuery = nil;
 #endif
 	
 	if ([dict count] < 1) {
-		NSString *errorString = [NSString stringWithFormat:@"We can't dehydrate %@ without ivars for the database", self];
+		NSString *errorString = [NSString stringWithFormat:@"We can't dehydrate %@ with an empty dictionary", self];
 		SQLK_ERR(error, errorString, 0)
 		return NO;
 	}
-	
 	if (!self.db) {
 		NSString *errorString = [NSString stringWithFormat:@"We can't dehydrate %@ without a database", self];
 		SQLK_ERR(error, errorString, 0);
@@ -264,7 +272,7 @@ static NSString *hydrateQuery = nil;
 	
 	
 	// ***** UPDATE
-	if (self.object_id) {
+	if (_object_id) {
 		
 		// distribute column names and their values in two arrays (format needed for FMDB)
 		for (NSString *columnKey in [dict allKeys]) {
@@ -273,7 +281,7 @@ static NSString *hydrateQuery = nil;
 		}
 		
 		// compose and ...
-		[arguments addObject:object_id];									///< to satisfy the WHERE condition placeholder
+		[arguments addObject:_object_id];									// to satisfy the WHERE condition placeholder
 		query = [NSString stringWithFormat:
 				 @"UPDATE `%@` SET %@ WHERE `%@` = ?",
 				 [[self class] tableName],
@@ -287,7 +295,8 @@ static NSString *hydrateQuery = nil;
 	
 	
 	// ***** INSERT
-	if (tryInsert && (!self.object_id || (success && [self.db changes] < 1))) {
+	/// @todo If the row didn't need to change but is already there, will this cause an INSERT?
+	if (tryInsert && (!_object_id || (success && [self.db changes] < 1))) {
 		[properties removeAllObjects];
 		[arguments removeAllObjects];
 		NSMutableArray *qmarks = [NSMutableArray arrayWithCapacity:[dict count]];
@@ -299,10 +308,10 @@ static NSString *hydrateQuery = nil;
 		}
 		
 		// explicitly set primary key if we have one already
-		if (self.object_id && ![dict objectForKey:[[self class] tableKey]]) {
+		if (_object_id && ![dict objectForKey:[[self class] tableKey]]) {
 			[properties addObject:[[self class] tableKey]];
 			[qmarks addObject:@"?"];
-			[arguments addObject:object_id];
+			[arguments addObject:_object_id];
 		}
 		
 		// compose and execute query
@@ -315,7 +324,7 @@ static NSString *hydrateQuery = nil;
 		success = [self.db executeUpdate:query withArgumentsInArray:arguments];
 		if (success) {
 			inDatabase = YES;
-			if (!self.object_id) {
+			if (!_object_id) {
 				self.object_id = [NSNumber numberWithLongLong:[self.db lastInsertRowId]];
 			}
 		}
@@ -360,7 +369,7 @@ static NSString *hydrateQuery = nil;
 		SQLK_ERR(error, errorMessage, 0)
 		return NO;
 	}
-	if (!object_id) {
+	if (!_object_id) {
 		NSString *errorMessage = [NSString stringWithFormat:@"We can't delete %@ without primary key", self];
 		SQLK_ERR(error, errorMessage, 0)
 		return NO;
@@ -368,7 +377,7 @@ static NSString *hydrateQuery = nil;
 	
 	// delete
 	NSString *purgeQuery = [NSString stringWithFormat:@"DELETE FROM `%@` WHERE `%@` = ?", [[self class] tableName], [[self class] tableKey]];
-	BOOL success = [self.db executeUpdate:purgeQuery, self.object_id];
+	BOOL success = [self.db executeUpdate:purgeQuery, _object_id];
 	if (success) {
 		hydrated = NO;
 		inDatabase = NO;
@@ -381,6 +390,7 @@ static NSString *hydrateQuery = nil;
 /**
  *	Called after an object has been purged. You can override this to perform additional tasks (e.g. delete dependencies).
  *	The default implementation does nothing.
+ *	@param success A bool indicating whether the DELETE action was successful
  */
 - (void)didPurgeSuccessfully:(BOOL)success
 {
@@ -390,24 +400,24 @@ static NSString *hydrateQuery = nil;
 
 #pragma mark - Ivar Gathering
 /**
- *	Returns all instance variable names that end with an underscore
+ *	Returns all instance variable names that end with an underscore and are thus assumed to be database variables
  *	@return An NSArray full of NSStrings
  */
 static NSMutableDictionary *ivarsPerClass = nil;
 
-+ (NSArray *)dbVariables
++ (NSSet *)dbVariables
 {
 	NSString *className = NSStringFromClass([self class]);
-	NSArray *classIvars = [ivarsPerClass objectForKey:className];
+	NSSet *classIvars = [ivarsPerClass objectForKey:className];
 	if (!classIvars) {
-		NSMutableArray *ivarArr = nil;
+		NSMutableSet *ivarSet = nil;
 		
 		// get instance variables that end with an underscore
 		unsigned int numVars, i;
 		Ivar *ivars = class_copyIvarList(self, &numVars);
 		
 		if (numVars > 0) {
-			ivarArr = [NSMutableArray arrayWithCapacity:numVars];
+			ivarSet = [NSMutableSet setWithCapacity:numVars];
 			
 			for (i = 0; i < numVars; i++) {
 				const char *name = ivar_getName(ivars[i]);
@@ -422,7 +432,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 					// add database column name to array
 					NSString *varName = [NSString stringWithCString:stripped_name encoding:NSUTF8StringEncoding];
 					if (varName) {
-						[ivarArr addObject:varName];
+						[ivarSet addObject:varName];
 					}
 				}
 			}
@@ -431,7 +441,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 		free(ivars);
 		
 		// store
-		classIvars = [ivarArr copy];
+		classIvars = [ivarSet copy];
 		if (!ivarsPerClass) {
 			ivarsPerClass = [NSMutableDictionary new];
 		}
@@ -445,7 +455,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
  *	Returns an NSDictionary with the receiver's properties for the given property names
  *	@param propNames An array containing NSString property names, which will be fed to "valueForKey:"
  */
-- (NSMutableDictionary *)dbValuesForPropertyNames:(NSArray *)propNames
+- (NSMutableDictionary *)valuesForPropertiesNamed:(NSSet *)propNames
 {
 	if ([propNames count] < 1) {
 		return nil;
@@ -460,7 +470,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 			value = [self valueForKey:varName];
 		}
 		@catch (NSException *exception) {
-			SQLog(@"Catched exception when getting value for key \"%@\": %@", varName, exception);
+			SQLog(@"Can not get value for key \"%@\": %@", varName, exception);
 		}
 		if (!value) {
 			value = [NSNull null];
@@ -486,7 +496,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 	if ([object isMemberOfClass:[self class]]) {
 		id otherKey = [(SQLiteObject *)object object_id];
 		if (otherKey) {
-			return [object_id isEqual:otherKey];
+			return [_object_id isEqual:otherKey];
 		}
 	}
 	return NO;
@@ -495,7 +505,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"%@ <%p> '%@'", NSStringFromClass([self class]), self, object_id];
+	return [NSString stringWithFormat:@"%@ <%p> '%@'", NSStringFromClass([self class]), self, _object_id];
 }
 
 

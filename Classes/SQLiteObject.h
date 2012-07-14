@@ -22,14 +22,14 @@
 @interface SQLiteObject : NSObject
 
 @property (nonatomic, unsafe_unretained) FMDatabase *db;
-@property (nonatomic, strong) id object_id;											///< The object id can either be an NSNumber or NSString (e.g. for UUIDs)
+@property (nonatomic, copy) id object_id;											///< The object id should either be an NSNumber or NSString (e.g. for UUIDs)
 @property (nonatomic, readonly, assign, getter=isHydrated) BOOL hydrated;
 @property (nonatomic, readonly, assign, getter=isInDatabase) BOOL inDatabase;		///< Set to YES if one of the "[de]hydrate" methods has been called on the object
 
 + (id)newWithDatabase:(FMDatabase *)aDatabase;
 
-+ (NSArray *)dbVariables;
-- (NSMutableDictionary *)dbValuesForPropertyNames:(NSArray *)propNames;
++ (NSSet *)dbVariables;
+- (NSMutableDictionary *)valuesForPropertiesNamed:(NSSet *)propNames;
 
 - (void)setFromDictionary:(NSDictionary *)dict;
 - (void)hydrateFromDictionary:(NSDictionary *)dict;
@@ -43,7 +43,7 @@
 - (void)didHydrateSuccessfully:(BOOL)success;
 
 - (BOOL)dehydrate:(NSError **)error;
-- (BOOL)dehydratePropertiesNamed:(NSArray *)propNames error:(NSError **)error;
+- (BOOL)dehydratePropertiesNamed:(NSSet *)propNames error:(NSError **)error;
 - (void)didDehydrateSuccessfully:(BOOL)success;
 
 - (BOOL)purge:(NSError **)error;
