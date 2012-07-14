@@ -7,6 +7,7 @@
 //
 
 #import "SQLiteObject.h"
+#import "sqlk.h"
 #import "SQLKStructure.h"
 #import "SQLKTableStructure.h"
 #import <sqlite3.h>
@@ -93,7 +94,7 @@
 					}
 					else if (overwrite) {
 						if (![object_id isEqual:value]) {
-							DLog(@"We're overwriting the object with a different key!");
+							SQLog(@"We're overwriting the object with a different key!");
 							self.object_id = value;
 						}
 					}
@@ -109,7 +110,7 @@
 						[self setValue:value forKey:ivarKey];
 					}
 					@catch (NSException *exception) {
-						DLog(@"Catched exception when setting value for key \"%@\": %@", ivarKey, exception);
+						SQLog(@"Catched exception when setting value for key \"%@\": %@", ivarKey, exception);
 					}
 				}
 			}
@@ -176,11 +177,11 @@ static NSString *hydrateQuery = nil;
 - (BOOL)hydrate
 {
 	if (!self.db) {
-		DLog(@"We can't hydrate %@ without database", self);
+		SQLog(@"We can't hydrate %@ without database", self);
 		return NO;
 	}
 	if (!object_id) {
-		DLog(@"We can't hydrate %@ without primary key", self);
+		SQLog(@"We can't hydrate %@ without primary key", self);
 		return NO;
 	}
 	
@@ -389,7 +390,7 @@ static NSString *hydrateQuery = nil;
 
 #pragma mark - Ivar Gathering
 /**
- *	Returns all instance variable names that begin with an underscore
+ *	Returns all instance variable names that end with an underscore
  *	@return An NSArray full of NSStrings
  */
 static NSMutableDictionary *ivarsPerClass = nil;
@@ -401,7 +402,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 	if (!classIvars) {
 		NSMutableArray *ivarArr = nil;
 		
-		// get instance variables
+		// get instance variables that end with an underscore
 		unsigned int numVars, i;
 		Ivar *ivars = class_copyIvarList(self, &numVars);
 		
@@ -410,9 +411,16 @@ static NSMutableDictionary *ivarsPerClass = nil;
 			
 			for (i = 0; i < numVars; i++) {
 				const char *name = ivar_getName(ivars[i]);
-				if (sizeof(name) > 0 && '_' == name[0]) {
-					name++;									// removes the underscore
-					NSString *varName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
+				unsigned long len = strlen(name);
+				if (len > 1 && '_' == name[len-1]) {
+					
+					// remove the trailing underscore
+					char stripped_name[len];
+					strcpy(stripped_name, name);
+					stripped_name[len-1] = '\0';
+					
+					// add database column name to array
+					NSString *varName = [NSString stringWithCString:stripped_name encoding:NSUTF8StringEncoding];
 					if (varName) {
 						[ivarArr addObject:varName];
 					}
@@ -434,10 +442,15 @@ static NSMutableDictionary *ivarsPerClass = nil;
 }
 
 /**
- *	Returns an NSDictionary with the receivers properties for the property names in the argument array
+ *	Returns an NSDictionary with the receiver's properties for the given property names
+ *	@param propNames An array containing NSString property names, which will be fed to "valueForKey:"
  */
 - (NSMutableDictionary *)dbValuesForPropertyNames:(NSArray *)propNames
 {
+	if ([propNames count] < 1) {
+		return nil;
+	}
+	
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:[propNames count]];
 	
 	// insert values into dictionary
@@ -447,7 +460,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 			value = [self valueForKey:varName];
 		}
 		@catch (NSException *exception) {
-			DLog(@"Catched exception when getting value for key \"%@\": %@", varName, exception);
+			SQLog(@"Catched exception when getting value for key \"%@\": %@", varName, exception);
 		}
 		if (!value) {
 			value = [NSNull null];
@@ -462,7 +475,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 
 #pragma mark - Utilities
 /**
- *	An object is equal if it has the same address or if it is of the same class and has the same object_id
+ *	An object is equal if it has the same pointer or if it is of the same class and has the same object_id
  */
 - (BOOL)isEqual:(id)object
 {

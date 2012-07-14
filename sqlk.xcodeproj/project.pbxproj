@@ -47,6 +47,8 @@
 		EEE498AB133ABA5500FEDD45 /* SQLKColumnStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */; };
 		EEE498AC133ABA5500FEDD45 /* SQLKColumnStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917012872C8700C69142 /* SQLKColumnStructure.m */; };
 		EEE498AD133ABA6000FEDD45 /* sqlk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* sqlk_Prefix.pch */; };
+		EEF9474915B1DE270046D04A /* SQLKTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EEF9474815B1DE270046D04A /* SQLKTestObject.m */; };
+		EEF9474B15B1DE2C0046D04A /* SQLiteObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D916E12872C8700C69142 /* SQLiteObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +100,8 @@
 		EEE49874133AB93800FEDD45 /* SQLiteKit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SQLiteKit-Info.plist"; sourceTree = "<group>"; };
 		EEE49876133AB93800FEDD45 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EEE49878133AB93800FEDD45 /* SQLiteKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SQLiteKit-Prefix.pch"; sourceTree = "<group>"; };
+		EEF9474715B1DE270046D04A /* SQLKTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKTestObject.h; sourceTree = "<group>"; };
+		EEF9474815B1DE270046D04A /* SQLKTestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLKTestObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +199,8 @@
 			children = (
 				EE08DE6C15A9E07E00CF6086 /* UnitTesting_iOS.h */,
 				EE08DE6D15A9E07E00CF6086 /* UnitTesting_iOS.m */,
+				EEF9474715B1DE270046D04A /* SQLKTestObject.h */,
+				EEF9474815B1DE270046D04A /* SQLKTestObject.m */,
 				EE08DE8715A9E44D00CF6086 /* database1.xml */,
 				EE08DE9115A9EE2100CF6086 /* database2.xml */,
 				EE08DE6715A9E07E00CF6086 /* Supporting Files */,
@@ -434,6 +440,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE08DE6E15A9E07E00CF6086 /* UnitTesting_iOS.m in Sources */,
+				EEF9474915B1DE270046D04A /* SQLKTestObject.m in Sources */,
+				EEF9474B15B1DE2C0046D04A /* SQLiteObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,11 +12,12 @@
 
 
 /**
- *	Base object for your objects hydrated from SQLite
- *	Basically, one class represents one table, one instance of the class represents one table entry. All instance variables beginning with an
- *	underscore will be fetched from and written to the database!
- *	@attention Note that this class doesn't throw exceptions on "valueForUndefinedKey:" and "setValue:forUndefinedKey:", but it does alert you
- *	when the class is not key-value coding compliant for a given path to give you the opportunity to adjust the class to match the database
+ *	Base object for your objects hydrated from SQLite.
+ *	
+ *	Basically, one class represents one table, one instance of the class represents one table entry. All instance variables ENDING WITH AN UNDERSCORE will be
+ *	fetched from and written to the database!
+ *	@attention Note that this class doesn't throw exceptions on "valueForUndefinedKey:" and "setValue:forUndefinedKey:", but it does alert you when the class is
+ *	not key-value coding compliant for a given path to give you the opportunity to adjust the class to match the database.
  */
 @interface SQLiteObject : NSObject
 
@@ -50,13 +51,3 @@
 
 
 @end
-
-
-#ifndef SQLK_ERR
-#define SQLK_ERR(p, s, c)	if (p != NULL && s) {\
-		*p = [NSError errorWithDomain:NSCocoaErrorDomain code:(c ? c : 0) userInfo:[NSDictionary dictionaryWithObject:s forKey:NSLocalizedDescriptionKey]];\
-	}\
-	else {\
-		DLog(@"Ignored Error: %@", s);\
-}
-#endif

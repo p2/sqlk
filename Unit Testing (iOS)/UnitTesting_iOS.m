@@ -8,6 +8,7 @@
 
 #import "UnitTesting_iOS.h"
 #import "sqlk.h"
+#import "SQLKTestObject.h"
 #import "SQLKStructure.h"
 #import "SQLKTableStructure.h"
 #import "FMDatabase.h"
@@ -28,7 +29,14 @@
 }
 
 
-- (void)testAll
+- (void)testObject
+{
+	STAssertTrue(2 == [[SQLKTestObject dbVariables] count], @"Incorrect number of database-based variables");
+	STAssertFalse(3 == [[SQLKTestObject dbVariables] count], @"Incorrect number of database-based variables");
+}
+
+
+- (void)testStructures
 {
 	NSString *xmlPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"database1" ofType:@"xml"];
 	STAssertNotNil(xmlPath, @"Did not find database1.xml");
