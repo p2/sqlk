@@ -97,7 +97,9 @@
 
 #pragma mark - KVC
 /**
- *	Returns the SQLite type for type variations one might use
+ *	Returns the SQLite type for type variations one might use.
+ *	SQLite does not respect lengths of types (e.g. INT(4) or VARCHAR(255)) but permits them in the queries. We strip those so we can compare types between
+ *	columns.
  */
 - (void)setType:(NSString *)aType
 {
@@ -108,6 +110,10 @@
 			type = @"INTEGER";
 		}
 		else {
+			NSUInteger bracketPosition = [aType rangeOfString:@"("].location;
+			if (NSNotFound != bracketPosition) {
+				aType = [aType substringToIndex:bracketPosition];
+			}
 			type = [aType copy];
 		}
 	}

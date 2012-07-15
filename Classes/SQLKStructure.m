@@ -192,7 +192,7 @@
 	}
 	
 	// db exists, check structure if desired
-	if (update) {
+	else if (update) {
 		if ([self updateDatabaseAt:dbPath dropTables:YES error:error]) {
 			handle = [FMDatabase databaseWithPath:dbPath];
 			self.database = handle;
