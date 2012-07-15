@@ -51,8 +51,8 @@
 		NSScanner *scanner = [NSScanner scannerWithString:aQuery];
 		[scanner setCaseSensitive:NO];
 		NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceCharacterSet];
-		NSMutableCharacterSet *wsOrComma = [whiteSpace mutableCopy];
-		[wsOrComma addCharactersInString:@","];
+		NSMutableCharacterSet *letterSet = [NSCharacterSet lowercaseLetterCharacterSet];
+		[letterSet formUnionWithCharacterSet:[NSCharacterSet uppercaseLetterCharacterSet]];
 		NSCharacterSet *closeBracketOrComma = [NSCharacterSet characterSetWithCharactersInString:@"),"];
 		
 		
@@ -119,14 +119,20 @@
 							[newConstraints addObject:constraint];
 						}
 						
-						// ** most likely we found a column
+						// ** we most likely found a column
 						else {
 							SQLKColumnStructure *column = [SQLKColumnStructure columnForTable:t];
 							column.name = scanString;
 							
 							[scanner scanCharactersFromSet:whiteSpace intoString:NULL];
-							if ([scanner scanUpToCharactersFromSet:wsOrComma intoString:&scanString]) {			// what happens with "int (6)"? For now, this won't work
+							if ([scanner scanCharactersFromSet:letterSet intoString:&scanString]) {
 								column.type = scanString;
+							}
+							
+							// there might my MySQL-type type lengths, we just ignore them
+							if ([scanner scanString:@"(" intoString:NULL]) {
+								[scanner scanUpToString:@")" intoString:NULL];
+								[scanner scanString:@")" intoString:NULL];
 							}
 							
 							/// @todo Scan column constraints more sophisticated (scan up to either "(" or "," and see what we've got, then decide whether next
@@ -135,7 +141,7 @@
 							
 							// scan column constraints and defaults
 							if ([scanner scanUpToString:@"," intoString:&scanString]) {
-								SLog(@"==>  %@  \"%@\"", column.name, scanString);
+								SLog(@"==>  %@ %@  \"%@\"", column.name, column.type, scanString);
 								
 								// unique column
 								column.isUnique = (NSNotFound != [scanString rangeOfString:@"UNIQUE"].location);
