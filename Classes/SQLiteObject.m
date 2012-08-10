@@ -502,6 +502,11 @@ static NSMutableDictionary *ivarsPerClass = nil;
 	return NO;
 }
 
+- (NSUInteger)hash
+{
+	return [_object_id hash];
+}
+
 
 - (NSString *)description
 {
