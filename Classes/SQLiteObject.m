@@ -407,7 +407,7 @@ static NSMutableDictionary *ivarsPerClass = nil;
 
 + (NSSet *)dbVariables
 {
-	NSString *className = NSStringFromClass([self class]);
+	NSString *className = NSStringFromClass(self);
 	NSSet *classIvars = [ivarsPerClass objectForKey:className];
 	if (!classIvars) {
 		NSMutableSet *ivarSet = nil;
@@ -442,10 +442,12 @@ static NSMutableDictionary *ivarsPerClass = nil;
 		
 		// store
 		classIvars = [ivarSet copy];
-		if (!ivarsPerClass) {
-			ivarsPerClass = [NSMutableDictionary new];
+		if (className && classIvars) {
+			if (!ivarsPerClass) {
+				ivarsPerClass = [NSMutableDictionary new];
+			}
+			[ivarsPerClass setObject:classIvars forKey:className];
 		}
-		[ivarsPerClass setObject:classIvars forKey:className];
 	}
 	
 	return classIvars;
