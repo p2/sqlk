@@ -76,10 +76,10 @@
 - (void)autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite
 {
 	if ([dict count] > 0) {
-		NSString *tableKey = [[self class] tableKey];
+		NSString *tableKey = [isa tableKey];
 		
 		// loop all db-ivars and assign appropriately
-		for (NSString *aKey in [[self class] dbVariables]) {
+		for (NSString *aKey in [isa dbVariables]) {
 			id value = [dict objectForKey:aKey];
 			if (value) {
 				
@@ -403,11 +403,11 @@ static NSString *hydrateQuery = nil;
  *	Returns all instance variable names that end with an underscore and are thus assumed to be database variables
  *	@return An NSArray full of NSStrings
  */
-static NSMutableDictionary *ivarsPerClass = nil;
-
 + (NSSet *)dbVariables
 {
-	NSString *className = NSStringFromClass(self);
+	static NSMutableDictionary *ivarsPerClass = nil;
+	
+	NSString *className = NSStringFromClass([self class]);
 	NSSet *classIvars = [ivarsPerClass objectForKey:className];
 	if (!classIvars) {
 		NSMutableSet *ivarSet = nil;
