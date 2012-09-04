@@ -75,6 +75,15 @@
  */
 - (void)autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite
 {
+	// make sure we get a dictionary. This step prevents crashes due to direct feeding of JSON that doesn't have the structure the dev thinks it always has.
+	if (![dict isKindOfClass:[NSDictionary class]]) {
+		if (dict) {
+			SQLog(@"We need a dictionary to autofill, got this instead: %@", dict);
+		}
+		return;
+	}
+	
+	// let's go
 	if ([dict count] > 0) {
 		NSString *tableKey = [isa tableKey];
 		
