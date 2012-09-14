@@ -409,16 +409,23 @@ static NSString *hydrateQuery = nil;
 
 #pragma mark - Ivar Gathering
 /**
- *	Returns all instance variable names that end with an underscore and are thus assumed to be database variables
+ *	Returns all instance variable names that end with an underscore and are thus assumed to be database variables.
+ *
+ *  This method caused me major headaches because it crashed at the line indicated below, almost at the end, in an app released to the app store but did NOT
+ *  crash in debug and AdHoc builds. That's why there is the SQLK_USE_CLASS_VARIABLES_STORE switch.
  *	@return An NSArray full of NSStrings
  */
+#define SQLK_USE_CLASS_VARIABLES_STORE 0
+
 + (NSSet *)dbVariables
 {
+#if SQLK_USE_CLASS_VARIABLES_STORE
 	static NSMutableDictionary *ivarsPerClass = nil;
 	
 	NSString *className = NSStringFromClass([self class]);
 	NSSet *classIvars = [ivarsPerClass objectForKey:className];
 	if (!classIvars) {
+#endif
 		NSMutableSet *ivarSet = nil;
 		
 		// get instance variables that end with an underscore
@@ -448,18 +455,21 @@ static NSString *hydrateQuery = nil;
 		}
 		
 		free(ivars);
-		
+#if !SQLK_USE_CLASS_VARIABLES_STORE
+		return ivarSet;
+#else
 		// store
 		classIvars = [ivarSet copy];
 		if (className && classIvars) {
 			if (!ivarsPerClass) {
 				ivarsPerClass = [NSMutableDictionary new];
 			}
-			[ivarsPerClass setObject:classIvars forKey:className];
+			[ivarsPerClass setObject:classIvars forKey:className];			//< This crashed in an app store build but not in debug nor AdHoc versions...
 		}
 	}
 	
 	return classIvars;
+#endif
 }
 
 /**
