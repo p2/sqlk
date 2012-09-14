@@ -411,21 +411,17 @@ static NSString *hydrateQuery = nil;
 /**
  *	Returns all instance variable names that end with an underscore and are thus assumed to be database variables.
  *
- *  This method caused me major headaches because it crashed at the line indicated below, almost at the end, in an app released to the app store but did NOT
- *  crash in debug and AdHoc builds. That's why there is the SQLK_USE_CLASS_VARIABLES_STORE switch.
+ *  @warning This method caused me major headaches because it crashed at the line indicated below, almost at the end, in an app released to the app store but
+ *  did NOT crash in debug and AdHoc builds. The issue is the LLVM code level optimization, as of LLVM 4.1 you CAN NOT GO HIGHER THAN -o1 optimization!!!
  *	@return An NSArray full of NSStrings
  */
-#define SQLK_USE_CLASS_VARIABLES_STORE 0
-
 + (NSSet *)dbVariables
 {
-#if SQLK_USE_CLASS_VARIABLES_STORE
 	static NSMutableDictionary *ivarsPerClass = nil;
 	
 	NSString *className = NSStringFromClass([self class]);
 	NSSet *classIvars = [ivarsPerClass objectForKey:className];
 	if (!classIvars) {
-#endif
 		NSMutableSet *ivarSet = nil;
 		
 		// get instance variables that end with an underscore
@@ -455,9 +451,7 @@ static NSString *hydrateQuery = nil;
 		}
 		
 		free(ivars);
-#if !SQLK_USE_CLASS_VARIABLES_STORE
-		return ivarSet;
-#else
+		
 		// store
 		classIvars = [ivarSet copy];
 		if (className && classIvars) {
@@ -469,7 +463,6 @@ static NSString *hydrateQuery = nil;
 	}
 	
 	return classIvars;
-#endif
 }
 
 /**
