@@ -410,10 +410,7 @@ static NSString *hydrateQuery = nil;
 #pragma mark - Ivar Gathering
 /**
  *	Returns all instance variable names that end with an underscore and are thus assumed to be database variables.
- *
- *  @warning This method caused me major headaches because it crashed at the line indicated below, almost at the end, in an app released to the app store but
- *  did NOT crash in debug and AdHoc builds. The issue is the LLVM code level optimization, as of LLVM 4.1 you CAN NOT GO HIGHER THAN -o1 optimization!!!
- *	@return An NSArray full of NSStrings
+ *	@return An NSSet full of NSStrings
  */
 + (NSSet *)dbVariables
 {
@@ -437,11 +434,11 @@ static NSString *hydrateQuery = nil;
 				if (len > 1 && '_' == name[len-1]) {
 					
 					// remove the trailing underscore
-					char stripped_name[len];
+					char stripped_name[len+1];
 					strcpy(stripped_name, name);
 					stripped_name[len-1] = '\0';
 					
-					// add database column name to array
+					// add database column name to set
 					NSString *varName = [NSString stringWithCString:stripped_name encoding:NSUTF8StringEncoding];
 					if (varName) {
 						[ivarSet addObject:varName];
@@ -458,7 +455,7 @@ static NSString *hydrateQuery = nil;
 			if (!ivarsPerClass) {
 				ivarsPerClass = [NSMutableDictionary new];
 			}
-			[ivarsPerClass setObject:classIvars forKey:className];			//< This crashed in an app store build but not in debug nor AdHoc versions...
+			[ivarsPerClass setObject:classIvars forKey:className];
 		}
 	}
 	
