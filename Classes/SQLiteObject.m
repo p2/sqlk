@@ -85,10 +85,10 @@
 	
 	// let's go
 	if ([dict count] > 0) {
-		NSString *tableKey = [isa tableKey];
+		NSString *tableKey = [[self class] tableKey];
 		
 		// loop all db-ivars and assign appropriately
-		for (NSString *aKey in [isa dbVariables]) {
+		for (NSString *aKey in [[self class] dbVariables]) {
 			id value = [dict objectForKey:aKey];
 			if (value) {
 				
