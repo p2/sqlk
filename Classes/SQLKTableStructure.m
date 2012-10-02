@@ -307,8 +307,8 @@
 				if ([existingColumns count] > 0) {
 					for (SQLKColumnStructure *sup in existingColumns) {
 						NSError *myError = nil;
-						NSString *errorString = [NSString stringWithFormat:@"Superfluuous column: %@", sup.name];
-						SQLK_ERR(&myError, errorString, 0)
+						NSString *myErrorString = [NSString stringWithFormat:@"Superfluuous column: %@", sup.name];
+						SQLK_ERR(&myError, myErrorString, 0)
 						[errors addObject:myError];
 					}
 				}
