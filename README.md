@@ -21,7 +21,7 @@ Using SQLiteObject
 
 For each table that you have, you create a subclass of SQLiteObject. You need to do at lest four things:
 
-* Create a subclass
+* Add `SQLiteKit.h` and `.m` to your project and create a subclass
 * Add properties
 * Override `tableName`
 * Override `tableKey`
