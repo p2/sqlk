@@ -8,7 +8,12 @@ This SQLite kit aims to ease working with SQLite databases in Cocoa by providing
 
 The kit tries to complement [fmdb], the awesome SQLite Cocoa wrapper by Gus Mueller. The project uses ARC, so if you haven't yet moved to ARC you're on your own.
 
+### License ###
+
+This project is released under the [Apache 2.0 license][apache], because why not. There is no NOTICE file so you don't need to mention anything when using the kit.
+
 [fmdb]: https://github.com/ccgus/fmdb
+[apache]: http://www.apache.org/licenses/LICENSE-2.0.html
 
 
 Using SQLiteObject
@@ -35,15 +40,17 @@ This makes the object automatically write and read this property from the databa
 
 You override these class methods to tell the objects into which tables it belongs, like so:
 
-    + (NSString *)tableName
-    {
-    	return @"test_table";
-    }
-    
-    + (NSString *)tableKey
-    {
-    	return @"row_id";
-    }
+```objective-c
++ (NSString *)tableName
+{
+    return @"test_table";
+}
+
++ (NSString *)tableKey
+{
+    return @"row_id";
+}
+```
 
 
 ### Using SQLiteObject ###
@@ -52,7 +59,7 @@ After these three steps you can now use your objects easily:
 
 #### Writing to the database ####
 
-```
+```objective-c
 FMDatabase *db = [FMDatabase databaseWithPath:path-to-sqlite];
 MyObject *obj = [MyObject newWithDatabase:db];
 obj.db_prop = @"Hello World";
@@ -65,7 +72,7 @@ if (![db dehydrate:&error]) {
 
 #### Reading from the database ####
 
-```
+```objective-c
 FMDatabase *db = [FMDatabase databaseWithPath:path-to-sqlite];
 MyObject *obj = [MyObject newWithDatabase:db];
 obj.object_id = @1;
@@ -91,7 +98,7 @@ The kit can read database structures from an XML file and create a database that
 
 Here's an example schema:
 
-```
+```xml
 <database>
     <table name="objects">
         <column name="object_id" type="varchar" primary="1" />

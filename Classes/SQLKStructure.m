@@ -4,7 +4,9 @@
 //
 //  Created by Pascal Pfiffner on 11.09.10.
 //  Copyright 2010 Pascal Pfiffner. All rights reserved.
-//	
+//  This sourcecode is released under the Apache License, Version 2.0
+//  http://www.apache.org/licenses/LICENSE-2.0.html
+//
 
 #import "SQLKStructure.h"
 #import "sqlk.h"
@@ -176,6 +178,7 @@
 		
 		// encrypt the database
 		if (handle) {
+#if TARGET_OS_IPHONE
 			NSDictionary *attr = [fm attributesOfItemAtPath:dbPath error:nil];
 			if (NSFileProtectionComplete != [attr objectForKey:NSFileProtectionKey]) {
 				NSDictionary *newAttrs = [NSDictionary dictionaryWithObject:NSFileProtectionComplete forKey:NSFileProtectionKey];
@@ -183,7 +186,7 @@
 					return nil;
 				}
 			}
-			
+#endif
 			// report that it was missing
 			if (NULL != wasMissing) {
 				*wasMissing = YES;

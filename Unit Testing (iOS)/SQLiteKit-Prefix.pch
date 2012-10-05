@@ -1,9 +1,9 @@
 //
-// Prefix header for all source files of the 'sqlk' target in the 'sqlk' project.
+// Prefix header for all source files of the 'SQLiteKit' and 'sqlk' targets in the 'SQLiteKit' project
 //
 
 #ifdef __OBJC__
-    #import <Foundation/Foundation.h>
+	#import <Cocoa/Cocoa.h>
 #endif
 
 // DLog only displays if -DDEBUG is set, ALog always displays output regardless of the DEBUG setting
