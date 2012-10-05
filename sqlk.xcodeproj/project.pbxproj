@@ -12,7 +12,6 @@
 		EE08DE6215A9E07E00CF6086 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE6115A9E07E00CF6086 /* SenTestingKit.framework */; };
 		EE08DE6415A9E07E00CF6086 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE6315A9E07E00CF6086 /* UIKit.framework */; };
 		EE08DE6515A9E07E00CF6086 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
-		EE08DE6B15A9E07E00CF6086 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EE08DE6915A9E07E00CF6086 /* InfoPlist.strings */; };
 		EE08DE6E15A9E07E00CF6086 /* UnitTesting_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = EE08DE6D15A9E07E00CF6086 /* UnitTesting_iOS.m */; };
 		EE08DE8215A9E28500CF6086 /* libsqlk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC07E0554694100DB518D /* libsqlk.a */; };
 		EE08DE8415A9E28500CF6086 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE8315A9E28500CF6086 /* libsqlite3.dylib */; };
@@ -69,7 +68,6 @@
 		EE08DE6115A9E07E00CF6086 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		EE08DE6315A9E07E00CF6086 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		EE08DE6815A9E07E00CF6086 /* Unit Testing (iOS)-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Unit Testing (iOS)-Info.plist"; sourceTree = "<group>"; };
-		EE08DE6A15A9E07E00CF6086 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EE08DE6C15A9E07E00CF6086 /* UnitTesting_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnitTesting_iOS.h; sourceTree = "<group>"; };
 		EE08DE6D15A9E07E00CF6086 /* UnitTesting_iOS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnitTesting_iOS.m; sourceTree = "<group>"; };
 		EE08DE6F15A9E07E00CF6086 /* Unit Testing (iOS)-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Unit Testing (iOS)-Prefix.pch"; sourceTree = "<group>"; };
@@ -212,7 +210,6 @@
 			isa = PBXGroup;
 			children = (
 				EE08DE6815A9E07E00CF6086 /* Unit Testing (iOS)-Info.plist */,
-				EE08DE6915A9E07E00CF6086 /* InfoPlist.strings */,
 				EE08DE6F15A9E07E00CF6086 /* Unit Testing (iOS)-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -389,7 +386,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE08DE6B15A9E07E00CF6086 /* InfoPlist.strings in Resources */,
 				EE08DE8915A9E4A700CF6086 /* database1.xml in Resources */,
 				EE08DE9215A9EE2100CF6086 /* database2.xml in Resources */,
 			);
@@ -469,14 +465,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		EE08DE6915A9E07E00CF6086 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EE08DE6A15A9E07E00CF6086 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		EEE49875133AB93800FEDD45 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -566,10 +554,6 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Unit Testing (iOS)/Unit Testing (iOS)-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "Unit Testing (iOS)/Unit Testing (iOS)-Info.plist";

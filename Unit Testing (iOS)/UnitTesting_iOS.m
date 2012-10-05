@@ -29,13 +29,6 @@
 }
 
 
-- (void)testObject
-{
-	STAssertTrue(2 == [[SQLKTestObject dbVariables] count], @"Incorrect number of database-based variables");
-	STAssertFalse(3 == [[SQLKTestObject dbVariables] count], @"Incorrect number of database-based variables");
-}
-
-
 - (void)testStructures
 {
 	NSString *xmlPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"database1" ofType:@"xml"];
@@ -100,7 +93,15 @@
 	// clean up
 	[db close];
 	NSLog(@"-->  %@", dbPath);
-//	[fm removeItemAtPath:dbPath error:nil];
+	[fm removeItemAtPath:dbPath error:nil];
+}
+
+
+- (void)testObject
+{
+	// SQLKTestObject has 2 database variables
+	STAssertTrue(2 == [[SQLKTestObject dbVariables] count], @"Incorrect number of database-based variables");
+	STAssertFalse(3 == [[SQLKTestObject dbVariables] count], @"Incorrect number of database-based variables");
 }
 
 
