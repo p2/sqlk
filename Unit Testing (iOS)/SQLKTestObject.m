@@ -10,8 +10,19 @@
 
 @implementation SQLKTestObject
 
-@synthesize db_string = _db_string_;
-@synthesize db_number = _db_number_;
+@synthesize db_string = db_string_;
+@synthesize db_number = db_number_;
 @synthesize non_db_string = _non_db_string;
+
++ (NSString *)tableName
+{
+	return @"test_table";
+}
+
++ (NSString *)tableKey
+{
+	return @"row_id";
+}
+
 
 @end

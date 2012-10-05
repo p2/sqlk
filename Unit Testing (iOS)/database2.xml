@@ -3,8 +3,8 @@
 		<column name="row_id" type="int" primary="1" />
 		<column name="group_id" type="varchar(36)" />
 		<column name="type_id" type="varchar(36)" />
-		<column name="value" type="int" />
-		<column name="description" type="text" />
+		<column name="db_number" type="int" />
+		<column name="db_string" type="text" />
 		<column name="lastedit" type="timestamp" default="CURRENT_TIMESTAMP" />
 		<column name="lastedit_by" type="int" />
 		<column name="added" type="timestamp" default="CURRENT_TIMESTAMP" />
