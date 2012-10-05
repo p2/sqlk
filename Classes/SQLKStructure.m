@@ -341,6 +341,9 @@
 						return NO;
 					}
 				}
+				
+				// TODO: Add support for renaming tables (have an "oldnames" property in the XML?)
+				// TODO: Add support for dropping tables
 			}
 		}
 		

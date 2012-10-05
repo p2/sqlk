@@ -411,7 +411,7 @@
 				// column is missing, add it
 				if (!existing) {
 					
-					/// @todo New columns may not: ( http://www.sqlite.org/lang_altertable.html )
+					// TODO: New columns may not: ( http://www.sqlite.org/lang_altertable.html )
 					//		- be PRIMARY
 					//		- be UNIQUE
 					//		- have CURRENT_[TIME|DATE|TIMESTAMP] as default
@@ -424,6 +424,8 @@
 						return NO;
 					}
 				}
+				
+				// TODO: To drop columns, we have to recreate the table without the column to be dropped
 			}
 		}
 		
