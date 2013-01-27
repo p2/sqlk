@@ -503,6 +503,7 @@
 		else {
 			errorString = [NSString stringWithFormat:@"Failed to parse sql for table structure: %@", sql];
 		}
+		[masterSet close];
 	}
 	else {
 		errorString = [NSString stringWithFormat:@"SQLite error %d when fetching table description: %@", [_database lastErrorCode], [_database lastErrorMessage]];

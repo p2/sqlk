@@ -23,8 +23,8 @@ For each table that you have, you create a subclass of SQLiteObject. You need to
 
 * Add `SQLiteKit.h` and `.m` to your project and create a subclass
 * Add properties
-* Override `tableName`
-* Override `tableKey`
+* Override `+tableName`
+* Override `+tableKey`
 
 
 ### Adding Properties ###

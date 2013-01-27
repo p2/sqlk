@@ -33,15 +33,14 @@
 + (NSSet *)dbVariables;
 - (NSMutableDictionary *)valuesForPropertiesNamed:(NSSet *)propNames;
 
-- (void)setFromDictionary:(NSDictionary *)dict;
-- (void)hydrateFromDictionary:(NSDictionary *)dict;
-- (void)autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite;
+- (BOOL)setFromDictionary:(NSDictionary *)dict;
 
 + (NSString *)tableName;
 + (NSString *)tableKey;
 + (NSString *)hydrateQuery;
 
 - (BOOL)hydrate;
+- (BOOL)hydrateFromDictionary:(NSDictionary *)dict;
 - (void)didHydrateSuccessfully:(BOOL)success;
 
 - (BOOL)dehydrate:(NSError **)error;

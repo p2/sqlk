@@ -23,6 +23,7 @@
 @property (nonatomic, readwrite, assign) BOOL hydrated;
 @property (nonatomic, readwrite, assign) BOOL inDatabase;
 
+- (BOOL)autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite;
 - (BOOL)dehydrateProperties:(NSDictionary *)dict tryInsert:(BOOL)tryInsert error:(NSError *__autoreleasing *)error;
 
 @end
@@ -49,40 +50,29 @@
 
 #pragma mark - Value Setter
 /**
- *	Fills all database instance variables with the values from the dictionary
+ *	Fills all database instance variables with the values from the dictionary.
  *	@attention Dictionary entries with key "id" are assumed to be the object id!
  *	@attention Dictionary entries that are not describing a database value are skipped
  */
-- (void)setFromDictionary:(NSDictionary *)dict
+- (BOOL)setFromDictionary:(NSDictionary *)dict
 {
-	[self autofillFrom:dict overwrite:NO];
+	return [self autofillFrom:dict overwrite:NO];
 }
 
 /**
- *	Calls "autofillFromDictionary:overwrite:" with YES for overwrite, thus also setting the object_id if it is in the dictionary.
- *	If you use this method, the receiver is assumed to be present in the database already.
- *	@attention Dictionary entries with key "id" are assumed to be the object id!
- */
-- (void)hydrateFromDictionary:(NSDictionary *)dict
-{
-	inDatabase = YES;
-	[self autofillFrom:dict overwrite:YES];
-}
-
-/**
- *	Fills all instance variables ending with an underscore with the corresponding values from the dictionary
+ *	Fills all properties returned from +dbVariables with the corresponding values from the dictionary
  *	@param dict The dictionary to use
  *	@param overwrite If YES, if the primary key given in the dictionary differs from this instance's id, the primary key will be overwritten
  *	@attention Dictionary entries with key "id" are assumed to be the object id!
  */
-- (void)autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite
+- (BOOL)autofillFrom:(NSDictionary *)dict overwrite:(BOOL)overwrite
 {
 	// make sure we get a dictionary. This step prevents crashes due to direct feeding of JSON that doesn't have the structure the dev thinks it always has.
 	if (![dict isKindOfClass:[NSDictionary class]]) {
 		if (dict) {
 			SQLog(@"We need a dictionary to autofill, got this instead: %@", dict);
 		}
-		return;
+		return NO;
 	}
 	
 	// let's go
@@ -144,7 +134,10 @@
 				self.object_id = value;
 			}
 		}
+		return YES;
 	}
+	
+	return NO;
 }
 
 
@@ -182,8 +175,10 @@ static NSString *hydrateQuery = nil;
 
 
 /**
- *	Calls "hydrateFromDictionary:" after performing "hydrateQuery"
- *	Consider using "didHydrateSuccessfully:" before deciding to override this method.
+ *  Calls "hydrateFromDictionary:" after performing "hydrateQuery".
+ *
+ *  Consider using "didHydrateSuccessfully:" before deciding to override this method. If you're hydrating several database objects from one query, you can use
+ *  "hydrateFromDictionary:" instead.
  */
 - (BOOL)hydrate
 {
@@ -198,18 +193,38 @@ static NSString *hydrateQuery = nil;
 	
 	// fetch first result (hopefully the only one), hydrate and close
 	FMResultSet *res = [self.db executeQuery:[[self class] hydrateQuery], _object_id];
-	[res next];
-	[self hydrateFromDictionary:[res resultDictionary]];
+	if ([res next]) {
+		[self hydrateFromDictionary:[res resultDictionary]];
+	}
 	[res close];
-	hydrated = YES;
-	[self didHydrateSuccessfully:hydrated];
 	
 	return hydrated;
 }
 
 /**
- *	You may override this method to perform additional tasks after hydration has been completed, e.g. hydrate relationships.
- *	The default implementation does nothing.
+ *  Marks the receiver as being present in the database, sets all properties from the given dictionary and sets the hydrated flag to YES (if successful).
+ *
+ *  You should only use this method when you pull the receiver's data out from the database and can't use "hydrate", e.g. when fetching several database objects
+ *  with one query. "didHydrateSuccessfully:" will be called.
+ *	@attention Dictionary entries with key "id" are assumed to be the object id!
+ */
+- (BOOL)hydrateFromDictionary:(NSDictionary *)dict
+{
+	BOOL didFillSuccessfully = NO;
+	inDatabase = YES;
+	if ([self autofillFrom:dict overwrite:YES]) {
+		didFillSuccessfully = YES;
+		hydrated = YES;
+	}
+	[self didHydrateSuccessfully:didFillSuccessfully];
+	
+	return didFillSuccessfully;
+}
+
+/**
+ *  You may override this method to perform additional tasks after hydration has been completed, e.g. hydrate relationships.
+ *
+ *  The default implementation does nothing.
  */
 - (void)didHydrateSuccessfully:(BOOL)success
 {
