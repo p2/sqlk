@@ -317,7 +317,7 @@
 				
 				// report specific errors
 				if ([errors count] > 0) {
-					errorString = [NSString stringWithFormat:@"%d errors occurred while comparing columns to table \"%@\". See \"SQLKErrors\" in this errors' userInfo.", [errors count], refTable.name];
+					errorString = [NSString stringWithFormat:@"%d errors occurred while comparing columns to table \"%@\". See \"SQLKErrors\" in this errors' userInfo.", (unsigned int)[errors count], refTable.name];
 					errorCode = 673;
 				}
 				else {
@@ -487,7 +487,7 @@
 
 - (NSString *) description
 {
-	return [NSString stringWithFormat:@"%@ <%p> \"%@\", %i columns, %i constraints", NSStringFromClass([self class]), self, name, [columns count], [constraints count]];
+	return [NSString stringWithFormat:@"%@ <%p> \"%@\", %i columns, %i constraints", NSStringFromClass([self class]), self, name, (unsigned int)[columns count], (unsigned int)[constraints count]];
 }
 
 

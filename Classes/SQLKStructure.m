@@ -362,7 +362,7 @@
 				}
 			}
 			else {
-				DLog(@"There are %d superfluuous tables, but we're not allowed to drop them", [existingTables count]);
+				DLog(@"There are %d superfluuous tables, but we're not allowed to drop them", (unsigned int)[existingTables count]);
 			}
 		}
 		
@@ -568,7 +568,7 @@
 		
 		// report mismatch errors
 		if ([errors count] > 0) {
-			NSString *errorString = [NSString stringWithFormat:@"%d errors occurred while comparing structure. See \"SQLKErrors\" in this errors' userInfo.", [errors count]];
+			NSString *errorString = [NSString stringWithFormat:@"%d errors occurred while comparing structure. See \"SQLKErrors\" in this errors' userInfo.", (unsigned int)[errors count]];
 			DLog(@"Error: %@", errorString);
 			if (NULL != error) {
 				NSDictionary *userDict = [NSDictionary dictionaryWithObjectsAndKeys:errorString, NSLocalizedDescriptionKey, errors, @"SQLKErrors", nil];
@@ -788,7 +788,7 @@
 
 - (NSString *) description
 {
-	return [NSString stringWithFormat:@"%@ <%p> %i tables", NSStringFromClass([self class]), self, [self.tables count]];
+	return [NSString stringWithFormat:@"%@ <%p> %i tables", NSStringFromClass([self class]), self, (unsigned int)[self.tables count]];
 }
 
 

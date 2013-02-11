@@ -86,7 +86,7 @@
 				
 				// handle the primary key
 				if ([aKey isEqualToString:tableKey]) {
-					if ([value isKindOfClass:[NSString class]] && [[NSString stringWithFormat:@"%d", [value integerValue]] isEqualToString:value]) {
+					if ([value isKindOfClass:[NSString class]] && [[NSString stringWithFormat:@"%d", [value intValue]] isEqualToString:value]) {
 						value = [NSNumber numberWithInteger:[value integerValue]];
 					}
 					
@@ -128,7 +128,7 @@
 			}
 			
 			if (value) {
-				if ([value isKindOfClass:[NSString class]] && [[NSString stringWithFormat:@"%d", [value integerValue]] isEqualToString:value]) {
+				if ([value isKindOfClass:[NSString class]] && [[NSString stringWithFormat:@"%d", [value intValue]] isEqualToString:value]) {
 					value = [NSNumber numberWithInteger:[value integerValue]];
 				}
 				self.object_id = value;
