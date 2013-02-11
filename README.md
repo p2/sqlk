@@ -29,16 +29,16 @@ For each table that you have, you create a subclass of SQLiteObject. You need to
 
 ### Adding Properties ###
 
-You can add as many properties to the subclass as you'd like. To have the object recognize a property as one that is stored in the database, you synthesize it to **have an underscore at the end**, for example:
+You can add as many properties to the subclass as you'd like. To have the object recognize a property as one that is stored in the database, you synthesize that property to be the **same name as the db variable plus an underscore at the end**, for example:
 
     @synthesize db_prop = db_prop_;
 
-This makes the object automatically write and read this property from the database on `hydrate:` and `dehydrate`.
+This makes the object automatically read and write the **db_prop** property from/to the database on `hydrate:` and `dehydrate`.
 
 
 ### Overriding tableName and tableKey ###
 
-You override these class methods to tell the objects into which tables it belongs, like so:
+You override these class methods to tell the objects to which table they belong, like so:
 
 ```objective-c
 + (NSString *)tableName
