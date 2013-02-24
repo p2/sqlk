@@ -9,11 +9,9 @@
 /* Begin PBXBuildFile section */
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		EE08DE6215A9E07E00CF6086 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE6115A9E07E00CF6086 /* SenTestingKit.framework */; };
-		EE08DE6415A9E07E00CF6086 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE6315A9E07E00CF6086 /* UIKit.framework */; };
 		EE08DE6515A9E07E00CF6086 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		EE08DE6E15A9E07E00CF6086 /* UnitTesting_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = EE08DE6D15A9E07E00CF6086 /* UnitTesting_iOS.m */; };
 		EE08DE8215A9E28500CF6086 /* libsqlk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC07E0554694100DB518D /* libsqlk.a */; };
-		EE08DE8415A9E28500CF6086 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE8315A9E28500CF6086 /* libsqlite3.dylib */; };
 		EE08DE8915A9E4A700CF6086 /* database1.xml in Resources */ = {isa = PBXBuildFile; fileRef = EE08DE8715A9E44D00CF6086 /* database1.xml */; };
 		EE08DE9215A9EE2100CF6086 /* database2.xml in Resources */ = {isa = PBXBuildFile; fileRef = EE08DE9115A9EE2100CF6086 /* database2.xml */; };
 		EE2D917712872C8700C69142 /* SQLKColumnStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */; };
@@ -25,7 +23,6 @@
 		EE51873E146EFB97000BB0FC /* sqlk.h in Headers */ = {isa = PBXBuildFile; fileRef = EE51873D146EFB97000BB0FC /* sqlk.h */; };
 		EE51873F146EFB97000BB0FC /* sqlk.h in Headers */ = {isa = PBXBuildFile; fileRef = EE51873D146EFB97000BB0FC /* sqlk.h */; };
 		EE6A348816C8B44D00EF9F0D /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE08DE6115A9E07E00CF6086 /* SenTestingKit.framework */; };
-		EE6A348916C8B44D00EF9F0D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE4986C133AB93800FEDD45 /* Cocoa.framework */; };
 		EE6A349816C8B45B00EF9F0D /* UnitTesting_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = EE08DE6D15A9E07E00CF6086 /* UnitTesting_iOS.m */; };
 		EE6A349916C8B45E00EF9F0D /* SQLKTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EEF9474815B1DE270046D04A /* SQLKTestObject.m */; };
 		EE6A349A16C8B46100EF9F0D /* database1.xml in Resources */ = {isa = PBXBuildFile; fileRef = EE08DE8715A9E44D00CF6086 /* database1.xml */; };
@@ -47,7 +44,6 @@
 		EEB659F0142F8122005B423C /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB659E5142F8122005B423C /* FMResultSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EEB659F1142F8122005B423C /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB659E6142F8122005B423C /* FMResultSet.m */; };
 		EEB659F2142F8122005B423C /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB659E6142F8122005B423C /* FMResultSet.m */; };
-		EEE4986D133AB93800FEDD45 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE4986C133AB93800FEDD45 /* Cocoa.framework */; };
 		EEE498A7133ABA4600FEDD45 /* SQLKStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917112872C8700C69142 /* SQLKStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EEE498A8133ABA4B00FEDD45 /* SQLKStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2D917212872C8700C69142 /* SQLKStructure.m */; };
 		EEE498A9133ABA4E00FEDD45 /* SQLKTableStructure.h in Headers */ = {isa = PBXBuildFile; fileRef = EE2D917312872C8700C69142 /* SQLKTableStructure.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -73,13 +69,11 @@
 		D2AAC07E0554694100DB518D /* libsqlk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsqlk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE08DE6015A9E07E00CF6086 /* Unit Testing (iOS).octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Unit Testing (iOS).octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE08DE6115A9E07E00CF6086 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		EE08DE6315A9E07E00CF6086 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		EE08DE6815A9E07E00CF6086 /* Unit Testing (iOS)-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Unit Testing (iOS)-Info.plist"; sourceTree = "<group>"; };
 		EE08DE6C15A9E07E00CF6086 /* UnitTesting_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnitTesting_iOS.h; sourceTree = "<group>"; };
 		EE08DE6D15A9E07E00CF6086 /* UnitTesting_iOS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnitTesting_iOS.m; sourceTree = "<group>"; };
 		EE08DE6F15A9E07E00CF6086 /* Unit Testing (iOS)-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Unit Testing (iOS)-Prefix.pch"; sourceTree = "<group>"; };
 		EE08DE7A15A9E24E00CF6086 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		EE08DE8315A9E28500CF6086 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.0.sdk/usr/lib/libsqlite3.dylib; sourceTree = DEVELOPER_DIR; };
 		EE08DE8715A9E44D00CF6086 /* database1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = database1.xml; sourceTree = "<group>"; };
 		EE08DE9115A9EE2100CF6086 /* database2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = database2.xml; sourceTree = "<group>"; };
 		EE2D916D12872C8700C69142 /* SQLiteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = SQLiteObject.h; path = Classes/SQLiteObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -104,10 +98,6 @@
 		EEB659E5142F8122005B423C /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = fmdb/src/FMResultSet.h; sourceTree = "<group>"; };
 		EEB659E6142F8122005B423C /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = fmdb/src/FMResultSet.m; sourceTree = "<group>"; };
 		EEE4986B133AB93800FEDD45 /* SQLiteKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQLiteKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EEE4986C133AB93800FEDD45 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		EEE4986F133AB93800FEDD45 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		EEE49870133AB93800FEDD45 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		EEE49871133AB93800FEDD45 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EEE49874133AB93800FEDD45 /* SQLiteKit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SQLiteKit-Info.plist"; sourceTree = "<group>"; };
 		EEF9474715B1DE270046D04A /* SQLKTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKTestObject.h; sourceTree = "<group>"; };
 		EEF9474815B1DE270046D04A /* SQLKTestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLKTestObject.m; sourceTree = "<group>"; };
@@ -126,10 +116,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE08DE8415A9E28500CF6086 /* libsqlite3.dylib in Frameworks */,
 				EE08DE8215A9E28500CF6086 /* libsqlk.a in Frameworks */,
 				EE08DE6215A9E07E00CF6086 /* SenTestingKit.framework in Frameworks */,
-				EE08DE6415A9E07E00CF6086 /* UIKit.framework in Frameworks */,
 				EE08DE6515A9E07E00CF6086 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,7 +128,6 @@
 			files = (
 				EE6A349C16C8B4D600EF9F0D /* SQLiteKit.framework in Frameworks */,
 				EE6A348816C8B44D00EF9F0D /* SenTestingKit.framework in Frameworks */,
-				EE6A348916C8B44D00EF9F0D /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,7 +136,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE8AAD52161F795900CCED98 /* libsqlite3.dylib in Frameworks */,
-				EEE4986D133AB93800FEDD45 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,7 +156,6 @@
 		0867D691FE84028FC02AAC07 /* sqlk */ = {
 			isa = PBXGroup;
 			children = (
-				EE8AAD51161F795900CCED98 /* libsqlite3.dylib */,
 				EE08DE7A15A9E24E00CF6086 /* README.md */,
 				EE8AAD4B161F77B100CCED98 /* LICENSE.txt */,
 				EE51873B146EFAA6000BB0FC /* Code */,
@@ -185,12 +170,9 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EE08DE8315A9E28500CF6086 /* libsqlite3.dylib */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
-				EEE4986C133AB93800FEDD45 /* Cocoa.framework */,
 				EE08DE6115A9E07E00CF6086 /* SenTestingKit.framework */,
-				EE08DE6315A9E07E00CF6086 /* UIKit.framework */,
-				EEE4986E133AB93800FEDD45 /* Other Frameworks */,
+				EE8AAD51161F795900CCED98 /* libsqlite3.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -257,16 +239,6 @@
 				EEB659E6142F8122005B423C /* FMResultSet.m */,
 			);
 			name = fmdb;
-			sourceTree = "<group>";
-		};
-		EEE4986E133AB93800FEDD45 /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				EEE4986F133AB93800FEDD45 /* AppKit.framework */,
-				EEE49870133AB93800FEDD45 /* CoreData.framework */,
-				EEE49871133AB93800FEDD45 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		EEE49872133AB93800FEDD45 /* SQLiteKit */ = {
@@ -909,6 +881,7 @@
 				EE6A349716C8B44D00EF9F0D /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EEE49879133AB93800FEDD45 /* Build configuration list for PBXNativeTarget "SQLiteKit" */ = {
 			isa = XCConfigurationList;
