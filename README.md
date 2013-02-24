@@ -16,6 +16,27 @@ This project is released under the [Apache 2.0 license][apache], because why not
 [apache]: http://www.apache.org/licenses/LICENSE-2.0.html
 
 
+Setup
+-----
+
+Here's one way on how you can use SQLiteKit for your app:
+
+1. Use git to clone the kit as a submodule (if you use git, otherwise just use `git clone`):  
+ 
+       cd your-project
+       git submodule add git://github.com/p2/sqlk.git
+
+2. Add the **sqlk** project to your Xcode workspace
+3. Go to your app's build settings and add this to your **User Header Search Paths**, with **recursive** enabled:
+   
+       "$(PROJECT_DIR)"
+
+4. Go to your app's build phases and add these two frameworks:
+   
+       libsqlite3.dylib
+       libsqlk.a
+
+
 Using SQLiteObject
 ------------------
 
@@ -86,12 +107,7 @@ if (![db hydrate]) {
 Using the kit
 -------------
 
-The rest of the kit provides ways to create and update your SQLite database. If you want to use this functionality you can either use it as a subproject in your Xcode workspace or add the files like they were your own. Then link your app with:
-
-* libsqlite3.dylib
-* libsqlk.a
-
-The kit can read database structures from an XML file and create a database that represents this schema, and even update existing databases to match the schema, within the constraints of SQLite. Remember, SQLite can not rename or delete table columns.
+The rest of the kit provides ways to create and update your SQLite database. it can read database structures from an XML file and create a database that represents this schema, and even update existing databases to match the schema, within the constraints of SQLite. Remember, SQLite can not rename or delete table columns.
 
 
 ### XML Schema ###

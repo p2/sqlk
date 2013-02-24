@@ -76,7 +76,7 @@
 		EE08DE7A15A9E24E00CF6086 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		EE08DE8715A9E44D00CF6086 /* database1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = database1.xml; sourceTree = "<group>"; };
 		EE08DE9115A9EE2100CF6086 /* database2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = database2.xml; sourceTree = "<group>"; };
-		EE2D916D12872C8700C69142 /* SQLiteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = SQLiteObject.h; path = Classes/SQLiteObject.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		EE2D916D12872C8700C69142 /* SQLiteObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = SQLiteObject.h; path = Classes/SQLiteObject.h; sourceTree = "<group>"; };
 		EE2D916E12872C8700C69142 /* SQLiteObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SQLiteObject.m; path = Classes/SQLiteObject.m; sourceTree = "<group>"; };
 		EE2D916F12872C8700C69142 /* SQLKColumnStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLKColumnStructure.h; sourceTree = "<group>"; };
 		EE2D917012872C8700C69142 /* SQLKColumnStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SQLKColumnStructure.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
