@@ -22,19 +22,25 @@ Setup
 Here's one way on how you can use SQLiteKit for your app:
 
 1. Use git to clone the kit as a submodule (if you use git, otherwise just use `git clone`):  
- 
-       cd your-project
-       git submodule add git://github.com/p2/sqlk.git
+
+   ```
+   cd your-project
+   git submodule add git://github.com/p2/sqlk.git
+   ```
 
 2. Add the **sqlk** project to your Xcode workspace
 3. Go to your app's build settings and add this to your **User Header Search Paths**, with **recursive** enabled:
    
-       "$(PROJECT_DIR)"
+   ```
+   "$(PROJECT_DIR)"
+   ```
 
 4. Go to your app's build phases and add these two frameworks:
    
-       libsqlite3.dylib
-       libsqlk.a
+   ```
+   libsqlite3.dylib
+   libsqlk.a
+   ```
 
 
 Using SQLiteObject
@@ -52,7 +58,9 @@ For each table that you have, you create a subclass of SQLiteObject. You need to
 
 You can add as many properties to the subclass as you'd like. To have the object recognize a property as one that is stored in the database, you synthesize that property to be the **same name as the db variable plus an underscore at the end**, for example:
 
-    @synthesize db_prop = db_prop_;
+```objective-c
+@synthesize db_prop = db_prop_;
+```
 
 This makes the object automatically read and write the **db_prop** property from/to the database on `hydrate:` and `dehydrate`.
 
