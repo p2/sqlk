@@ -52,14 +52,16 @@
 		NSString *errorString = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:aQuery];
 		[scanner setCaseSensitive:NO];
-		NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceCharacterSet];
-		NSMutableCharacterSet *letterSet = [NSCharacterSet lowercaseLetterCharacterSet];
-		[letterSet formUnionWithCharacterSet:[NSCharacterSet uppercaseLetterCharacterSet]];
+		[scanner setCharactersToBeSkipped:nil];
+		
+		NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+		NSMutableCharacterSet *letterSet = [NSCharacterSet letterCharacterSet];
 		NSCharacterSet *closeBracketOrComma = [NSCharacterSet characterSetWithCharactersInString:@"),"];
 		
 		
 		// scan table name
 		if ([scanner scanUpToString:@"TABLE" intoString:NULL] && [scanner scanString:@"TABLE" intoString:NULL]) {
+			[scanner scanCharactersFromSet:whiteSpace intoString:NULL];
 			//[scanner scanString:@"EXISTS" intoString:NULL];				/// @todo skip potential "IF NOT EXISTS"
 			
 			NSString *tblName = nil;
@@ -78,7 +80,7 @@
 				BOOL noMoreColumns = NO;
 				while (![scanner isAtEnd]) {
 					NSString *scanString = nil;
-					//[scanner scanCharactersFromSet:whiteSpace intoString:NULL];		// are in characters to be ignored anyway
+					[scanner scanCharactersFromSet:whiteSpace intoString:NULL];
 					if ([scanner scanString:@")" intoString:&scanString]) {
 						noMoreColumns = YES;
 					}
@@ -97,9 +99,7 @@
 								|| [@"CHECK" isEqualToString:scanString]))
 						{
 							atConstraints = YES;
-							
-							NSCharacterSet *skipSet = [scanner charactersToBeSkipped];
-							[scanner setCharactersToBeSkipped:nil];
+							SLog(@"==>  Interpreting as constraint");
 							
 							NSMutableString *constraint = [scanString mutableCopy];
 							if ([scanner scanUpToString:@"(" intoString:&scanString]) {
@@ -115,7 +115,6 @@
 							if ([scanner scanUpToCharactersFromSet:closeBracketOrComma intoString:&scanString]) {
 								[constraint appendString:scanString];
 							}
-							[scanner setCharactersToBeSkipped:skipSet];
 							[scanner scanString:@"," intoString:NULL];
 							
 							[newConstraints addObject:constraint];
@@ -123,11 +122,14 @@
 						
 						// ** we most likely found a column
 						else {
+							SLog(@"==>  Interpreting as column");
 							SQLKColumnStructure *column = [SQLKColumnStructure columnForTable:t];
 							column.name = scanString;
 							
+							// type
 							[scanner scanCharactersFromSet:whiteSpace intoString:NULL];
 							if ([scanner scanCharactersFromSet:letterSet intoString:&scanString]) {
+								[scanner scanCharactersFromSet:whiteSpace intoString:NULL];
 								column.type = scanString;
 							}
 							
@@ -143,7 +145,7 @@
 							
 							// scan column constraints and defaults
 							if ([scanner scanUpToString:@"," intoString:&scanString]) {
-								SLog(@"==>  %@ %@  \"%@\"", column.name, column.type, scanString);
+								SLog(@"==>  name: %@  type: %@  constraints/defaults: \"%@\"", column.name, column.type, scanString);
 								
 								// unique column
 								column.isUnique = (NSNotFound != [scanString rangeOfString:@"UNIQUE"].location);
