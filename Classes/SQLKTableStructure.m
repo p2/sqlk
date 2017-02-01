@@ -55,7 +55,7 @@
 		[scanner setCharactersToBeSkipped:nil];
 		
 		NSCharacterSet *whiteSpace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-		NSMutableCharacterSet *letterSet = [NSCharacterSet letterCharacterSet];
+		NSCharacterSet *letterSet = [NSCharacterSet letterCharacterSet];
 		NSCharacterSet *closeBracketOrComma = [NSCharacterSet characterSetWithCharactersInString:@"),"];
 		
 		

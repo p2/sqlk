@@ -11,6 +11,7 @@
 *.perspectivev3
 !default.perspectivev3
 xcuserdata
+**.xcscmblueprint
 profile
 *.moved-aside
 DerivedData
